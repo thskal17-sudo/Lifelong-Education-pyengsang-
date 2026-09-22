@@ -475,17 +475,26 @@ sources:
     notes: 2026-09-23 웹검색으로 확인한 도메인(학점은행제·시간제등록 운영). 게시판 경로·셀렉터 미확인.
 
   - id: ulsan_lifelong
-    name: 울산대학교 평생교육원
+    name: 울산대학교 평생교육원 공지사항
     org_type: university
     tier: 3
-    enabled: false
+    enabled: true
+    verified: true
     homepage: https://cec.ulsan.ac.kr/cec
     region_hint: [울산]
     adapter:
       type: html_list
-      list_url: TODO
-    notes: 2026-09-23 웹검색으로 확인한 도메인(ncms.ulsan.ac.kr/cec 로도 접근). 게시판 경로·셀렉터 미확인.
-
+      list_url: https://cec.ulsan.ac.kr/cec/3978
+      row_selector: table.a_brdList tbody tr
+      title_selector: td.bdlTitle a
+      date_selector: td.bdlDate
+      keywords: [강사, 교강사, 강의, 지도사, 초빙, 강좌 개설, 위촉]
+      paging: { max_pages: 1 }
+      detail: { fetch: true, body_selector: body }
+    notes: >-
+      공지사항 게시판(2026-09-23 러너 구조 검증: table.a_brdList, 제목 td.bdlTitle a → ?action=view&no=NNNN,
+      작성일 td.bdlDate 'YYYY-MM-DD'). 수강생 모집 공고가 대부분이라 keywords 로 강사 관련만 거른다.
+      상세 본문 셀렉터 미확인이라 body 전체 사용. '교육원 소식'(/cec/4843)·'게시판'(/cec/3964)도 후보.
   - id: uc_lifelong
     name: 울산과학대학교 평생교육원
     org_type: university
