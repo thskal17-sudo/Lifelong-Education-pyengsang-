@@ -12,7 +12,16 @@ on:
         description: "dump 시 이 CSS 셀렉터의 본문 전문을 출력 (예: div#bo_v_con)"
         default: ""
       days:
-        description: "probe 수집 기간(일). 비우면 settings.yaml 의 default_days(14). 게시가 뜸한 게시판 셀렉터 확인용으로 90 등"
+        description: "probe 수집 기간(일). 비우면 settings.yaml 의 default_days. 게시가 뜸한 게시판 셀렉터 확인용으로 90 등"
+        default: ""
+      render:
+        description: "브라우저(playwright)로 렌더링해서 덤프·수집 (JS 게시판용, true/false)"
+        default: "false"
+      wait_for:
+        description: "렌더 덤프에서 이 셀렉터가 나타날 때까지 대기 (예: table tbody tr)"
+        default: ""
+      click:
+        description: "렌더 덤프에서 먼저 클릭할 셀렉터 (탭 전환용)"
         default: ""
 permissions:
   contents: read
@@ -27,12 +36,25 @@ jobs:
           python-version: "3.12"
           cache: pip
       - run: pip install -e . requests beautifulsoup4 lxml
+      - name: install browser
+        if: ${{ github.event.inputs.render == 'true' }}
+        run: |
+          pip install -e ".[browser]"
+          python -m playwright install --with-deps chromium
       - name: dump structure
-        if: ${{ github.event.inputs.urls != '' }}
+        if: ${{ github.event.inputs.urls != '' && github.event.inputs.render != 'true' }}
         env:
           URLS: ${{ github.event.inputs.urls }}
           BODY_SELECTOR: ${{ github.event.inputs.body_selector }}
         run: python scripts/dump_structure.py
+      - name: dump structure (rendered)
+        if: ${{ github.event.inputs.urls != '' && github.event.inputs.render == 'true' }}
+        env:
+          URLS: ${{ github.event.inputs.urls }}
+          BODY_SELECTOR: ${{ github.event.inputs.body_selector }}
+          WAIT_FOR: ${{ github.event.inputs.wait_for }}
+          CLICK: ${{ github.event.inputs.click }}
+        run: python scripts/dump_rendered.py
       - name: gia probe
         if: ${{ github.event.inputs.sources != '' }}
         env:
