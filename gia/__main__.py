@@ -47,6 +47,7 @@ def _parser() -> argparse.ArgumentParser:
     pr.add_argument("source_id")
     pr.add_argument("--limit", type=int, default=5)
     pr.add_argument("--detail", action="store_true", help="첫 건의 상세·마감일·점수까지 표시")
+    pr.add_argument("--ignore-keywords", action="store_true", help="keywords 필터를 무시하고 목록 전부 표시 (셀렉터 확인용)")
     pr.add_argument("--save-fixture", action="store_true", help="목록(및 첫 상세) 응답을 tests/fixtures/live/<id>/ 에 저장")
 
     so = sub.add_parser("sources", help="소스별 설정 상태")
@@ -146,6 +147,9 @@ def main(argv: list[str] | None = None) -> int:
         if cfg is None:
             print(f"소스 없음: {args.source_id}", file=sys.stderr)
             return 2
+        if args.ignore_keywords:
+            cfg.adapter = {**cfg.adapter, "keywords": []}
+            print("[probe] keywords 무시: 목록 전부 표시")
         http = HttpClient(bundle.settings.collector)
         try:
             if args.save_fixture:

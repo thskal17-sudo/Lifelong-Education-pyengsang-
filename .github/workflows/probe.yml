@@ -26,6 +26,9 @@ on:
       render_timeout:
         description: "렌더 덤프 대기 시간(초). 느린 사이트는 60 등. 기본 25"
         default: ""
+      ignore_keywords:
+        description: "probe 에서 keywords 필터를 무시하고 목록 전부 표시 (셀렉터 확인용, true/false)"
+        default: "false"
 permissions:
   contents: read
 jobs:
@@ -70,6 +73,7 @@ jobs:
           WORKNET_API_KEY: ${{ secrets.WORKNET_API_KEY }}
           SOURCES: ${{ github.event.inputs.sources }}
           DAYS: ${{ github.event.inputs.days }}
+          IGNORE_KEYWORDS: ${{ github.event.inputs.ignore_keywords }}
         run: |
           if [ -n "$DAYS" ]; then
             sed -i "s/^\(\s*default_days:\s*\).*/\1$DAYS/" config/settings.yaml
@@ -77,6 +81,10 @@ jobs:
           fi
           for s in $SOURCES; do
             echo "::group::probe $s"
-            python -m gia probe "$s" --detail || true
+            if [ "$IGNORE_KEYWORDS" = "true" ]; then
+              python -m gia probe "$s" --detail --ignore-keywords || true
+            else
+              python -m gia probe "$s" --detail || true
+            fi
             echo "::endgroup::"
           done
