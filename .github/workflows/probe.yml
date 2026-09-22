@@ -43,12 +43,8 @@ jobs:
           # --with-deps 는 apt 설치까지 해서 10분 넘게 걸린다. 러너 이미지에 필요한 라이브러리가
           # 대부분 이미 있으므로 브라우저만 받고, 실행이 안 될 때만 의존 패키지를 깐다.
           python -m playwright install chromium
-          python -c "
-from playwright.sync_api import sync_playwright
-with sync_playwright() as p:
-    b = p.chromium.launch(headless=True); b.close()
-print('chromium ok')
-" || python -m playwright install-deps chromium
+          python -c "from playwright.sync_api import sync_playwright as s; p=s().start(); b=p.chromium.launch(headless=True); b.close(); p.stop(); print('chromium ok')" \
+            || python -m playwright install-deps chromium
       - name: dump structure
         if: ${{ github.event.inputs.urls != '' && github.event.inputs.render != 'true' }}
         env:
