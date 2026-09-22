@@ -23,6 +23,9 @@ on:
       click:
         description: "렌더 덤프에서 먼저 클릭할 셀렉터 (탭 전환용)"
         default: ""
+      render_timeout:
+        description: "렌더 덤프 대기 시간(초). 느린 사이트는 60 등. 기본 25"
+        default: ""
 permissions:
   contents: read
 jobs:
@@ -58,6 +61,7 @@ jobs:
           BODY_SELECTOR: ${{ github.event.inputs.body_selector }}
           WAIT_FOR: ${{ github.event.inputs.wait_for }}
           CLICK: ${{ github.event.inputs.click }}
+          RENDER_TIMEOUT_SEC: ${{ github.event.inputs.render_timeout }}
         run: python scripts/dump_rendered.py
       - name: gia probe
         if: ${{ github.event.inputs.sources != '' }}

@@ -133,3 +133,42 @@ def test_tls_verify_false_routes_host_to_insecure_client(settings):
     ctx = HttpClient.legacy_tls_context()
     assert ctx.minimum_version == ssl.TLSVersion.TLSv1 and ctx.verify_mode == ssl.CERT_NONE
     legacy.close()
+
+
+def test_html_list_reads_onclick_on_the_row(settings):
+    """상세 링크가 행(tr) 자체의 onclick 에 있는 게시판 (부산외대 평생교육원)."""
+    from datetime import date
+
+    from gia.collectors.html_list import parse_list_html
+    from tests.conftest import make_source
+
+    html = """
+    <table class="table_list"><tbody>
+      <tr onclick="window.location='/community_notice_detail/35'">
+        <td class="mo_hide">공지</td>
+        <td class="tit"><b>[일반]</b> 평생교육 정규강좌 신규 강사 모집</td>
+        <td>관리자</td><td class="mo_hide">2026-09-22 11:12:00</td><td class="mo_hide">108</td>
+      </tr>
+      <tr onclick="window.location='/community_notice_detail/34'">
+        <td class="mo_hide">17</td>
+        <td class="tit">여름방학 수강생 모집</td>
+        <td>관리자</td><td class="mo_hide">2026-09-20 09:00:00</td><td class="mo_hide">12</td>
+      </tr>
+    </tbody></table>
+    """
+    a = {
+        "row_selector": "table.table_list tbody tr",
+        "title_selector": "td.tit",
+        "link_attr": "onclick",
+        "link_regex": r"/community_notice_detail/(\d+)",
+        "link_url_template": "https://lec.bufs.ac.kr/community_notice_detail/{1}",
+        "date_selector": "td:nth-child(4)",
+        "date_formats": ["%Y-%m-%d %H:%M:%S"],
+        "keywords": ["강사"],
+    }
+    cfg = make_source("bufs", "university", type="html_list", list_url="https://lec.bufs.ac.kr/community_notice", **a)
+    rows, oldest = parse_list_html(html, "https://lec.bufs.ac.kr/community_notice", cfg.adapter, cfg, date(2026, 1, 1))
+    assert len(rows) == 1  # '수강생 모집' 은 keywords 로 걸러진다
+    assert rows[0].url == "https://lec.bufs.ac.kr/community_notice_detail/35"
+    assert rows[0].posted_at == date(2026, 9, 22)
+    assert "강사 모집" in rows[0].title

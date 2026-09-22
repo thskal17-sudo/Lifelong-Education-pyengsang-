@@ -70,6 +70,9 @@ def parse_list_html(html: str, page_url: str, a: dict, cfg, since: date) -> tupl
             continue
         title = (t.attributes.get(a["title_attr"]) if a.get("title_attr") else None) or t.text(strip=True)
         link = row.css_first(a.get("link_selector") or a.get("title_selector") or "a")
+        if link is None or (a.get("link_attr") and not link.attributes.get(a["link_attr"])):
+            # 행(tr·li) 자체에 onclick 이 걸린 게시판 (부산외대 평생교육원 등)
+            link = row if row.attributes.get(a.get("link_attr") or "onclick") else link
         target = resolve_link(link, page_url, a)
         if not title or not target:
             continue

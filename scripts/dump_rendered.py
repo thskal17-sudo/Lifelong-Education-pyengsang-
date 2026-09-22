@@ -22,16 +22,18 @@ from dump_structure import DETAIL, dump_detail, dump_links, dump_list, short_pat
 UA = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36"
 
 
-def render(url: str, wait_for: str | None, click: str | None, timeout_ms: int = 25000) -> tuple[str, str]:
+def render(url: str, wait_for: str | None, click: str | None, timeout_ms: int | None = None) -> tuple[str, str]:
     """(최종 URL, 렌더링된 HTML)."""
     from playwright.sync_api import sync_playwright
 
+    timeout_ms = timeout_ms or int(os.environ.get("RENDER_TIMEOUT_SEC") or 25) * 1000
     with sync_playwright() as pw:
         browser = pw.chromium.launch(headless=True)
         ctx = browser.new_context(user_agent=UA, locale="ko-KR")
         page = ctx.new_page()
         try:
-            page.goto(url, wait_until="domcontentloaded", timeout=timeout_ms)
+            # 느린 정부·대학 사이트는 domcontentloaded 도 오래 걸린다. commit 으로 먼저 붙고 기다린다
+            page.goto(url, wait_until="commit", timeout=timeout_ms)
             if click:
                 try:
                     page.click(click, timeout=5000)
