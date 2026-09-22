@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="utf-8"><title>부·울·경 평생교육원 강사공고 {{ r.date_str }}</title></head>
+<body style="font-family:-apple-system,'Apple SD Gothic Neo','Malgun Gothic',sans-serif;font-size:14px;line-height:1.5;color:#222;max-width:720px;margin:0 auto;padding:16px;">
+<h2 style="margin:0 0 4px;">부·울·경 대학 평생교육원 강사공고 일일 요약 — {{ r.date_str }}</h2>
+<p style="margin:0 0 16px;color:#555;">신규 <b>{{ r.new|length }}건</b> · 마감 임박 <b>{{ r.closing|length }}건</b> · 변경 <b>{{ r.updated|length }}건</b></p>
+
+{% if r.overview %}<p style="background:#f4f6f8;padding:8px 12px;border-radius:6px;">{{ r.overview }}</p>{% endif %}
+<h3 style="border-bottom:1px solid #ddd;padding-bottom:4px;">⏰ 마감 임박 ({{ r.closing_days }}일 이내)</h3>
+{% for p in r.closing %}
+<p style="margin:0 0 12px;"><b>[{{ p.field|field_name }}] {{ p.org_name }} · <a href="{{ p.primary_url }}">{{ p.title }}</a></b> — {{ p|dday }}<br>
+<span style="color:#555;">마감 {{ p|deadline_str }} · {{ p.region|region_str }} · {{ p.employment_type }}{% if '판별유보' in p.flags %} · ⚠ 강사 공고 여부 확인 필요{% endif %}{% if '재공고' in p.flags %} · 재공고{% endif %}</span></p>
+{% else %}<p>없음</p>{% endfor %}
+
+<h3 style="border-bottom:1px solid #ddd;padding-bottom:4px;">🆕 신규 공고</h3>
+{% for p in r.new %}
+<p style="margin:0 0 12px;"><b>[{{ p.field|field_name }}] {{ p.org_name }} · <a href="{{ p.primary_url }}">{{ p.title }}</a></b><br>
+<span style="color:#555;">마감 {{ p|deadline_str }} · {{ p.region|region_str }} · {{ p.employment_type }}{% if '판별유보' in p.flags %} · ⚠ 강사 공고 여부 확인 필요{% endif %}{% if '재공고' in p.flags %} · 재공고{% endif %}{% if '첨부추출실패' in p.flags and not p.deadline %} · 첨부 추출 실패{% endif %}</span>{% if p.one_line_summary %}<br><span>{{ p.one_line_summary }}{% if p.pay %} · {{ p.pay }}{% endif %}</span>{% endif %}</p>
+{% else %}<p>없음</p>{% endfor %}
+
+<h3 style="border-bottom:1px solid #ddd;padding-bottom:4px;">🔄 변경 공고</h3>
+{% for p in r.updated %}
+<p style="margin:0 0 8px;">[{{ p.field|field_name }}] {{ p.org_name }} · <a href="{{ p.primary_url }}">{{ p.title }}</a> — 마감 {{ p|deadline_str }}{% if p.flags %} ({{ p.flags|join(', ') }}){% endif %}</p>
+{% else %}<p>없음</p>{% endfor %}
+
+{% if r.run %}{% set c = r.run.counts() %}
+<p style="margin-top:24px;color:#888;font-size:12px;">수집 소스 정상 {{ c.ok + c.empty }} / 실패 {{ c.fail }} / 미설정 {{ c.unconfigured }}{% if c.fail %} · 실패: {% for s in r.run.sources if s.status == 'fail' %}{{ s.source_id }}{% if not loop.last %}, {% endif %}{% endfor %}{% endif %}</p>
+{% endif %}
+</body></html>

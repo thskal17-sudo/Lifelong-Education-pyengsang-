@@ -1,0 +1,58 @@
+# 부·울·경 대학 평생교육원 강사공고 일일 요약 — {{ r.date_str }}
+
+신규 **{{ r.new|length }}건** · 마감 임박 **{{ r.closing|length }}건** · 변경 **{{ r.updated|length }}건**{% if r.run %} · 수집 소스 {{ r.run.counts().ok + r.run.counts().empty }}/{{ r.run.sources|length }} 정상{% endif %}
+
+{% if r.overview %}> {{ r.overview }}
+
+{% endif %}## ⏰ 마감 임박 ({{ r.closing_days }}일 이내)
+
+{% for p in r.closing %}
+{{ loop.index }}. **[{{ p.field|field_name }}] {{ p.org_name }} · {{ p.title }}** — {{ p|dday }}
+   마감 {{ p|deadline_str }} · {{ p.region|region_str }} · {{ p.employment_type }}{% if p.pay %} · {{ p.pay }}{% endif %}{% if '판별유보' in p.flags %} · ⚠ 강사 공고 여부 확인 필요{% endif %}{% if '재공고' in p.flags %} · 재공고{% endif %}{% if '첨부추출실패' in p.flags and not p.deadline %} · 첨부 추출 실패{% endif %}
+{% if p.one_line_summary %}   {{ p.one_line_summary }}{% if p.pay %} · {{ p.pay }}{% endif %}
+{% endif %}   → {{ p.primary_url }} (출처: {% for sid in p.sources|map(attribute='source_id')|unique %}{{ r.source_names.get(sid, sid) }}{% if not loop.last %}, {% endif %}{% endfor %})
+{% else %}
+없음
+{% endfor %}
+
+## 🆕 신규 공고
+
+{% for p in r.new %}
+{{ loop.index }}. **[{{ p.field|field_name }}] {{ p.org_name }} · {{ p.title }}**
+   마감 {{ p|deadline_str }} · {{ p.region|region_str }} · {{ p.employment_type }}{% if p.pay %} · {{ p.pay }}{% endif %}{% if '판별유보' in p.flags %} · ⚠ 강사 공고 여부 확인 필요{% endif %}{% if '재공고' in p.flags %} · 재공고{% endif %}{% if '첨부추출실패' in p.flags and not p.deadline %} · 첨부 추출 실패{% endif %}
+{% if p.one_line_summary %}   {{ p.one_line_summary }}{% if p.pay %} · {{ p.pay }}{% endif %}
+{% endif %}   → {{ p.primary_url }} (출처: {% for sid in p.sources|map(attribute='source_id')|unique %}{{ r.source_names.get(sid, sid) }}{% if not loop.last %}, {% endif %}{% endfor %})
+{% else %}
+없음
+{% endfor %}
+
+## 🔄 변경 공고
+
+{% for p in r.updated %}
+- **[{{ p.field|field_name }}] {{ p.org_name }} · {{ p.title }}** — 마감 {{ p|deadline_str }}{% if p.flags %} ({{ p.flags|join(', ') }}){% endif %}
+  → {{ p.primary_url }}
+{% else %}
+없음
+{% endfor %}
+
+{% if r.weekly_md %}## 📊 주간 통계
+
+{{ r.weekly_md }}
+
+{% endif %}## 📎 부록: 수집 상태
+
+{% if r.run %}
+{% set c = r.run.counts() %}
+| 구분 | 값 |
+|---|---|
+| 실행 시각 | {{ r.run.started_at.strftime('%H:%M') }}{% if r.run.finished_at %} ~ {{ r.run.finished_at.strftime('%H:%M') }}{% endif %} KST |
+| 소스 정상 / 0건 / 실패 / 미설정 | {{ c.ok }} / {{ c.empty }} / {{ c.fail }} / {{ c.unconfigured }} |
+| 실패 소스 | {% for s in r.run.sources if s.status == 'fail' %}`{{ s.source_id }}` ({{ s.errors[0] if s.errors else '' }}){% if not loop.last %}, {% endif %}{% else %}없음{% endfor %} |
+| 미설정 소스 | {% for s in r.run.sources if s.status == 'unconfigured' %}`{{ s.source_id }}`{% if not loop.last %}, {% endif %}{% else %}없음{% endfor %} |
+| 이번 실행 신규 / 병합 | {{ r.run.totals.get('new', 0) }} / {{ r.run.totals.get('merged', 0) }} |
+| LLM 호출 | {{ r.run.llm_calls }}건 (입력 {{ r.run.llm_input_tokens }} · 캐시 {{ r.run.llm_cache_read_tokens }} · 출력 {{ r.run.llm_output_tokens }} 토큰 · 제외 {{ r.run.llm_excluded }}건) |
+{% else %}
+실행 기록 없음
+{% endif %}
+
+전체 아카이브: reports/ · 오탐·미탐 신고: data/feedback.jsonl

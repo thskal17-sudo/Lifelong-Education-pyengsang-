@@ -1,0 +1,56 @@
+name: report
+on:
+  schedule:
+    - cron: "30 22 * * *"   # 07:30 KST
+  workflow_dispatch:
+    inputs:
+      send:
+        description: "실제 발송 여부 (false면 파일만 생성)"
+        default: "true"
+concurrency:
+  group: pipeline
+  cancel-in-progress: false
+permissions:
+  contents: write
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}   # 대기 중 다른 실행이 push한 최신 커밋에서 시작 (rebase 충돌 방지)
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -e .
+      - name: report
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          SMTP_HOST: ${{ secrets.SMTP_HOST }}
+          SMTP_PORT: ${{ secrets.SMTP_PORT }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+          EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
+          EMAIL_TO: ${{ secrets.EMAIL_TO }}
+        run: |
+          if [ "${{ github.event.inputs.send }}" = "false" ]; then
+            python -m gia report --print
+          elif [ -n "$TELEGRAM_BOT_TOKEN" ] || [ -n "$SMTP_HOST" ]; then
+            python -m gia report --send
+          else
+            echo "알림 채널(텔레그램·이메일) 미설정: 리포트 파일만 생성하고 보고 상태를 기록합니다."
+            python -m gia report --mark
+          fi
+      - name: commit report
+        if: always()
+        run: |
+          git config user.name "gia-bot"
+          git config user.email "gia-bot@users.noreply.github.com"
+          git add data reports
+          git commit -m "report: $(TZ=Asia/Seoul date +%F)" || echo "no changes"
+          git pull --rebase origin ${{ github.ref_name }}
+          git push

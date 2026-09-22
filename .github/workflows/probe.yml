@@ -1,0 +1,52 @@
+name: probe
+on:
+  workflow_dispatch:
+    inputs:
+      urls:
+        description: "구조를 덤프할 목록 페이지 URL (공백/줄바꿈 구분)"
+        default: ""
+      sources:
+        description: "gia probe 로 시험 수집할 source id (공백 구분)"
+        default: ""
+      body_selector:
+        description: "dump 시 이 CSS 셀렉터의 본문 전문을 출력 (예: div#bo_v_con)"
+        default: ""
+      days:
+        description: "probe 수집 기간(일). 비우면 settings.yaml 의 default_days(14). 게시가 뜸한 게시판 셀렉터 확인용으로 90 등"
+        default: ""
+permissions:
+  contents: read
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -e . requests beautifulsoup4 lxml
+      - name: dump structure
+        if: ${{ github.event.inputs.urls != '' }}
+        env:
+          URLS: ${{ github.event.inputs.urls }}
+          BODY_SELECTOR: ${{ github.event.inputs.body_selector }}
+        run: python scripts/dump_structure.py
+      - name: gia probe
+        if: ${{ github.event.inputs.sources != '' }}
+        env:
+          DATA_GO_KR_KEY: ${{ secrets.DATA_GO_KR_KEY }}
+          WORKNET_API_KEY: ${{ secrets.WORKNET_API_KEY }}
+          SOURCES: ${{ github.event.inputs.sources }}
+          DAYS: ${{ github.event.inputs.days }}
+        run: |
+          if [ -n "$DAYS" ]; then
+            sed -i "s/^\(\s*default_days:\s*\).*/\1$DAYS/" config/settings.yaml
+            grep -n "default_days" config/settings.yaml
+          fi
+          for s in $SOURCES; do
+            echo "::group::probe $s"
+            python -m gia probe "$s" --detail || true
+            echo "::endgroup::"
+          done

@@ -1,0 +1,36 @@
+<b>부·울·경 평생교육원 강사공고 {{ r.date_str }}</b>
+신규 {{ r.new|length }} · 마감임박 {{ r.closing|length }} · 변경 {{ r.updated|length }}
+
+{% if r.overview %}<i>{{ r.overview|e }}</i>
+
+{% endif %}<b>⏰ 마감 임박</b>
+{% for p in r.closing %}
+{{ loop.index }}. [{{ p.field|field_name }}] {{ p.org_name|e }} · <a href="{{ p.primary_url|e }}">{{ p.title|e }}</a> — {{ p|dday }}
+   마감 {{ p|deadline_str }} · {{ p.region|region_str }} · {{ p.employment_type }}{% if '판별유보' in p.flags %} · ⚠확인필요{% endif %}
+{% else %}
+없음
+{% endfor %}
+
+<b>🆕 신규 공고</b>
+{% for p in r.new[:r.telegram_max_items] %}
+{{ loop.index }}. [{{ p.field|field_name }}] {{ p.org_name|e }} · <a href="{{ p.primary_url|e }}">{{ p.title|e }}</a>
+   마감 {{ p|deadline_str }} · {{ p.region|region_str }} · {{ p.employment_type }}{% if '판별유보' in p.flags %} · ⚠확인필요{% endif %}
+{% if p.one_line_summary %}   {{ p.one_line_summary|e }}
+{% endif %}{% else %}
+없음
+{% endfor %}
+{% if r.new|length > r.telegram_max_items %}
+외 {{ r.new|length - r.telegram_max_items }}건 → 전체는 reports/ 참조
+{% endif %}
+
+{% if r.updated %}
+<b>🔄 변경</b>
+{% for p in r.updated %}
+- {{ p.org_name|e }} · <a href="{{ p.primary_url|e }}">{{ p.title|e }}</a> — 마감 {{ p|deadline_str }}
+{% endfor %}
+
+{% endif %}
+{% if r.run %}
+{% set c = r.run.counts() %}
+<i>소스 정상 {{ c.ok + c.empty }} / 실패 {{ c.fail }} / 미설정 {{ c.unconfigured }}</i>
+{% endif %}

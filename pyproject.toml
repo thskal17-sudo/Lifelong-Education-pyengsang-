@@ -1,0 +1,36 @@
+[project]
+name = "gia"
+version = "0.1.0"
+description = "부산·울산·경남 대학 평생교육원 강사 공고 수집·일일 요약 (Lifelong Education)"
+requires-python = ">=3.11"
+dependencies = [
+  "httpx>=0.27",
+  "pydantic>=2.6",
+  "pyyaml>=6.0",
+  "jinja2>=3.1",
+  "selectolax>=0.3",
+  "rapidfuzz>=3.0",
+  "pypdf>=4.0",
+  "olefile>=0.46",
+  "anthropic>=1.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "freezegun>=1.4"]
+browser = ["playwright>=1.45"]
+
+[project.scripts]
+gia = "gia.__main__:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["gia*"]
+
+[tool.setuptools.package-data]
+gia = ["report/templates/*.j2"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

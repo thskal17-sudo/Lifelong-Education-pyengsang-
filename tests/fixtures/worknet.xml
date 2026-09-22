@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wantedRoot>
+  <total>2</total>
+  <wanted>
+    <wantedAuthNo>K1</wantedAuthNo>
+    <company>창원영어학원</company>
+    <title>초등 영어 강사 모집</title>
+    <region>경남 창원시</region>
+    <regDt>26-09-19</regDt>
+    <closeDate>26-09-29</closeDate>
+    <wantedInfoUrl>https://example.org/wn/K1</wantedInfoUrl>
+  </wanted>
+  <wanted>
+    <wantedAuthNo>K2</wantedAuthNo>
+    <company>김해체육센터</company>
+    <title>필라테스 강사 채용</title>
+    <region>경남 김해시</region>
+    <regDt>26-09-20</regDt>
+    <closeDate>상시</closeDate>
+    <wantedInfoUrl>https://example.org/wn/K2</wantedInfoUrl>
+  </wanted>
+</wantedRoot>

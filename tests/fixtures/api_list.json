@@ -1,0 +1,43 @@
+{
+ "resultCode": 200,
+ "totalCount": 4,
+ "result": [
+  {
+   "recrutPblntSn": 1,
+   "instNm": "한국폴리텍VII대학 창원캠퍼스",
+   "recrutPbancTtl": "2026-2학기 시간강사(전기) 모집",
+   "workRgnNmLst": "경남",
+   "pbancBgngYmd": "20260918",
+   "pbancEndYmd": "20260930",
+   "srcUrl": "https://example.org/job/1"
+  },
+  {
+   "recrutPblntSn": 2,
+   "instNm": "부산시설공단",
+   "recrutPbancTtl": "수영강사 채용",
+   "workRgnNmLst": "부산",
+   "pbancBgngYmd": "20260918",
+   "pbancEndYmd": "20260930",
+   "srcUrl": "https://example.org/job/2"
+  },
+  {
+   "recrutPblntSn": 3,
+   "instNm": "경남개발공사",
+   "recrutPbancTtl": "사무보조 채용",
+   "workRgnNmLst": "경남",
+   "pbancBgngYmd": "20260918",
+   "pbancEndYmd": "20260930",
+   "srcUrl": "https://example.org/job/3"
+  },
+  {
+   "recrutPblntSn": 4,
+   "instNm": "경남개발공사",
+   "recrutPbancTtl": "체육센터 운영 담당자 채용",
+   "workRgnNmLst": "경남",
+   "pbancBgngYmd": "20260918",
+   "pbancEndYmd": "20260930",
+   "srcUrl": "https://example.org/job/4",
+   "body": "강사 관리 및 시설 운영 담당"
+  }
+ ]
+}

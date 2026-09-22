@@ -1,0 +1,51 @@
+name: collect
+on:
+  schedule:
+    - cron: "30 21 * * *"   # 06:30 KST
+  workflow_dispatch:
+    inputs:
+      backfill_days:
+        description: "백필 일수 (0이면 기본 14일)"
+        default: "0"
+      sources:
+        description: "쉼표로 구분한 source id (비우면 전체)"
+        default: ""
+      refetch:
+        description: "이미 알던 URL도 상세를 다시 파싱 (파서 수정 후 보정용, true/false)"
+        default: "false"
+concurrency:
+  group: pipeline
+  cancel-in-progress: false
+permissions:
+  contents: write
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}   # 대기 중 다른 실행이 push한 최신 커밋에서 시작 (rebase 충돌 방지)
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -e .
+      - name: collect
+        env:
+          DATA_GO_KR_KEY: ${{ secrets.DATA_GO_KR_KEY }}
+          WORKNET_API_KEY: ${{ secrets.WORKNET_API_KEY }}
+        run: |
+          ARGS=""
+          if [ "${{ github.event.inputs.backfill_days }}" != "" ] && [ "${{ github.event.inputs.backfill_days }}" != "0" ]; then ARGS="$ARGS --backfill-days ${{ github.event.inputs.backfill_days }}"; fi
+          if [ "${{ github.event.inputs.sources }}" != "" ]; then ARGS="$ARGS --sources ${{ github.event.inputs.sources }}"; fi
+          if [ "${{ github.event.inputs.refetch }}" = "true" ]; then ARGS="$ARGS --refetch"; fi
+          python -m gia collect $ARGS
+      - name: commit data
+        run: |
+          git config user.name "gia-bot"
+          git config user.email "gia-bot@users.noreply.github.com"
+          git add data
+          git commit -m "data: collect $(TZ=Asia/Seoul date +%F)" || echo "no changes"
+          git pull --rebase origin ${{ github.ref_name }}
+          git push

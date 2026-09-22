@@ -1,0 +1,40 @@
+# 동작 설정 (docs/DESIGN.md 13.2)
+timezone: Asia/Seoul
+
+report:
+  send_time_kst: "07:30"
+  weekdays_only: false
+  telegram_max_items: 15
+  closing_soon_days: 3
+  daily_overview_llm: false     # true면 발송 시 LLM으로 3문장 총평 생성 (llm_enabled·API 키 필요)
+  recheck_active_days: 3        # 활성 공고 상세 재확인 주기(마감 연장 감지)
+  weekly_stats_weekday: 0       # 주간 통계를 붙이는 요일 (0=월 … 6=일, -1=끄기)
+
+classifier:
+  include_threshold: 70
+  review_threshold: 30
+  include_review_without_llm: true   # LLM 미사용 시 판단 유보 구간을 '판별유보' 플래그로 포함
+  llm_enabled: false                 # true로 바꾸고 ANTHROPIC_API_KEY 를 등록하면 판단 유보 건부터 LLM 판별·구조화 추출
+  llm_model: claude-opus-5
+  llm_effort: low
+  llm_max_calls_per_run: 60
+
+collector:
+  default_pages: 2
+  default_days: 14
+  backfill_days: 60
+  per_domain_delay_sec: 1.5
+  request_timeout_sec: 20
+  source_time_budget_sec: 180
+  concurrency: 4
+  respect_robots: true
+  attachment_max_mb: 10
+  attachment_max_files: 3               # 공고당 첨부 텍스트 추출 최대 파일 수
+  attachment_extensions: [.hwp, .hwpx, .pdf, .docx]
+
+interests:
+  weights: {}          # 예: { lifelong: 1.5, it_digital: 1.2 }
+  keywords: []         # 예: [한국어, 디지털, 성인문해]
+
+notify:
+  channels: [telegram]   # email을 추가하려면 SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASSWORD, EMAIL_FROM, EMAIL_TO 설정
