@@ -425,17 +425,28 @@ sources:
     notes: 2026-09-23 웹검색으로 확인한 도메인(부민캠퍼스). 게시판 경로·셀렉터 미확인.
 
   - id: deu_lifelong
-    name: 동의대학교 미래교육원
+    name: 동의대학교 미래교육원 공지사항
     org_type: university
     tier: 3
-    enabled: false
+    enabled: true
+    verified: true
     homepage: https://lifelong.deu.ac.kr
     region_hint: [부산]
     adapter:
       type: html_list
-      list_url: TODO
-    notes: 2026-09-23 웹검색으로 확인한 도메인. 게시판 경로·셀렉터 미확인.
-
+      org_name: 동의대학교 미래교육원
+      list_url: https://lifelong.deu.ac.kr/Board/BoardList.aspx?MENU_ID=146&PAGE_NO=&BoardMstNo=1
+      row_selector: dl
+      title_selector: a[id*="hlnkTitle"]
+      date_selector: span.summery
+      keywords: [강사, 교강사, 강의, 지도사, 초빙, 위촉, 강좌 개설, 강좌 제안]
+      paging: { max_pages: 1 }
+      detail: { fetch: true, body_selector: body }
+    notes: >-
+      공지사항&뉴스 게시판(2026-09-23 러너 렌더 덤프로 검증: dl > dt > p.notice > a#IContent_rptList_hlnkTitle_N,
+      날짜는 span.summery 의 '분류 / YYYY.MM.DD' 에서 느슨하게 추출). 상대경로 BoardView.aspx 로 이어진다.
+      '파크골프 2급지도자(강사) 양성과정 모집' 처럼 강사 양성 강좌(수강생 모집)가 섞여 있다 — 규칙의
+      '수강생' 제외어로 대부분 걸러지지만 리포트에서 한 번 더 확인할 것. 페이징 파라미터 미확인이라 1페이지만.
   - id: bufs_lifelong
     name: 부산외국어대학교 평생교육원 공지사항
     org_type: university
