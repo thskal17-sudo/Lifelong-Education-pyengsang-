@@ -20,7 +20,7 @@ from .extract.attachments import extract_text, file_extension
 from .extract.deadline import KST, DeadlineType, parse_deadline, parse_known_format
 from .models import Posting, RawPosting, RunLog, SourceRef, SourceRunResult, Status
 from .models import FIELD_NAMES
-from .normalize import clean_url, extract_regions, mask_pii, normalize_title, standardize_org
+from .normalize import clean_url, extract_regions, mask_pii, normalize_title, standardize_org, strip_surrogates
 from .store import Store
 
 log = logging.getLogger("gia")
@@ -38,7 +38,7 @@ class SourceOutcome:
 def build_posting(raw: RawPosting, cfg: SourceConfig, bundle: ConfigBundle, now: datetime) -> Posting | None:
     """RawPosting → Posting. 관련성이 낮으면 None."""
     cs = bundle.settings.classifier
-    title, flags = normalize_title(raw.title)
+    title, flags = normalize_title(strip_surrogates(raw.title))
     org = standardize_org(raw.org_name or cfg.adapter.get("org_name") or cfg.name, bundle.aliases)  # adapter.org_name: 게시판 이름 대신 쓸 기관명
     body = mask_pii(raw.body_text or "")
     rule = score_posting(title, body, raw.region_text, org)
@@ -164,7 +164,12 @@ def run_source(cfg: SourceConfig, bundle: ConfigBundle, store: Store, http: Http
             continue
         res.detail_fetched += 1
         enrich_attachments(raw, http, cs)
-        p = build_posting(raw, cfg, bundle, now)
+        try:
+            p = build_posting(raw, cfg, bundle, now)
+        except Exception as e:  # noqa: BLE001 - 공고 하나의 오류가 실행 전체를 멈추지 않게
+            res.errors.append(f"판별 실패 {url}: {type(e).__name__}: {e}"[:300])
+            log.warning("[%s] 판별 실패 %s: %s", cfg.id, url, e)
+            continue
         if p:
             out.postings.append(p)
             out.bodies[p.canonical_key] = (mask_pii(raw.body_text or ""), raw.region_text)

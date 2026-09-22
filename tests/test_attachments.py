@@ -41,3 +41,16 @@ def test_unsupported_and_empty():
 def test_file_extension():
     assert file_extension("https://x.org/files/공고문.HWP?x=1") == ".hwp"
     assert file_extension("https://x.org/download.do?fileId=3") == ""
+
+
+def test_extract_text_strips_lone_surrogates():
+    """HWP 본문을 UTF-16 으로 풀 때 섞여 드는 짝 없는 서로게이트를 없앤다 (진주보건대 첨부, 2026-09-23).
+
+    남아 있으면 build_posting 의 content_hash 계산에서 UnicodeEncodeError 가 나고 수집 전체가 멈춘다.
+    """
+    from gia.extract.attachments import extract_text
+    raw = "모집 공고\ud83d 강사 모집\udc00 끝".encode("utf-8", "surrogatepass")
+    res = extract_text(raw, "notice.txt")
+    assert res.ok
+    assert "강사 모집" in res.text
+    res.text.encode("utf-8")  # 예외가 없어야 한다

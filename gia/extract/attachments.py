@@ -38,6 +38,7 @@ def file_extension(name: str) -> str:
 
 
 def extract_text(data: bytes, filename: str, max_chars: int = 20000) -> ExtractResult:
+    from ..normalize import strip_surrogates  # 순환 import 방지
     ext = file_extension(filename)
     try:
         if ext == ".pdf":
@@ -54,7 +55,7 @@ def extract_text(data: bytes, filename: str, max_chars: int = 20000) -> ExtractR
             return ExtractResult("", False, f"지원하지 않는 형식: {ext or '확장자 없음'}")
     except Exception as e:  # noqa: BLE001 - 파일 하나의 실패가 수집을 막지 않도록
         return ExtractResult("", False, f"{type(e).__name__}: {e}"[:200])
-    text = _clean(text)[:max_chars]
+    text = _clean(strip_surrogates(text))[:max_chars]
     if not text.strip():
         return ExtractResult("", False, "빈 텍스트 (스캔 이미지 또는 암호화 가능성)")
     return ExtractResult(text, True)

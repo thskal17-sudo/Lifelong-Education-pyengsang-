@@ -121,8 +121,22 @@ def mentions_target_region(text: str) -> bool:
 mentions_gyeongnam = mentions_target_region  # 이전 이름 호환
 
 
+_SURROGATE_RE = re.compile(r"[\ud800-\udfff]")
+
+
+def strip_surrogates(text: str) -> str:
+    """UTF-8 로 인코딩할 수 없는 짝 없는 서로게이트를 없앤다.
+
+    HWP/HWPX 본문을 UTF-16 으로 풀 때 깨진 코드포인트가 섞여 들어오면
+    이후 str.encode() 가 UnicodeEncodeError 를 내며 수집 전체를 멈춘다(진주보건대 첨부, 2026-09-23).
+    """
+    if not text:
+        return text or ""
+    return _SURROGATE_RE.sub("", text)
+
+
 def mask_pii(text: str) -> str:
-    t = _EMAIL_RE.sub("[이메일]", text or "")
+    t = _EMAIL_RE.sub("[이메일]", strip_surrogates(text or ""))
     return _PHONE_RE.sub("[전화번호]", t)
 
 

@@ -116,3 +116,19 @@ def test_collect_dry_run_does_not_write(settings, tmp_path, monkeypatch):
     store = Store(tmp_path / "data")
     collect(bundle, store, _http(settings), now=NOW, dry_run=True)
     assert not (tmp_path / "data").exists()
+
+
+def test_build_posting_survives_broken_text(settings, tmp_path, monkeypatch):
+    """본문에 짝 없는 서로게이트가 있어도 공고를 만들고 수집이 계속된다."""
+    from gia.models import RawPosting
+    from gia.pipeline import build_posting
+    from tests.conftest import make_source
+
+    cfg = make_source("broken", type="html_list", list_url="https://x.example.org/l", row_selector="tr")
+    bad = "강사 모집 공고\ud83d 접수: 2026. 9. 30.(수) 18:00 까지"
+    raw = RawPosting(source_id="broken", title="평생교육원 강사 모집\udc00", url="https://x.example.org/1", body_text=bad)
+    p = build_posting(raw, cfg, _bundle(settings, [cfg]), NOW)
+    assert p is not None
+    assert "\ud83d" not in p.title and "\udc00" not in p.title
+    p.content_hash.encode("utf-8")
+    assert p.deadline is not None and p.deadline.isoformat() == "2026-09-30T18:00:00+09:00"
