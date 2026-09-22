@@ -21,8 +21,8 @@ classifier:
 
 collector:
   default_pages: 2
-  default_days: 14
-  backfill_days: 60
+  default_days: 30            # 대학 평생교육원은 학기 단위라 공고가 드물다. 14일이면 대부분 0건
+  backfill_days: 365          # 초기 적재·재수집용
   per_domain_delay_sec: 1.5
   request_timeout_sec: 20
   source_time_budget_sec: 180
