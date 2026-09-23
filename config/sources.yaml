@@ -475,17 +475,28 @@ sources:
       '평생교육 정규강좌 신규 강좌 및 강사 모집' 공고가 올라오는 게시판이라 우선순위가 높다.
       수강생 모집이 섞여 있어 keywords 로 거른다.
   - id: bhu_lifelong
-    name: 부산보건대학교 평생교육원
+    name: 부산보건대학교 평생교육원 공지사항
     org_type: university
     tier: 3
-    enabled: false
+    enabled: true
+    verified: true
     homepage: https://cedu.bhu.ac.kr
     region_hint: [부산]
     adapter:
       type: html_list
-      list_url: TODO
-    notes: 2026-09-23 웹검색으로 확인한 도메인. 게시판 경로·셀렉터 미확인.
-
+      org_name: 부산보건대학교 평생교육원
+      list_url: https://cedu.bhu.ac.kr/Board/BoardList.aspx?MENU_ID=146&PAGE_NO=&BoardMstNo=10
+      row_selector: table tbody tr
+      title_selector: td.text-left a
+      date_selector: td:nth-child(4)
+      date_formats: ["%Y.%m.%d"]
+      keywords: [강사, 교강사, 강의, 지도사, 초빙, 위촉, 강좌 개설]
+      paging: { max_pages: 1 }
+      detail: { fetch: true, body_selector: body }
+    notes: >-
+      공지사항 게시판(2026-09-23 러너 렌더 덤프로 검증: tbody tr, td.text-left a#IContent_rptList_hlnkTitle_N →
+      상대경로 BoardView.aspx?...BoardNo=N, 작성일 4열 'YYYY.MM.DD'). 사회복지 현장실습·수강생 모집이
+      대부분이라 keywords 로 거른다. 페이징 파라미터 미확인이라 1페이지만.
   - id: dit_lifelong
     name: 동의과학대학교 평생교육원
     org_type: university
