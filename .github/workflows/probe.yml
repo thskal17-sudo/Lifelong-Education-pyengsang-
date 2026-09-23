@@ -50,7 +50,9 @@ jobs:
     env:
       # 러너 로그는 저장소 밖(blob storage)에서 받아야 해서 네트워크가 좁은 환경에서는 읽을 수 없다.
       # 덤프 단계의 출력을 이 파일에 모아 probe-results 브랜치로 올리면 contents API 로 읽힌다.
-      PROBE_OUT: ${{ runner.temp }}/probe-out.txt
+      # runner 컨텍스트는 잡 레벨 env 에서 쓸 수 없어 고정 경로를 쓴다 (작업 디렉터리 밖이라
+      # 브랜치를 갈아타도 남는다).
+      PROBE_OUT: /tmp/probe-out.txt
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
