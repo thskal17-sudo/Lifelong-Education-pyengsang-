@@ -29,6 +29,9 @@ on:
       detail:
         description: "덤프를 상세 페이지로 분석 (본문·첨부 후보 출력). 클릭으로 연 상세는 URL 이 안 바뀌므로 필요 (true/false)"
         default: "false"
+      ua:
+        description: "렌더 덤프에서 쓸 User-Agent (비우면 크롬). 수집기 UA 로도 되는지 가를 때 사용"
+        default: ""
       render_timeout:
         description: "렌더 덤프 대기 시간(초). 느린 사이트는 60 등. 기본 25"
         default: ""
@@ -76,6 +79,7 @@ jobs:
           CLICK: ${{ github.event.inputs.click }}
           WAIT_AFTER: ${{ github.event.inputs.wait_after }}
           DETAIL: ${{ github.event.inputs.detail == 'true' && '1' || '' }}
+          DUMP_UA: ${{ github.event.inputs.ua }}
           RENDER_TIMEOUT_SEC: ${{ github.event.inputs.render_timeout }}
           BRIEF: ${{ github.event.inputs.brief == 'true' && '1' || '' }}
         run: python scripts/dump_rendered.py

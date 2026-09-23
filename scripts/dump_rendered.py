@@ -22,7 +22,10 @@ from bs4 import BeautifulSoup
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from dump_structure import DETAIL, dump_detail, dump_links, dump_list, short_path  # noqa: E402
 
-UA = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36"
+CHROME_UA = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36"
+# UA 를 바꿔 가며 같은 페이지를 훑을 수 있게 한다. 목록은 내주면서 자바스크립트 동작(postback)만
+# 막는 사이트가 있어서, 수집기 UA 로도 되는지 확인하려면 이 값을 갈아 끼워야 한다
+UA = os.environ.get("DUMP_UA") or CHROME_UA
 
 
 def _chromium_path() -> str | None:
@@ -86,7 +89,7 @@ def render(url: str, wait_for: str | None, click: str | None, timeout_ms: int | 
 
 def dump(url: str) -> None:
     print("=" * 100)
-    print("URL:", url, "(rendered)")
+    print("URL:", url, "(rendered)", "UA=" + UA[:60])
     try:
         final, html = render(url, os.environ.get("WAIT_FOR") or None, os.environ.get("CLICK") or None)
     except Exception as exc:  # noqa: BLE001
