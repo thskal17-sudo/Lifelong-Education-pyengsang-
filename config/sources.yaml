@@ -588,17 +588,25 @@ sources:
       2026-09-23 러너에서 읽기 시간 초과(https 인증서 실패 후 http 도 25초 초과). 국내 IP 또는
       브라우저 렌더링으로 재확인 필요. cms1.ks.ac.kr/kscec/Main.do 도 후보.
   - id: silla_lifelong
-    name: 신라대학교 평생교육원
+    name: 신라대학교 평생교육원 평교광장
     org_type: university
     tier: 3
     enabled: false
-    homepage: TODO
+    verified: true
+    homepage: https://soc.silla.ac.kr
     region_hint: [부산]
     adapter:
       type: html_list
-      list_url: TODO
-    notes: 2026-09-23 웹검색으로 도메인 미확인.
-
+      list_url: https://soc.silla.ac.kr/Home/Sub04/NoticeBoard01.aspx
+      row_selector: table#CP1_grdList tbody tr
+      title_selector: td.textWrap a
+      date_selector: td:nth-child(5)
+      date_formats: ["%Y-%m-%d"]
+    notes: >-
+      평교광장 게시판(2026-09-23 러너 검증). 목록은 잘 읽히지만 제목 링크가
+      javascript:__doPostBack('ctl00$CP1$grdList$ctl02$lnkSubject','') 형태의 ASP.NET 포스트백이라
+      상세 URL 이 없다. 브라우저로 클릭해야 열리므로 playwright 어댑터에 클릭 기반 상세 열기가
+      들어오기 전까지 비활성. 목록 셀렉터는 확정해 두었다.
   - id: dongseo_lifelong
     name: 동서대학교 평생교육원
     org_type: university
@@ -636,13 +644,26 @@ sources:
     notes: 2026-09-23 웹검색으로 도메인 미확인.
 
   - id: kit_lifelong
-    name: 경남정보대학교 평생교육원
+    name: 경남정보대학교 평생교육원 공지사항
     org_type: university
     tier: 3
-    enabled: false
-    homepage: TODO
+    enabled: true
+    verified: true
+    homepage: https://cei.kit.ac.kr/cei/
     region_hint: [부산]
     adapter:
       type: html_list
-      list_url: TODO
-    notes: 2026-09-23 웹검색으로 도메인 미확인. 교명은 '경남'이지만 부산 사상구 소재.
+      tls_verify: false   # 인증서 체인 문제 (#13)
+      org_name: 경남정보대학교 평생교육원
+      list_url: https://cei.kit.ac.kr/cei/index.php?pCode=MN0000028
+      row_selector: table.board-list-table tbody tr
+      title_selector: td.f-tit a
+      date_selector: td.f-date
+      date_formats: ["%Y-%m-%d"]
+      keywords: [강사, 교강사, 강의, 지도사, 초빙, 위촉, 강좌 개설]
+      paging: { max_pages: 1 }
+      detail: { fetch: true, body_selector: div#contents }
+    notes: >-
+      공지사항(2026-09-23 러너 검증: table.board-list-table, td.f-tit a → ?pCode=MN0000028&mode=view&idx=N,
+      td.f-date 'YYYY-MM-DD'). 교명은 '경남'이지만 부산 사상구 소재. 보건·일반 아카데미 수강생 모집이
+      대부분이라 keywords 로 거른다. 인증서 검증이 실패해 tls_verify: false.
