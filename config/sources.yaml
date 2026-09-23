@@ -612,6 +612,7 @@ sources:
       type: playwright
       org_name: 신라대학교 평생교육원
       list_url: https://soc.silla.ac.kr/Home/Sub04/NoticeBoard01.aspx
+      user_agent: "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36 (+https://github.com/thskal17-sudo/Lifelong-Education-pyengsang-)"
       wait_for: table#CP1_grdList tbody tr
       row_selector: table#CP1_grdList tbody tr
       title_selector: td.textWrap a
@@ -629,6 +630,10 @@ sources:
       상세는 안 열리니 리포트에서는 참고용. 본문 div#CP1_dvView 에 과정·제목·글쓴이·날짜가 같이 들어와
       마감 추출에 쓸 수 있다. 첨부는 __doPostBack 이라 URL 로 못 받아 attachment_selector 없음.
       뷰스테이트가 1.6MB 라 클릭 뒤 응답이 느리다 → detail.timeout_sec 90 (기본 20초로는 실패).
+      봇 UA 로는 상세가 안 열린다. 2026-09-23 러너에서 같은 클릭을 UA 만 바꿔 확인:
+      크롬 UA 는 1,633,432 바이트에 상세가 열리고, 봇 UA 는 39,929 바이트짜리 가벼운 페이지라
+      __doPostBack 이 아예 없다(90초 기다려도 목록 그대로). 그래서 이 게시판만 adapter.user_agent
+      로 브라우저 UA 를 쓰되 연락처 URL 을 붙여 둔다. robots.txt 준수와 요청 간격은 그대로.
   - id: dongseo_lifelong
     name: 동서대학교 평생교육원
     org_type: university

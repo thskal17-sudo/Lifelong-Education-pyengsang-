@@ -60,7 +60,9 @@ class PlaywrightListAdapter(SourceAdapter):
                 self._pw.stop()
                 self._pw = None
                 raise FetchError(f"브라우저 실행 실패: {str(e)[:150]}") from e
-        ctx = self._browser.new_context(user_agent=self.settings.user_agent, locale="ko-KR")
+        # adapter.user_agent: 이 게시판에서만 UA 를 갈아 끼운다. 봇 UA 에는 자바스크립트가 빠진
+        # 가벼운 페이지를 내주는 사이트가 있어서(신라대), 그대로 두면 상세가 열리지 않는다
+        ctx = self._browser.new_context(user_agent=self.a.get("user_agent") or self.settings.user_agent, locale="ko-KR")
         return ctx.new_page()
 
     def close(self) -> None:

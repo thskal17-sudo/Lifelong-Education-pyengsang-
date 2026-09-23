@@ -48,15 +48,23 @@ function fn_View(b, seq){
     '<p>seq ' + seq + ' 접수기간: 2026. 9. 21.(월) ~ 2026. 10. 5.(월) 18:00까지</p>';
 }
 </script></body></html>""".encode("utf-8")
+UA_TEMPLATE = """<html><head><meta charset="utf-8"></head><body>
+<table class="ua"><tbody>
+  <tr><td class="t"><a href="/view?id=1">{ua} 강사</a></td><td class="d">2026-09-20</td></tr>
+</tbody></table></body></html>"""
+
 VIEW_HTML = "<html><head><meta charset='utf-8'></head><body><div id='body'></div><script>document.getElementById('body').innerHTML='<p>접수기간: 2026. 9. 22.(월) ~ 2026. 9. 30.(수) 18:00까지</p><a class=\"file\" href=\"/f/공고.hwpx\">공고.hwpx</a>';</script></body></html>".encode("utf-8")
 
 
 class Handler(BaseHTTPRequestHandler):
     def do_GET(self):
-        body = (LIST_HTML if self.path.startswith("/list")
-                else POSTBACK_HTML if self.path.startswith("/postback")
-                else FNVIEW_HTML if self.path.startswith("/fnview")
-                else VIEW_HTML if self.path.startswith("/view") else b"")
+        if self.path.startswith("/ua"):
+            body = UA_TEMPLATE.format(ua=self.headers.get("User-Agent", "")).encode("utf-8")
+        else:
+            body = (LIST_HTML if self.path.startswith("/list")
+                    else POSTBACK_HTML if self.path.startswith("/postback")
+                    else FNVIEW_HTML if self.path.startswith("/fnview")
+                    else VIEW_HTML if self.path.startswith("/view") else b"")
         self.send_response(200 if body else 404)
         self.send_header("Content-Type", "text/html; charset=utf-8")
         self.send_header("Content-Length", str(len(body)))
@@ -147,6 +155,29 @@ def test_playwright_click_detail_onclick_link(settings, server):
         raw = ad.fetch_detail(listings[0])
         assert "seq 88118" in raw.body_text     # 두 번째 글이 아니라 클릭한 글이 열렸다
         assert "접수기간" in raw.body_text
+    finally:
+        ad.close()
+        http.close()
+
+
+@pytest.mark.skipif(not playwright_ready(), reason="playwright 패키지 또는 Chromium 없음")
+def test_playwright_source_user_agent_override(settings, server):
+    """adapter.user_agent 로 이 게시판에서만 UA 를 갈아 끼운다.
+
+    봇 UA 에는 자바스크립트가 빠진 페이지를 내주는 사이트가 있다(신라대).
+    """
+    ua = "Mozilla/5.0 (X11; Linux x86_64) TestBrowser/1.0"
+    cfg = make_source("uaboard", "university", type="playwright", list_url=f"{server}/ua",
+                      user_agent=ua, wait_for="table.ua tbody tr", row_selector="table.ua tbody tr",
+                      title_selector="td.t a", date_selector="td.d", keywords=["강사"],
+                      detail={"fetch": False})
+    http = HttpClient(settings.collector)
+    ad = PlaywrightListAdapter(cfg, http, settings.collector, since=date(2026, 9, 1))
+    try:
+        listings = ad.fetch_list()
+        assert len(listings) == 1
+        assert listings[0].title.startswith(ua)     # 설정한 UA 로 요청이 나갔다
+        assert settings.collector.user_agent not in listings[0].title
     finally:
         ad.close()
         http.close()
