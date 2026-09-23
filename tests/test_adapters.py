@@ -172,3 +172,36 @@ def test_html_list_reads_onclick_on_the_row(settings):
     assert rows[0].url == "https://lec.bufs.ac.kr/community_notice_detail/35"
     assert rows[0].posted_at == date(2026, 9, 22)
     assert "강사 모집" in rows[0].title
+
+
+def test_synthetic_link_from_row_number():
+    """상세가 URL 이 아닌 게시판은 행의 글 번호로 링크를 만든다 (신라대 평교광장)."""
+    from datetime import date
+
+    from gia.collectors.html_list import parse_list_html
+    from tests.conftest import make_source
+
+    html = """
+    <table id="grd"><tbody>
+      <tr><td class="no">1037</td>
+          <td class="tit"><a href="javascript:__doPostBack('ctl00$grd$ctl02$lnk','')">요가강사 위촉 공고</a></td>
+          <td class="date">2026-09-22</td></tr>
+      <tr><td class="no">1036</td>
+          <td class="tit"><a href="javascript:__doPostBack('ctl00$grd$ctl03$lnk','')">수강생 모집</a></td>
+          <td class="date">2026-09-04</td></tr>
+    </tbody></table>
+    """
+    a = {
+        "row_selector": "table#grd tbody tr",
+        "title_selector": "td.tit a",
+        "date_selector": "td.date",
+        "id_selector": "td.no",
+        "link_url_template": "https://soc.example.ac.kr/Board.aspx?no={1}",
+        "date_formats": ["%Y-%m-%d"],
+        "keywords": ["강사"],
+    }
+    cfg = make_source("pb", "university", type="playwright", list_url="https://soc.example.ac.kr/Board.aspx", **a)
+    rows, _ = parse_list_html(html, "https://soc.example.ac.kr/Board.aspx", cfg.adapter, cfg, date(2026, 1, 1))
+    assert len(rows) == 1
+    assert rows[0].url == "https://soc.example.ac.kr/Board.aspx?no=1037"
+    assert rows[0].posted_at == date(2026, 9, 22)

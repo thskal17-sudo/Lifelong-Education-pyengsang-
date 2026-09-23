@@ -30,7 +30,14 @@ jobs:
         with:
           python-version: "3.12"
           cache: pip
-      - run: pip install -e .
+      - run: pip install -e ".[browser]"
+      - name: install browser
+        run: |
+          # playwright 어댑터를 쓰는 소스(신라대·부산가톨릭대 등)가 있어 크로미움이 필요하다.
+          # --with-deps 는 apt 설치까지 해서 오래 걸리므로 브라우저만 받고, 실행이 안 될 때만 의존 패키지를 깐다.
+          python -m playwright install chromium
+          python -c "from playwright.sync_api import sync_playwright as s; p=s().start(); b=p.chromium.launch(headless=True); b.close(); p.stop(); print('chromium ok')" \
+            || python -m playwright install-deps chromium
       - name: collect
         env:
           DATA_GO_KR_KEY: ${{ secrets.DATA_GO_KR_KEY }}

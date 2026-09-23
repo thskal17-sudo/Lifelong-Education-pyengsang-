@@ -604,22 +604,29 @@ sources:
     name: 신라대학교 평생교육원 평교광장
     org_type: university
     tier: 3
-    enabled: false
+    enabled: true
     verified: true
     homepage: https://soc.silla.ac.kr
     region_hint: [부산]
     adapter:
-      type: html_list
+      type: playwright
+      org_name: 신라대학교 평생교육원
       list_url: https://soc.silla.ac.kr/Home/Sub04/NoticeBoard01.aspx
+      wait_for: table#CP1_grdList tbody tr
       row_selector: table#CP1_grdList tbody tr
       title_selector: td.textWrap a
       date_selector: td:nth-child(5)
       date_formats: ["%Y-%m-%d"]
+      id_selector: td.text-right
+      link_url_template: https://soc.silla.ac.kr/Home/Sub04/NoticeBoard01.aspx?no={1}
+      keywords: [강사, 교강사, 강의, 지도사, 초빙, 위촉, 강좌 개설]
+      paging: { max_pages: 1 }
+      detail: { fetch: true, click: true, body_selector: div#CP1_dvView }
     notes: >-
-      평교광장 게시판(2026-09-23 러너 검증). 목록은 잘 읽히지만 제목 링크가
-      javascript:__doPostBack('ctl00$CP1$grdList$ctl02$lnkSubject','') 형태의 ASP.NET 포스트백이라
-      상세 URL 이 없다. 브라우저로 클릭해야 열리므로 playwright 어댑터에 클릭 기반 상세 열기가
-      들어오기 전까지 비활성. 목록 셀렉터는 확정해 두었다.
+      평교광장 게시판(2026-09-23 러너 검증). 제목 링크가 ASP.NET __doPostBack 이라 상세 URL 이 없다.
+      목록에서 제목을 클릭해 상세를 읽고(detail.click), 링크는 첫 칸의 글 번호로 합성한다
+      (id_selector → ?no=N). 합성 링크를 열면 목록이 뜨고 상세는 안 열리니 리포트에서는 참고용.
+      상세 본문 셀렉터(div#CP1_dvView)는 추정이라 첫 수집에서 확인할 것.
   - id: dongseo_lifelong
     name: 동서대학교 평생교육원
     org_type: university
@@ -660,22 +667,30 @@ sources:
     name: 부산가톨릭대학교 평생교육원 공지사항
     org_type: university
     tier: 3
-    enabled: false
+    enabled: true
     verified: true
     homepage: https://edu.cup.ac.kr
     region_hint: [부산]
     adapter:
-      type: html_list
+      type: playwright
+      org_name: 부산가톨릭대학교 평생교육원
       list_url: https://edu.cup.ac.kr/organ/edu/front/board/List402.do
+      wait_for: div.board_list table tbody tr
       row_selector: div.board_list table tbody tr
       title_selector: td.left a
       date_selector: td.c_gray
       date_formats: ["%Y-%m-%d"]
+      link_attr: onclick
+      link_regex: fn_View\('(\d+)','(\d+)'
+      link_url_template: https://edu.cup.ac.kr/organ/edu/front/board/List402.do?seq={2}
+      keywords: [강사, 교강사, 강의, 지도사, 초빙, 위촉, 강좌 개설]
+      paging: { max_pages: 1 }
+      detail: { fetch: true, click: true, body_selector: div.board_view }
     notes: >-
-      공지사항(2026-09-23 러너 검증). 목록은 잘 읽히지만 상세가
-      onclick="javascript:fn_View('402','374','058000000000000','')" 로 열린다. seq 를 뽑아
-      View402.do?seq=N 으로 조립해 봤으나 목록 메뉴만 돌아와 실패. 실제 상세 URL 규칙을
-      확인하거나 브라우저 클릭이 필요해 비활성. 목록 셀렉터는 확정해 두었다.
+      공지사항(2026-09-23 러너 검증). 상세가 onclick="javascript:fn_View('402','374',...)" 로만 열린다.
+      목록에서 제목을 클릭해 상세를 읽고(detail.click), 링크는 onclick 의 seq 로 합성한다.
+      View402.do?seq=N 으로 직접 여는 것은 2026-09-23 에 시도했다가 목록만 돌아와 실패했다.
+      상세 본문 셀렉터(div.board_view)는 추정이라 첫 수집에서 확인할 것.
   - id: kit_lifelong
     name: 경남정보대학교 평생교육원 공지사항
     org_type: university

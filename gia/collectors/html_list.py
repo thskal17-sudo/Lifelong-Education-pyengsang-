@@ -58,6 +58,23 @@ def resolve_link(node, page_url: str, a: dict) -> str | None:
     return urljoin(page_url, value)
 
 
+def synthetic_link(row, a: dict) -> str | None:
+    """상세 URL 이 없는 게시판에서 행의 고유 번호로 링크를 만든다.
+
+    - id_selector: 번호가 들어 있는 셀 (예: 목록 첫 칸의 글 번호)
+    - id_regex: 그 텍스트에서 번호를 뽑는 정규식 (기본: 숫자)
+    - link_url_template: "{1}" 에 번호를 채울 URL 틀
+    """
+    node = row.css_first(a["id_selector"])
+    if node is None:
+        return None
+    m = re.search(a.get("id_regex") or r"(\d+)", node.text(strip=True))
+    tpl = a.get("link_url_template")
+    if not m or not tpl:
+        return None
+    return tpl.format(m.group(0), *m.groups())
+
+
 def parse_list_html(html: str, page_url: str, a: dict, cfg, since: date) -> tuple[list[RawListing], date | None]:
     """목록 HTML에서 공고 후보를 뽑는다. 반환: (목록, 페이지 내 가장 오래된 게시일)."""
     tree = HTMLParser(html)
@@ -69,11 +86,16 @@ def parse_list_html(html: str, page_url: str, a: dict, cfg, since: date) -> tupl
         if t is None:
             continue
         title = (t.attributes.get(a["title_attr"]) if a.get("title_attr") else None) or t.text(strip=True)
-        link = row.css_first(a.get("link_selector") or a.get("title_selector") or "a")
-        if link is None or (a.get("link_attr") and not link.attributes.get(a["link_attr"])):
-            # 행(tr·li) 자체에 onclick 이 걸린 게시판 (부산외대 평생교육원 등)
-            link = row if row.attributes.get(a.get("link_attr") or "onclick") else link
-        target = resolve_link(link, page_url, a)
+        if a.get("id_selector"):
+            # 상세가 URL 이 아니라 자바스크립트로 열리는 게시판: 행의 고유 번호로 합성 URL 을 만든다.
+            # (번호는 글마다 고정이라 재수집해도 같은 공고로 이어진다)
+            target = synthetic_link(row, a)
+        else:
+            link = row.css_first(a.get("link_selector") or a.get("title_selector") or "a")
+            if link is None or (a.get("link_attr") and not link.attributes.get(a["link_attr"])):
+                # 행(tr·li) 자체에 onclick 이 걸린 게시판 (부산외대 평생교육원 등)
+                link = row if row.attributes.get(a.get("link_attr") or "onclick") else link
+            target = resolve_link(link, page_url, a)
         if not title or not target:
             continue
         posted = None

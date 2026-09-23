@@ -11,6 +11,15 @@ from .base import FetchError, SourceAdapter
 from .html_list import extract_attachments_html, extract_body_html, parse_list_html
 
 
+def playwright_ready() -> bool:
+    """playwright 패키지와 크로미움이 모두 있어야 이 어댑터를 쓸 수 있다."""
+    try:
+        import playwright.sync_api  # noqa: F401
+    except ImportError:
+        return False
+    return find_chromium() is not None
+
+
 def find_chromium() -> str | None:
     """실행 파일 경로: GIA_CHROMIUM_PATH > PLAYWRIGHT_BROWSERS_PATH 안의 chrome > Playwright 기본."""
     explicit = os.environ.get("GIA_CHROMIUM_PATH")
@@ -94,16 +103,52 @@ class PlaywrightListAdapter(SourceAdapter):
             listings, oldest = parse_list_html(html, url, a, self.cfg, since)
             if not listings and oldest is None:
                 break
+            for l in listings:
+                l.extra["list_url"] = url   # 클릭 방식 상세는 이 페이지를 다시 열어 제목을 누른다
             out.extend(listings)
             if "{page}" not in list_url or (oldest and oldest < since):
                 break
         return out
 
+    def _render_click(self, listing: RawListing, d: dict) -> str:
+        """목록 페이지를 열어 이 공고의 제목을 클릭하고, 열린 상세 화면의 HTML 을 돌려준다.
+
+        상세가 URL 없이 자바스크립트로만 열리는 게시판용
+        (ASP.NET __doPostBack, fn_View 같은 onclick).
+        """
+        list_url = listing.extra.get("list_url") or self.a["list_url"].replace("{page}", "1")
+        self.http.check_allowed(list_url)
+        self.http.throttle(list_url)
+        page = self._page()
+        try:
+            timeout_ms = int(self.settings.request_timeout_sec * 1000)
+            page.goto(list_url, wait_until="commit", timeout=timeout_ms)
+            page.wait_for_selector(self.a.get("row_selector") or "table", timeout=timeout_ms)
+            # 제목이 같은 링크를 행 안에서 찾는다. 제목은 목록에서 읽은 그대로라 정확히 일치한다
+            scope = page.locator(self.a.get("row_selector") or "tr").filter(has_text=listing.title)
+            link = scope.locator(d.get("click_selector") or self.a.get("title_selector") or "a").first
+            if link.count() == 0:
+                link = page.get_by_text(listing.title, exact=True).first
+            link.click(timeout=timeout_ms)
+            wait_for = d.get("wait_for") or d.get("body_selector")
+            if wait_for:
+                page.wait_for_selector(wait_for, timeout=timeout_ms)
+            else:
+                page.wait_for_load_state("networkidle", timeout=timeout_ms)
+            page.wait_for_timeout(500)
+            return page.content()
+        except Exception as e:  # noqa: BLE001
+            raise FetchError(f"클릭 상세 실패 {listing.title[:30]}: {str(e)[:150]}") from e
+        finally:
+            page.context.close()
+
     def fetch_detail(self, listing: RawListing) -> RawPosting:
         d = self.a.get("detail") or {}
         if d.get("fetch") is False:
             return super().fetch_detail(listing)
-        if d.get("render", True):
+        if d.get("click"):
+            html = self._render_click(listing, d)
+        elif d.get("render", True):
             html = self._render(listing.url, d.get("wait_for") or d.get("body_selector"))
         else:
             from .html_list import decode_html
