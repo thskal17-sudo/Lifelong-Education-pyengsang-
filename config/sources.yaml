@@ -621,12 +621,14 @@ sources:
       link_url_template: https://soc.silla.ac.kr/Home/Sub04/NoticeBoard01.aspx?no={1}
       keywords: [강사, 교강사, 강의, 지도사, 초빙, 위촉, 강좌 개설]
       paging: { max_pages: 1 }
-      detail: { fetch: true, click: true, body_selector: div#CP1_dvView }
+      detail: { fetch: true, click: true, body_selector: div#CP1_dvView, timeout_sec: 90 }
     notes: >-
-      평교광장 게시판(2026-09-23 러너 검증). 제목 링크가 ASP.NET __doPostBack 이라 상세 URL 이 없다.
-      목록에서 제목을 클릭해 상세를 읽고(detail.click), 링크는 첫 칸의 글 번호로 합성한다
-      (id_selector → ?no=N). 합성 링크를 열면 목록이 뜨고 상세는 안 열리니 리포트에서는 참고용.
-      상세 본문 셀렉터(div#CP1_dvView)는 추정이라 첫 수집에서 확인할 것.
+      평교광장 게시판(2026-09-23 러너 검증: 목록 10건, 본문 465자). 제목 링크가 ASP.NET
+      __doPostBack 이라 상세 URL 이 없다. 목록에서 제목을 클릭해 상세를 읽고(detail.click),
+      링크는 첫 칸의 글 번호로 합성한다(id_selector → ?no=N). 합성 링크를 열면 목록이 뜨고
+      상세는 안 열리니 리포트에서는 참고용. 본문 div#CP1_dvView 에 과정·제목·글쓴이·날짜가 같이 들어와
+      마감 추출에 쓸 수 있다. 첨부는 __doPostBack 이라 URL 로 못 받아 attachment_selector 없음.
+      뷰스테이트가 1.6MB 라 클릭 뒤 응답이 느리다 → detail.timeout_sec 90 (기본 20초로는 실패).
   - id: dongseo_lifelong
     name: 동서대학교 평생교육원
     org_type: university
@@ -690,7 +692,9 @@ sources:
       공지사항(2026-09-23 러너 검증). 상세가 onclick="javascript:fn_View('402','374',...)" 로만 열린다.
       목록에서 제목을 클릭해 상세를 읽고(detail.click), 링크는 onclick 의 seq 로 합성한다.
       View402.do?seq=N 으로 직접 여는 것은 2026-09-23 에 시도했다가 목록만 돌아와 실패했다.
-      상세 본문 셀렉터(div.board_view)는 추정이라 첫 수집에서 확인할 것.
+      2026-09-23 러너 검증: 목록 3건, 본문 325자, 마감 추출 정상. 클릭하면 View402.do 로 실제
+      이동하지만(POST) 주소에 seq 가 안 붙어서, 합성 링크는 같은 글을 가리키는 식별자로만 쓴다.
+      글이 드물어(반년에 3건) 수집이 0건이어도 정상이다.
   - id: kit_lifelong
     name: 경남정보대학교 평생교육원 공지사항
     org_type: university

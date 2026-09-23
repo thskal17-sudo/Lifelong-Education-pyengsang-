@@ -122,19 +122,34 @@ class PlaywrightListAdapter(SourceAdapter):
         page = self._page()
         try:
             timeout_ms = int(self.settings.request_timeout_sec * 1000)
+            # 클릭 뒤에는 폼 전체를 다시 올리는 게시판이 있다 (신라대는 뷰스테이트가 1.6MB).
+            # 목록을 받는 시간과 상세가 열리는 시간은 자릿수가 달라서 따로 잡는다
+            detail_ms = int(float(d.get("timeout_sec") or max(self.settings.request_timeout_sec, 60)) * 1000)
             page.goto(list_url, wait_until="commit", timeout=timeout_ms)
             page.wait_for_selector(self.a.get("row_selector") or "table", timeout=timeout_ms)
+            # __doPostBack 은 스크립트가 다 올라와야 동작한다. 행만 보고 바로 누르면 아무 일도 안 일어난다
+            try:
+                page.wait_for_load_state("load", timeout=timeout_ms)
+            except Exception:  # noqa: BLE001
+                pass
+            page.wait_for_timeout(300)
             # 제목이 같은 링크를 행 안에서 찾는다. 제목은 목록에서 읽은 그대로라 정확히 일치한다
             scope = page.locator(self.a.get("row_selector") or "tr").filter(has_text=listing.title)
             link = scope.locator(d.get("click_selector") or self.a.get("title_selector") or "a").first
             if link.count() == 0:
                 link = page.get_by_text(listing.title, exact=True).first
             link.click(timeout=timeout_ms)
+            # 먼저 통신이 끝나기를 기다린다. 상세 칸이 목록에도 (빈 채로) 있는 게시판이 많아서,
+            # 이걸 건너뛰고 셀렉터만 보면 클릭 전 빈 칸을 본문으로 잡을 수 있다
+            try:
+                page.wait_for_load_state("networkidle", timeout=detail_ms)
+            except Exception:  # noqa: BLE001
+                pass
             wait_for = d.get("wait_for") or d.get("body_selector")
             if wait_for:
-                page.wait_for_selector(wait_for, timeout=timeout_ms)
-            else:
-                page.wait_for_load_state("networkidle", timeout=timeout_ms)
+                # 화면에 보이는지(visible)까지 따지지 않는다. 우리는 DOM 만 읽고,
+                # 접힌 채로 그려 두는 게시판에서 괜히 실패한다
+                page.wait_for_selector(wait_for, timeout=detail_ms, state="attached")
             page.wait_for_timeout(500)
             return page.content()
         except Exception as e:  # noqa: BLE001
