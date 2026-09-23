@@ -21,8 +21,14 @@ on:
         description: "렌더 덤프에서 이 셀렉터가 나타날 때까지 대기 (예: table tbody tr)"
         default: ""
       click:
-        description: "렌더 덤프에서 먼저 클릭할 셀렉터 (탭 전환용)"
+        description: "렌더 덤프에서 클릭할 셀렉터 (탭 전환, 또는 목록의 첫 글 제목을 눌러 상세 열기)"
         default: ""
+      wait_after:
+        description: "클릭 뒤 이 셀렉터가 나타날 때까지 대기 (비우면 networkidle)"
+        default: ""
+      detail:
+        description: "덤프를 상세 페이지로 분석 (본문·첨부 후보 출력). 클릭으로 연 상세는 URL 이 안 바뀌므로 필요 (true/false)"
+        default: "false"
       render_timeout:
         description: "렌더 덤프 대기 시간(초). 느린 사이트는 60 등. 기본 25"
         default: ""
@@ -68,6 +74,8 @@ jobs:
           BODY_SELECTOR: ${{ github.event.inputs.body_selector }}
           WAIT_FOR: ${{ github.event.inputs.wait_for }}
           CLICK: ${{ github.event.inputs.click }}
+          WAIT_AFTER: ${{ github.event.inputs.wait_after }}
+          DETAIL: ${{ github.event.inputs.detail == 'true' && '1' || '' }}
           RENDER_TIMEOUT_SEC: ${{ github.event.inputs.render_timeout }}
           BRIEF: ${{ github.event.inputs.brief == 'true' && '1' || '' }}
         run: python scripts/dump_rendered.py

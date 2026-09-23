@@ -7,6 +7,9 @@ scripts/dump_structure.py 의 분석 함수를 그대로 쓰고, HTML 만 브라
     URLS="https://a/board https://b/board" python scripts/dump_rendered.py
     WAIT_FOR="table tbody tr" URLS=... python scripts/dump_rendered.py   # 이 셀렉터가 나타날 때까지 대기
     CLICK="#tab2" URLS=... python scripts/dump_rendered.py               # 렌더 후 한 번 클릭 (탭 전환)
+    CLICK="td.textWrap a" WAIT_FOR="table tbody tr" WAIT_AFTER="#dvView" DETAIL=1 URLS=...
+        # 목록이 그려질 때까지 기다렸다가 첫 글을 클릭하고, 열린 상세를 본문 후보로 분석한다
+        # (상세가 URL 없이 자바스크립트로만 열리는 게시판용)
 """
 from __future__ import annotations
 
@@ -22,33 +25,58 @@ from dump_structure import DETAIL, dump_detail, dump_links, dump_list, short_pat
 UA = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36"
 
 
+def _chromium_path() -> str | None:
+    """수집기와 같은 규칙으로 크로미움을 찾는다 (러너 이미지에 미리 깔린 빌드 재사용)."""
+    try:
+        from gia.collectors.playwright_list import find_chromium
+    except ImportError:
+        return os.environ.get("GIA_CHROMIUM_PATH") or None
+    return find_chromium()
+
+
+def _wait(page, selector: str | None, timeout_ms: int, label: str) -> None:
+    try:
+        if selector:
+            page.wait_for_selector(selector, timeout=timeout_ms)
+        else:
+            page.wait_for_load_state("networkidle", timeout=timeout_ms)
+    except Exception as e:  # noqa: BLE001
+        print(f"  ({label} 대기 실패 {selector or 'networkidle'}: {str(e)[:80]})")
+
+
 def render(url: str, wait_for: str | None, click: str | None, timeout_ms: int | None = None) -> tuple[str, str]:
-    """(최종 URL, 렌더링된 HTML)."""
+    """(최종 URL, 렌더링된 HTML).
+
+    click 이 있으면 WAIT_FOR 로 목록이 그려지기를 먼저 기다린 뒤 클릭하고,
+    WAIT_AFTER(없으면 networkidle)로 상세가 열리기를 기다린다.
+    """
     from playwright.sync_api import sync_playwright
 
     timeout_ms = timeout_ms or int(os.environ.get("RENDER_TIMEOUT_SEC") or 25) * 1000
+    wait_after = os.environ.get("WAIT_AFTER") or None
     with sync_playwright() as pw:
-        browser = pw.chromium.launch(headless=True)
+        kw = {"headless": True}
+        exe = _chromium_path()
+        if exe:
+            kw["executable_path"] = exe
+        browser = pw.chromium.launch(**kw)
         ctx = browser.new_context(user_agent=UA, locale="ko-KR")
         page = ctx.new_page()
         try:
             # 느린 정부·대학 사이트는 domcontentloaded 도 오래 걸린다. commit 으로 먼저 붙고 기다린다
             page.goto(url, wait_until="commit", timeout=timeout_ms)
+            # 클릭 대상이 늦게 그려지는 게시판이 많다. 먼저 목록을 기다린 뒤 누른다
+            _wait(page, wait_for, timeout_ms, "클릭 전")
             if click:
+                page.wait_for_timeout(300)
                 try:
-                    page.click(click, timeout=5000)
+                    page.locator(click).first.click(timeout=timeout_ms)
+                    print(f"  (클릭함 {click})")
                 except Exception as e:  # noqa: BLE001
                     print(f"  (클릭 실패 {click}: {str(e)[:80]})")
-            if wait_for:
-                try:
-                    page.wait_for_selector(wait_for, timeout=timeout_ms)
-                except Exception as e:  # noqa: BLE001
-                    print(f"  (대기 실패 {wait_for}: {str(e)[:80]})")
-            else:
-                try:
-                    page.wait_for_load_state("networkidle", timeout=timeout_ms)
-                except Exception:  # noqa: BLE001
-                    pass
+                _wait(page, wait_after, timeout_ms, "클릭 후")
+            elif not wait_for:
+                _wait(page, None, timeout_ms, "로드")
             page.wait_for_timeout(1200)  # 늦게 그리는 목록 대비
             return page.url, page.content()
         finally:
@@ -72,7 +100,8 @@ def dump(url: str) -> None:
         for node in soup.select(sel_env)[:3]:
             print(f"\n[BODY TEXT] {short_path(node)}")
             print(node.get_text("\n", strip=True)[:3000])
-    if DETAIL.search(url):
+    # 클릭으로 연 상세는 URL 이 목록 그대로라 자동 판별이 안 된다. DETAIL=1 로 강제한다
+    if os.environ.get("DETAIL") or DETAIL.search(final) or DETAIL.search(url):
         dump_detail(soup)
     else:
         dump_list(soup)
