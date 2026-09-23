@@ -1,0 +1,104 @@
+====================================================================================================
+URL: https://soc.inje.ac.kr
+status=403 final=https://soc.inje.ac.kr/ encoding=ascii bytes=198
+title: 403 Forbidden
+body (short): <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN"> <HTML><HEAD> <TITLE>403 Forbidden</TITLE> </HEAD><BODY> <H1>Forbidden</H1> You don't have permission to access / on this server.<P> </BODY></HTML> 
+====================================================================================================
+URL: https://life.kaya.ac.kr
+  (connect failed, retrying once: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without)
+  FETCH ERROR: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+====================================================================================================
+URL: https://ice.cs.ac.kr
+  (tls handshake failed, retrying with legacy TLS context)
+status=200 final=https://ice.cs.ac.kr/ encoding=utf-8 bytes=158021
+title: 창신대학교 부설 평생교육원
+[DATES] sample: []
+
+[RETRY without noise filter]
+[DATES] sample: []
+
+[ANCHORS] most common link paths
+   x4 div.content_wr.df > div.four.df > div.text > a  href=/lecture {'data-v-50c3cd33': ''} text='수강신청 나에게 꼭 맞는 강좌, 지금 바로 신청해보세요!'
+      row? div.text :: '수강신청 나에게 꼭 맞는 강좌, 지금 바로 신청해보세요!'
+   x2 div.right_con.df > div.text_wr.df > div.tit > a  href=tel:055-250-3050 {'data-v-50c3cd33': ''} text='055-250-3050'
+      row? div.tit :: '055-250-3050'
+====================================================================================================
+URL: https://ps.cmu.ac.kr/homepage/ps/page/subLocation.do?menu_no=20010801
+  (tls handshake failed, retrying with legacy TLS context)
+status=200 final=https://ps.cmu.ac.kr/homepage/ps/page/subLocation.do?menu_no=20010801 encoding=UTF-8 bytes=18643
+title: 평생교육원
+[DATES] sample: []
+
+[RETRY without noise filter]
+
+[LIST] div.gnb_wrap > div.fix-layout > ul#gnb.gnb  items=3
+   li: li.m1 -> 평생교육과정신청 모집안내 민간자격안내 민간자격등록정보 평생교육과정신청 주요업무 및 연혁 위치 및 담당업무
+      a href=/homepage/ps/page/subLocation.do?menu_no=20010201 onclick= :: own='' all='평생교육과정신청'
+      span :: own='평생교육과정신청' all='평생교육과정신청'
+      ul :: own='' all='모집안내 민간자격안내 민간자격등록정보 평생교육과정신청 주요업무 및 연혁 위치 및 담당업무'
+      li.s1 :: own='' all='모집안내'
+      a href=/homepage/ps/page/subLocation.do?menu_no=20010201 onclick= :: own='' all='모집안내'
+      span :: own='모집안내' all='모집안내'
+[DATES] sample: []
+
+[LINKS] board candidates (3)
+   '모집안내' -> https://ps.cmu.ac.kr/homepage/ps/page/subLocation.do?menu_no=20010201
+   '게시판' -> https://ps.cmu.ac.kr/homepage/ps/page/subLocation.do?menu_no=20010801
+   '대학일자리센터' -> http://job.cmu.ac.kr/
+====================================================================================================
+URL: http://cms.pknu.ac.kr/lifelong/main.do
+status=200 final=https://cms.pknu.ac.kr/lifelong/main.do encoding=UTF-8 bytes=107
+title: 
+body (short):  <script> var newwin; location.href='/application.jsp'; </script> 
+====================================================================================================
+URL: https://ce.dit.ac.kr/dit/
+status=200 final=https://ce.dit.ac.kr/dit/ encoding=utf-8 bytes=1862
+title: Error
+body (short): <!DOCTYPE html> <html> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, user-scalable=no"> <title>Error</title> </head> <style> .content { position:absolute; top:calc(50% - 100px); left:calc(50% - 293px); } .img { display: inline-block; vertical-align: middle; } .text_content { display: inline-block; vertical-align: middle; margin-left: 30px; } .title { margin-bottom: 20px; font-size: 24px; font-weight: bold; color: #EA7D6D; } .text { font-family: 'Dotum'; font-size: 13px; line-height: 1.6; font-weight: bold; color: #777; } .btn { margin: 30px auto 0px auto; pad
+====================================================================================================
+URL: https://www.uc.ac.kr/edu/Main.do
+status=200 final=https://edu.uc.ac.kr/edu/Main.do encoding=UTF-8 bytes=78418
+title: 울산과학대학교 평생교육원
+
+[LIST] div.qm-list.qm-org > div.list-box > ul.ulist  items=21
+   li: li -> UC포털
+      a href=http://portal.uc.ac.kr/ onclick= attrs={'target': '_blank'} :: own='' all='UC포털'
+      span :: own='UC포털' all='UC포털'
+
+[LIST] div.qm-list.qm-san > div.list-box > ul.ulist  items=10
+   li: li -> 고등직업교육거점지구사업단
+      a href=/hive/Main.do onclick= attrs={'target': '_blank'} :: own='' all='고등직업교육거점지구사업단'
+      span :: own='고등직업교육거점지구사업단' all='고등직업교육거점지구사업단'
+
+[PAGING] https://edu.uc.ac.kr/edu/CMS/Board/Board.do??mcode=&mCode=MN075&page=1&searchID=&searchKeyword=&searchCategory=&mgr_seq=388&site_code=edu&mo
+[DATES] sample: []
+
+[ANCHORS] most common link paths
+   x8 div.list-box > ul.ulist > li > a  href=/job/Main.do {'target': '_blank', 'title': '새창열림'} text='대학일자리플러스센터'
+      row? li :: '대학일자리플러스센터'
+   x3 div.dlist-box2 > dl > dd > a  href=https://www.uc.ac.kr/meister/CMS/Contents/Contents.do?mCode=MN020 {'target': '_blank', 'title': '새창열림'} text='미래모빌리티제조학과'
+      row? div.dlist-box2 :: '전문기술석사과정 미래모빌리티제조학과 인공지능기반텔레헬스학과 바이오화학생산기술학과'
+
+[LINKS] board candidates (6)
+   '입찰공고' -> https://www.uc.ac.kr/kr/CMS/Board/Board.do?mCode=MN245
+   '진로·취업상담' -> https://job.uc.ac.kr/job/CMS/Mentoring/list.do?mCode=MN031
+   '인공지능기반텔레헬스학과' -> https://www.uc.ac.kr/meister/CMS/Contents/Contents.do?mCode=MN026
+   '대학일자리플러스센터' -> https://edu.uc.ac.kr/job/Main.do
+   '강사소개' -> http://edu.uc.ac.kr/edu/CMS/Contents/Contents.do?mCode=MN040
+   '공지사항' -> http://edu.uc.ac.kr/edu/CMS/Board/Board.do?mCode=MN075
+====================================================================================================
+URL: https://edu.ch.ac.kr
+  (ssl verify failed, retrying without verification)
+status=200 final=https://edu.ch.ac.kr/ encoding=CP949 bytes=188
+title: 춘해보건대학교 평생교육원
+body (short): <!doctype html> <html lang="ko"> <head> <meta http-equiv="refresh" content="0; url=main/main.php" /> <title> 춘해보건대학교 평생교육원 </title> </head> <body> </body> </html>
+====================================================================================================
+URL: https://cms.ks.ac.kr/kscec/main.do
+  (ssl verify failed, retrying without verification)
+  (still failing without verification: HTTPSConnectionPool(host='bandi.ks.ac.kr', port=443): Max retries exceeded with ; retrying with legacy TLS context)
+  FETCH ERROR: HTTPConnectionPool(host='cms.ks.ac.kr', port=80): Read timed out. (read timeout=25)
+====================================================================================================
+URL: https://www.dongseo.ac.kr
+status=200 final=https://www.dongseo.ac.kr/ encoding=UTF-8 bytes=1612
+title: 
+body (short): <!doctype html> <html lang="ko"> <head> <meta charset="UTF-8"> <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> <meta http-equiv="X-UA-Compatible" content="IE=edge" /> <meta name="author" content="Centumsoft" /> <meta name="description" content="" /> <meta name="keywords" content="" /> <!-- <meta name="robots" content="INDEX" /> --> <meta name="viewport" content="width=device-width, initial-scale=1.0 ,maximum-scale=1.0, minimum-scale=1.0,user-scalable=no,target-densitydpi=medium-dpi" /> <title></title> <meta http-equiv="expire" content="-1" /> <meta http-equiv="cache-contr
