@@ -633,19 +633,29 @@ sources:
     notes: 2026-09-23 본교 도메인만 확인. 평생교육원 전용 경로 확인 필요.
 
   - id: tu_lifelong
-    name: 동명대학교 부설 평생교육원
+    name: 동명대학교 부설 평생교육원 공지사항
     org_type: university
     tier: 3
-    enabled: false
+    enabled: true
+    verified: true
     homepage: https://lifedu.tu.ac.kr
     region_hint: [부산]
     adapter:
       type: html_list
-      list_url: https://lifedu.tu.ac.kr/LifelongEdu/Board/ANN001U.aspx
+      org_name: 동명대학교 평생교육원
+      list_url: https://lifedu.tu.ac.kr/LifelongEdu/Board/ANN001U.aspx?page={page}
+      encoding: euc-kr
+      row_selector: table.TableStyle02 tbody tr
+      title_selector: td a[href*="ANN001U_02.aspx"]
+      date_selector: td:nth-child(4)
+      date_formats: ["%Y-%m-%d"]
+      keywords: [강사, 교강사, 강의, 지도사, 초빙, 위촉, 강좌 개설]
+      paging: { max_pages: 2 }
+      detail: { fetch: true, body_selector: div.Contents, encoding: euc-kr }
     notes: >-
-      2026-09-23 러너 확인: 공지사항 목록은 /LifelongEdu/Board/ANN001U.aspx, 상세는
-      ANN001U_02.aspx?board_div=01&seq=N&rowstate=read 형태. 목록 페이지의 행·제목·날짜 셀렉터는
-      아직 확인 못 했다(덤프 로그가 좌측 메뉴까지만 잡힘). 다음에 이 URL 만 단독으로 덤프할 것.
+      공지사항(2026-09-23 러너 단독 덤프로 검증: table.TableStyle02.list, 제목 a#rptList_lnkTitle_N →
+      ANN001U_02.aspx?...&seq=N, 4열 등록일 'YYYY-MM-DD'). 응답 charset 이 ks_c_5601-1987 이라 euc-kr 지정.
+      학점은행제·사회복지현장실습 안내가 대부분이라 keywords 로 거른다.
   - id: cup_lifelong
     name: 부산가톨릭대학교 평생교육원 공지사항
     org_type: university
