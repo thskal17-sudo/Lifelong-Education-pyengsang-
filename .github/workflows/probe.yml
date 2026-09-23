@@ -29,6 +29,9 @@ on:
       ignore_keywords:
         description: "probe 에서 keywords 필터를 무시하고 목록 전부 표시 (셀렉터 확인용, true/false)"
         default: "false"
+      brief:
+        description: "덤프 출력을 줄여 여러 사이트를 한 번에 훑기 (true/false)"
+        default: "false"
 permissions:
   contents: read
 jobs:
@@ -56,6 +59,7 @@ jobs:
         env:
           URLS: ${{ github.event.inputs.urls }}
           BODY_SELECTOR: ${{ github.event.inputs.body_selector }}
+          BRIEF: ${{ github.event.inputs.brief == 'true' && '1' || '' }}
         run: python scripts/dump_structure.py
       - name: dump structure (rendered)
         if: ${{ github.event.inputs.urls != '' && github.event.inputs.render == 'true' }}
@@ -65,6 +69,7 @@ jobs:
           WAIT_FOR: ${{ github.event.inputs.wait_for }}
           CLICK: ${{ github.event.inputs.click }}
           RENDER_TIMEOUT_SEC: ${{ github.event.inputs.render_timeout }}
+          BRIEF: ${{ github.event.inputs.brief == 'true' && '1' || '' }}
         run: python scripts/dump_rendered.py
       - name: gia probe
         if: ${{ github.event.inputs.sources != '' }}

@@ -32,6 +32,7 @@ HEADERS = {
     "sec-ch-ua-mobile": "?0",
     "sec-ch-ua-platform": '"Windows"',
 }
+BRIEF = bool(os.environ.get("BRIEF"))  # 여러 URL 을 한 번에 훑을 때 출력 축약
 NOISE = re.compile(r"(?<![a-z])(nav|menu|header|footer|lnb|gnb|tnb|snb|anb|topmenu|depth|sitemap|quick|util|breadcrumb|location|family|skip|m_menu|slide|banner|share|foot|head)(?![a-z0-9])", re.I)
 DETAIL = re.compile(r"(amode=view|(?<!sub)View\.do|Detail\.do|regSn=|/view\.|nttNo=|dataSid=|wr_id=|pan=read|List2Content|NttInfo|artclView|/boardview/|/lectopen/view/|bMode=view|btype=view|mode=READ|mod=document|_view\.asp|/view/)", re.I)
 
@@ -132,21 +133,25 @@ def dump_list(soup, noise=None) -> None:
             continue
         found += 1
         print(f"\n[TABLE] {short_path(t)}  rows={len(rows)}")
-        for tr in rows[:2]:
+        for tr in (rows[1:2] if BRIEF else rows[:2]):
             cells = tr.find_all(["th", "td"])
             print("   row:", sel(tr), "->", " | ".join(f"{sel(c)}:{c.get_text(' ', strip=True)[:26]}" for c in cells[:8]))
         if len(rows) > 1:
-            row_detail(rows[1])
+            row_detail(rows[1], limit=6 if BRIEF else 14)
+    shown = 0
     for ul in soup.find_all(["ul", "ol"]):
+        if BRIEF and shown >= 2:
+            break
         lis = ul.find_all("li", recursive=False)
         if len(lis) < 3 or not ul.find("a") or noise.search(path(ul)):
             continue
         if sum(len(li.get_text(" ", strip=True)) for li in lis) < 80:
             continue
         found += 1
+        shown += 1
         print(f"\n[LIST] {short_path(ul)}  items={len(lis)}")
         print("   li:", sel(lis[0]), "->", lis[0].get_text(" ", strip=True)[:100])
-        row_detail(lis[0])
+        row_detail(lis[0], limit=6 if BRIEF else 14)
     pag = [a for a in soup.find_all("a") if re.search(r"(cpage|pageIndex|startPage|pageNo|page)=\d+", a.get("href") or "")]
     if pag:
         print("\n[PAGING]", (pag[0].get("href") or "")[:140])
@@ -167,7 +172,7 @@ def dump_anchor_paths(soup) -> None:
         if len(text) < 10 or NOISE.search(path(a)):
             continue
         groups[" > ".join(path(a).split(" > ")[-4:])].append(a)
-    top = Counter({k: len(v) for k, v in groups.items()}).most_common(4)
+    top = Counter({k: len(v) for k, v in groups.items()}).most_common(2 if BRIEF else 4)
     if not top:
         return
     print("\n[ANCHORS] most common link paths")
@@ -256,7 +261,7 @@ def dump_links(soup, base: str) -> None:
         out.append(f"   {text[:30]!r} -> {full[:120]}")
     if out:
         print(f"\n[LINKS] board candidates ({len(out)})")
-        print("\n".join(out[:40]))
+        print("\n".join(out[: 6 if BRIEF else 40]))
 
 
 if __name__ == "__main__":
