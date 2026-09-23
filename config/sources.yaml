@@ -386,13 +386,15 @@ sources:
       encoding: euc-kr
       row_selector: tr
       title_selector: td a[href*="List2Content"]
+      date_selector: td:nth-child(4)
+      date_formats: ["%Y/%m/%d"]
       keywords: [강사, 교강사, 강의, 지도사, 초빙, 위촉, 강좌 개설]
       paging: { max_pages: 1 }
       detail: { fetch: true, body_selector: body, encoding: euc-kr }
     notes: >-
       공지사항(2026-09-23 러너 검증: 중첩 table 이라 행은 tr, 제목 앵커는 List2Content.asp?board_idx=N).
-      해운대캠퍼스 수강생 모집이 대부분이고 게시가 뜸해 daily_light. 날짜 열 위치가 불안정해
-      date_selector 없이 keywords 로만 거른다(목록이 짧아 부담 없음).
+      해운대캠퍼스 수강생 모집이 대부분이고 게시가 뜸해 daily_light. 날짜는 4열 'YYYY/MM/DD'
+      (처음엔 date_selector 없이 켰다가 2022년 글이 들어와 추가함).
   - id: pnu_lifelong
     name: 부산대학교 미래시민교육원 강사 공지사항
     org_type: university
@@ -435,7 +437,7 @@ sources:
     name: 동아대학교 부설 평생교육원 공지사항
     org_type: university
     tier: 3
-    enabled: true
+    enabled: false
     verified: true
     homepage: https://donga-edu.donga.ac.kr
     region_hint: [부산]
@@ -451,8 +453,9 @@ sources:
       paging: { max_pages: 2 }
       detail: { fetch: true, body_selector: div.sub_con_write }
     notes: >-
-      공지사항(2026-09-23 러너 검증: div.sub_comm_02 table, td.txt_left a → ./read.aspx?no=N&board_code=NOTICE,
-      3열이 등록일 'YYYY-MM-DD'). 부민캠퍼스. 학점은행제 안내가 대부분이라 keywords 로 거른다.
+      공지사항 구조는 확인했으나(div.sub_comm_02 table, td.txt_left a → read.aspx?no=N, 3열 등록일)
+      robots.txt 가 이 경로를 막는다(2026-09-23 수집에서 'robots.txt 차단'). respect_robots 정책상 비활성.
+      운영자 동의를 받으면 셀렉터 그대로 켜면 된다.
   - id: deu_lifelong
     name: 동의대학교 미래교육원 공지사항
     org_type: university
