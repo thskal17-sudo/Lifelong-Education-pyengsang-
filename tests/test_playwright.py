@@ -36,6 +36,18 @@ document.querySelectorAll('td.tit a').forEach(function(a){
   a.addEventListener('click', function(e){ e.preventDefault(); __doPostBack(a.getAttribute('href'), ''); });
 });
 </script></body></html>""".encode("utf-8")
+FNVIEW_HTML = """<html><head><meta charset="utf-8"></head><body>
+<div class="board_list"><table><tbody>
+  <tr><td>2</td><td class="left"><a href="javascript:void(0)" onclick="fn_View('402','88118')">fn_View 게시판 바리스타 강사 초빙</a></td><td class="c_gray">2026-09-21</td></tr>
+  <tr><td>1</td><td class="left"><a href="javascript:void(0)" onclick="fn_View('402','88117')">수강신청 안내</a></td><td class="c_gray">2026-09-15</td></tr>
+</tbody></table></div>
+<div class="board_view"></div>
+<script>
+function fn_View(b, seq){
+  document.querySelector('div.board_view').innerHTML =
+    '<p>seq ' + seq + ' 접수기간: 2026. 9. 21.(월) ~ 2026. 10. 5.(월) 18:00까지</p>';
+}
+</script></body></html>""".encode("utf-8")
 VIEW_HTML = "<html><head><meta charset='utf-8'></head><body><div id='body'></div><script>document.getElementById('body').innerHTML='<p>접수기간: 2026. 9. 22.(월) ~ 2026. 9. 30.(수) 18:00까지</p><a class=\"file\" href=\"/f/공고.hwpx\">공고.hwpx</a>';</script></body></html>".encode("utf-8")
 
 
@@ -43,6 +55,7 @@ class Handler(BaseHTTPRequestHandler):
     def do_GET(self):
         body = (LIST_HTML if self.path.startswith("/list")
                 else POSTBACK_HTML if self.path.startswith("/postback")
+                else FNVIEW_HTML if self.path.startswith("/fnview")
                 else VIEW_HTML if self.path.startswith("/view") else b"")
         self.send_response(200 if body else 404)
         self.send_header("Content-Type", "text/html; charset=utf-8")
@@ -105,6 +118,34 @@ def test_playwright_click_detail(settings, server):
         ]
         raw = ad.fetch_detail(listings[0])
         assert "글번호 1037" in raw.body_text     # 두 번째 글이 아니라 클릭한 글이 열렸다
+        assert "접수기간" in raw.body_text
+    finally:
+        ad.close()
+        http.close()
+
+
+@pytest.mark.skipif(not playwright_ready(), reason="playwright 패키지 또는 Chromium 없음")
+def test_playwright_click_detail_onclick_link(settings, server):
+    """상세 URL 은 onclick 인자로 만들고, 본문은 클릭해서 읽는 게시판 (부산가톨릭대 fn_View).
+
+    fn_View('402','88118') 처럼 인자가 둘이라 두 번째 그룹({2})을 seq 로 쓴다.
+    """
+    cfg = make_source("fnboard", "university", type="playwright", list_url=f"{server}/fnview",
+                      wait_for="div.board_list table tbody tr", row_selector="div.board_list table tbody tr",
+                      title_selector="td.left a", date_selector="td.c_gray",
+                      link_attr="onclick", link_regex=r"fn_View\('(\d+)','(\d+)'",
+                      link_url_template=f"{server}/fnview?seq={{2}}",
+                      keywords=["강사"],
+                      detail={"fetch": True, "click": True, "body_selector": "div.board_view"})
+    http = HttpClient(settings.collector)
+    ad = PlaywrightListAdapter(cfg, http, settings.collector, since=date(2026, 9, 1))
+    try:
+        listings = ad.fetch_list()
+        assert [(l.title, l.url) for l in listings] == [
+            ("fn_View 게시판 바리스타 강사 초빙", f"{server}/fnview?seq=88118")
+        ]
+        raw = ad.fetch_detail(listings[0])
+        assert "seq 88118" in raw.body_text     # 두 번째 글이 아니라 클릭한 글이 열렸다
         assert "접수기간" in raw.body_text
     finally:
         ad.close()
