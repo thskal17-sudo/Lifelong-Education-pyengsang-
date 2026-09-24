@@ -470,15 +470,21 @@ sources:
     org_type: university
     tier: 3
     enabled: false
-    homepage: http://cms.pknu.ac.kr/lifelong/main.do
+    homepage: https://ps.pknu.ac.kr
     region_hint: [부산]
     adapter:
       type: html_list
       list_url: TODO
     notes: >-
-      2026-09-23 러너 확인: /lifelong/main.do 가 본문 없이 JS 로 /application.jsp 로 넘긴다(수강신청 시스템).
-      공지·채용 게시판 경로를 따로 찾아야 한다. 같은 날 재확인: /lifelong/application.jsp 는 404 라
-      JS 가 가리키는 경로가 cms.pknu.ac.kr 기준이 아니다. 수강신청 시스템의 실제 호스트부터 찾아야 한다.
+      경로 문제가 아니라 러너에서 연결이 안 되는 곳이다(2026-09-24 확인).
+      평생교육원 주소는 ps.pknu.ac.kr 이고(cms.pknu.ac.kr/lifelong 이 아니다),
+      강사 채용 공고는 본교 공지사항 www.pknu.ac.kr/main/163 에 올라온다
+      ('2023-1학기 강사 채용 공고' 등). 그런데 두 주소 모두 브라우저로 40초를 기다려도
+      Page.goto 가 commit 조차 못 한다 — TCP 연결 단계에서 막힌다.
+      경성대·가야대·인제대와 같은 러너 IP 차단으로 본다. 국내 IP 에서 다시 확인할 것.
+      www.pknu.ac.kr/main/163 은 ?action=view&no=N 형식이라 이미 수집 중인
+      울산대(cec.ulsan.ac.kr/cec/3978)와 같은 CMS 다 — 열리기만 하면 셀렉터는 그대로 쓸 수 있다.
+
   - id: donga_lifelong
     name: 동아대학교 부설 평생교육원 공지사항
     org_type: university
@@ -586,10 +592,12 @@ sources:
       type: html_list
       list_url: TODO
     notes: >-
-      2026-09-23 러너 확인: /dit/ 루트는 Error 페이지를 돌려준다. index.php?pCode=... 형태의
-      실제 메뉴 경로를 찾아야 한다(학점은행제·시간제등록 안내 pCode=MN0000033).
-      같은 날 재확인: /dit/index.php?pCode=MN0000033 도 같은 Error 페이지(1862 bytes)라 pCode 추측으로는
-      안 열린다. 본교(www.dit.ac.kr)에서 평생교육원으로 들어가는 실제 링크를 따라가야 한다.
+      경로 문제가 아니었다(2026-09-24 정정). 웹 검색으로 실제 게시판 주소를 확인했는데
+      (공지사항 index.php?pCode=MN0000014, 교육원소식 pCode=MN0000016) 러너에서 열면
+      둘 다 똑같이 1,627 바이트짜리 title=Error 페이지가 돌아온다. 크롬 UA 로 렌더해도 같다.
+      pCode 를 몰라서가 아니라 사이트가 러너 요청을 거절하는 것으로 본다.
+      국내 IP 에서 다시 확인할 것.
+
   - id: ulsan_lifelong
     name: 울산대학교 평생교육원 공지사항
     org_type: university
@@ -708,19 +716,61 @@ sources:
       __doPostBack 이 아예 없다(90초 기다려도 목록 그대로). 그래서 이 게시판만 adapter.user_agent
       로 브라우저 UA 를 쓰되 연락처 URL 을 붙여 둔다. robots.txt 준수와 요청 간격은 그대로.
   - id: dongseo_lifelong
-    name: 동서대학교 평생교육원
+    name: 동서대학교 평생교육원 일반과정 공지사항
     org_type: university
     tier: 3
-    enabled: false
-    homepage: https://www.dongseo.ac.kr
+    enabled: true
+    verified: true
+    homepage: https://uni.dongseo.ac.kr/continuing/
     region_hint: [부산]
     adapter:
       type: html_list
-      list_url: TODO
+      org_name: 동서대학교 평생교육원
+      list_url: https://uni.dongseo.ac.kr/continuing/index.php?pCode=MN4000068
+      row_selector: table.isDataList.board-list-table tbody tr
+      title_selector: td.f-tit.subject a
+      date_selector: td.f-date.date
+      date_formats: ["%Y-%m-%d"]
+      keywords: [강사, 교강사, 강의, 지도사, 초빙, 위촉, 강좌 개설]
+      paging: { max_pages: 1 }
+      detail: { fetch: false }
     notes: >-
-      2026-09-23 본교 도메인만 확인. 평생교육원 전용 경로 확인 필요. 같은 날 재확인: www.dongseo.ac.kr 은
-      1.6KB 짜리 셸 페이지(title 비어 있음)라 서버 HTML 에서 메뉴를 따라갈 수 없다 → 렌더 덤프로
-      평생교육원 링크를 찾아야 한다.
+      일반과정 공지사항(2026-09-24 러너 렌더 덤프로 구조 확인). 평생교육원 주소는 본교가 아니라
+      uni.dongseo.ac.kr/continuing/ 이다. lifelong.dongseo.ac.kr 은 존재하지 않는 도메인이니
+      (ERR_NAME_NOT_RESOLVED) 검색 결과에 나와도 쓰지 말 것.
+      칸마다 클래스가 붙어 있어 위치 대신 클래스로 잡는다 — 학점은행제 게시판에는 첨부 열이 하나 더 있어
+      위치로 잡으면 둘이 어긋난다(울산과학대에서 같은 함정에 걸렸다).
+      detail.fetch 는 false 다. 상세를 떠 보니 본문 후보가 하나도 안 잡힌다(글 내용이 이미지).
+      본문이 없으니 마감 추출도 안 되고 제목으로만 점수를 낸다. 글이 3건뿐인 조용한 게시판이라
+      당분간은 이걸로 충분하다. 텍스트 본문이 있는 강사 공고가 올라오면 그때 본문 셀렉터를 찾을 것.
+      강사·교원초빙 공고는 실제로는 본교 채용 게시판
+      (www.dongseo.ac.kr/kr/index.php?pCode=MN2000197&CgCode=A5, 구조 동일)에 올라온다 —
+      평생교육원 범위를 벗어나 넣지 않았다. 50+생애재설계대학 게시판(pCode=MN4000075)은 미확인.
+
+  - id: dongseo_lifelong_credit
+    name: 동서대학교 평생교육원 학점은행제 공지사항
+    org_type: university
+    tier: 3
+    enabled: true
+    verified: true
+    homepage: https://uni.dongseo.ac.kr/continuing/
+    region_hint: [부산]
+    schedule: daily_light
+    adapter:
+      type: html_list
+      org_name: 동서대학교 평생교육원
+      list_url: https://uni.dongseo.ac.kr/continuing/index.php?pCode=MN4000069
+      row_selector: table.isDataList.board-list-table tbody tr
+      title_selector: td.f-tit.subject a
+      date_selector: td.f-date.date
+      date_formats: ["%Y-%m-%d"]
+      keywords: [강사, 교강사, 강의, 지도사, 초빙, 위촉, 강좌 개설]
+      paging: { max_pages: 1 }
+      detail: { fetch: false }
+    notes: >-
+      학점은행제 공지사항(2026-09-24 러너 렌더 덤프로 구조 확인). 일반과정 게시판과 같은 표 구조인데
+      첨부 열(td.f-dn.fdown)이 하나 더 있다 — 그래서 날짜를 위치가 아니라 td.f-date 로 잡는다.
+      글 4건, 최신 2026-02-25 로 더 조용하다. detail.fetch 는 일반과정과 같은 이유로 false.
 
   - id: tu_lifelong
     name: 동명대학교 부설 평생교육원 공지사항
