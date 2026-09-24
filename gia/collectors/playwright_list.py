@@ -112,8 +112,8 @@ class PlaywrightListAdapter(SourceAdapter):
                 break
         return out
 
-    def _render_click(self, listing: RawListing, d: dict) -> str:
-        """목록 페이지를 열어 이 공고의 제목을 클릭하고, 열린 상세 화면의 HTML 을 돌려준다.
+    def _render_click(self, listing: RawListing, d: dict) -> tuple[str, str]:
+        """목록에서 이 공고의 제목을 클릭하고, (상세 HTML, 그때의 주소) 를 돌려준다.
 
         상세가 URL 없이 자바스크립트로만 열리는 게시판용
         (ASP.NET __doPostBack, fn_View 같은 onclick).
@@ -153,7 +153,7 @@ class PlaywrightListAdapter(SourceAdapter):
                 # 접힌 채로 그려 두는 게시판에서 괜히 실패한다
                 page.wait_for_selector(wait_for, timeout=detail_ms, state="attached")
             page.wait_for_timeout(500)
-            return page.content()
+            return page.content(), page.url
         except Exception as e:  # noqa: BLE001
             raise FetchError(f"클릭 상세 실패 {listing.title[:30]}: {str(e)[:150]}") from e
         finally:
@@ -163,13 +163,19 @@ class PlaywrightListAdapter(SourceAdapter):
         d = self.a.get("detail") or {}
         if d.get("fetch") is False:
             return super().fetch_detail(listing)
+        opened_url = None
         if d.get("click"):
-            html = self._render_click(listing, d)
+            html, opened_url = self._render_click(listing, d)
         elif d.get("render", True):
             html = self._render(listing.url, d.get("wait_for") or d.get("body_selector"))
         else:
             from .html_list import decode_html
             html = decode_html(self.http.get(listing.url), d.get("encoding"))
+        data = listing.model_dump()
+        if d.get("url_from_page") and opened_url and opened_url != data["url"]:
+            # 목록에 글 번호가 없는 게시판(창신대·김해대)은 목록 단계의 주소가 임시값이다.
+            # 클릭해서 열린 진짜 주소로 바꿔야 중복 판정과 리포트 링크가 맞는다
+            data["url"] = opened_url
         body = extract_body_html(html, d.get("body_selector") or "body")
-        attachments = extract_attachments_html(html, listing.url, d.get("attachment_selector"))
-        return RawPosting(**listing.model_dump(), body_text=body, attachments=attachments, fetched_at=datetime.now(KST))
+        attachments = extract_attachments_html(html, data["url"], d.get("attachment_selector"))
+        return RawPosting(**data, body_text=body, attachments=attachments, fetched_at=datetime.now(KST))

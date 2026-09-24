@@ -265,30 +265,64 @@ sources:
       life.kaya.ac.kr·www.kaya.ac.kr 모두 GitHub 러너에서 연결 끊김/시간초과(2026-09-22, 2회) → 지자체와 같은 러너 IP 차단으로 판단. 국내 IP 필요.
 
   - id: gimhae_college_lifelong
-    name: 김해대학교 평생직업교육원
+    name: 김해대학교 채용/입찰
     org_type: university
     tier: 3
-    enabled: false
+    enabled: true
+    verified: true
     homepage: https://www.gimhae.ac.kr/www/content/219
     region_hint: [경남, 김해]
     adapter:
       type: playwright
-      list_url: https://www.gimhae.ac.kr/www/board/47
+      org_name: 김해대학교 평생직업교육원
+      list_url: https://www.gimhae.ac.kr/www/board/47?page={page}
+      wait_for: table#ScListBoard tbody td.tit
+      row_selector: table#ScListBoard tbody tr
+      title_selector: td.tit a
+      date_selector: td:nth-last-child(2)
+      date_formats: ["%Y-%m-%d %H:%M:%S", "%Y-%m-%d"]
+      id_selector: td:first-child
+      link_url_template: https://www.gimhae.ac.kr/www/board/47#no{1}
+      keywords: [강사, 교강사, 강의, 지도사, 초빙, 위촉, 강좌 개설]
+      paging: { max_pages: 1 }
+      detail: { fetch: true, click: true, url_from_page: true, body_selector: div.board-view }
     notes: >-
-      평생직업교육원 전용 게시판 없음. 본교 채용/입찰(www/board/47)은 JS 렌더링이라 서버 HTML 에 목록이 없음(2026-09-22) → playwright 어댑터로 재검증.
+      평생직업교육원 전용 게시판이 없어 본교 채용/입찰 게시판을 본다(2026-09-24 러너 렌더 덤프로 구조 확인).
+      제목이 href=javascript:void(0) 이고 글 번호가 DOM 에 없다. 첫 칸 순번은 상단 고정글에서 비어 있어
+      화면상 순서로 보이므로 식별자로 믿을 수 없다 → 순번으로 임시 주소만 만들고 클릭해 열린
+      진짜 주소로 바꾼다(url_from_page). 상단 고정글은 순번이 없어 건너뛴다.
+      조교 채용·입찰이 대부분이라 keywords 로 강사 관련만 거른다.
+      상세 본문 셀렉터는 추정이라 첫 probe 에서 확인할 것.
 
   - id: changshin_lifelong
-    name: 창신대학교 부설 평생교육원
+    name: 창신대학교 부설 평생교육원 알림마당
     org_type: university
     tier: 3
-    enabled: false
+    enabled: true
+    verified: true
     homepage: https://ice.cs.ac.kr
     region_hint: [경남, 창원]
     adapter:
       type: playwright
-      list_url: TODO
+      org_name: 창신대학교 부설 평생교육원
+      list_url: https://ice.cs.ac.kr/board/71faa983-6ed2-4ea9-868d-d2c318cae543
+      wait_for: div.notice_list table tbody td.tit
+      row_selector: div.notice_list table tbody tr
+      title_selector: td.tit
+      date_selector: td:nth-child(5)
+      date_formats: ["%Y-%m-%d"]
+      id_selector: td:first-child
+      link_url_template: https://ice.cs.ac.kr/board/71faa983-6ed2-4ea9-868d-d2c318cae543#no{1}
+      keywords: [강사, 교강사, 강의, 지도사, 초빙, 위촉, 강좌 개설]
+      paging: { max_pages: 1 }
+      detail: { fetch: true, click: true, url_from_page: true, body_selector: div.notice_view }
     notes: >-
-      ice.cs.ac.kr 은 구형 TLS(SECLEVEL 낮춘 컨텍스트로만 handshake 성공)이고 Vue SPA 라 서버 HTML 에 목록이 없음(2026-09-22). playwright 어댑터 + 구형 TLS 허용이 모두 필요 → gia http 클라이언트 보강 후 재검증.
+      알림마당(2026-09-24 러너 렌더 덤프로 구조 확인). Nuxt SPA 라 브라우저가 필요하고,
+      구형 TLS 는 크로미움이 알아서 넘긴다(평문 요청만 SECLEVEL 을 낮춰야 했다).
+      목록 행에 상세 링크가 없다 — 상세 주소는 /board/{게시판UUID}/{글UUID} 인데 UUID 가 목록에 안 나온다.
+      그래서 목록 단계에서는 No 칸으로 임시 주소를 만들고, 클릭해 열린 진짜 주소로 바꾼다(url_from_page).
+      wait_for 는 반드시 데이터 칸(td.tit)으로 잡을 것 — tr 로 잡으면 Nuxt 가 채우기 전
+      '등록된 글이 없습니다' 행을 떠 버린다. 상세 본문 셀렉터는 추정이라 첫 probe 에서 확인할 것.
 
   - id: cwmc_lifelong
     name: 창원문성대학교 평생교육원
@@ -564,16 +598,30 @@ sources:
       작성일 td.bdlDate 'YYYY-MM-DD'). 수강생 모집 공고가 대부분이라 keywords 로 강사 관련만 거른다.
       상세 본문 셀렉터 미확인이라 body 전체 사용. '교육원 소식'(/cec/4843)·'게시판'(/cec/3964)도 후보.
   - id: uc_lifelong
-    name: 울산과학대학교 평생교육원
+    name: 울산과학대학교 평생교육원 공지사항
     org_type: university
     tier: 3
-    enabled: false
-    homepage: https://www.uc.ac.kr/edu/Main.do
+    enabled: true
+    verified: true
+    homepage: https://edu.uc.ac.kr/edu/Main.do
     region_hint: [울산]
     adapter:
       type: html_list
-      list_url: TODO
-    notes: 2026-09-23 웹검색으로 확인한 도메인. 게시판 경로·셀렉터 미확인.
+      org_name: 울산과학대학교 평생교육원
+      list_url: https://edu.uc.ac.kr/edu/CMS/Board/Board.do?mCode=MN075&page={page}
+      row_selector: table tbody tr
+      title_selector: td.subject p.stitle a
+      date_selector: td:nth-last-child(2)
+      date_formats: ["%Y.%m.%d"]
+      keywords: [강사, 교강사, 강의, 지도사, 초빙, 위촉, 강좌 개설]
+      paging: { max_pages: 2 }
+      detail: { fetch: true, body_selector: div.board_view }
+    notes: >-
+      공지사항(2026-09-24 러너 렌더 덤프로 구조 확인). 상세가 ?mCode=MN075&mode=view&mgr_seq=388&board_seq=N
+      실주소라 클릭 없이 수집한다. 목록에 '[모집] 2026-2학기 평생교육원 신입생 모집',
+      '[모집] 10월 UC골프아카데미 수강생 모집' 같은 글이 올라온다. 날짜는 2026.09.21 형식이고
+      열 위치가 분류 유무로 흔들려 뒤에서 두 번째(조회수 앞) 칸으로 잡았다.
+      상세 본문 셀렉터는 추정이라 첫 probe 에서 확인할 것.
 
   - id: ch_lifelong
     name: 춘해보건대학교 평생교육원
@@ -583,9 +631,15 @@ sources:
     homepage: https://edu.ch.ac.kr
     region_hint: [울산]
     adapter:
-      type: html_list
+      type: playwright
       list_url: TODO
-    notes: 2026-09-23 웹검색으로 확인한 도메인(울주군 소재). 게시판 경로·셀렉터 미확인.
+    notes: >-
+      2026-09-24 러너 확인. 평문 요청은 연결 시간 초과인데 크로미움으로는 열린다(/main/main.php).
+      그런데 게시판 주소 sub05/01.php·01_1.php 는 단독으로 열면 11KB 짜리 빈 껍데기다.
+      글 목록은 메인 페이지 탭(div#tab1.tab-content > ul.list01 > li > a → /sub05/01.php?wr_id=N)에만 있고
+      거기에는 날짜 칸이 없다. 날짜 없이 켜면 2018년 글까지 들어온다(영산대에서 같은 사고).
+      목록에 '유아숲지도사 양성과정 모집 공고' 같은 대상 공고가 있어 값어치는 있으니,
+      날짜가 있는 진짜 목록 주소(파라미터 필요 추정)를 찾은 뒤 켤 것.
 
   - id: ks_lifelong
     name: 경성대학교 평생교육원

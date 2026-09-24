@@ -161,6 +161,32 @@ def test_playwright_click_detail_onclick_link(settings, server):
 
 
 @pytest.mark.skipif(not playwright_ready(), reason="playwright 패키지 또는 Chromium 없음")
+def test_playwright_click_detail_url_from_page(settings, server):
+    """목록에 글 번호가 없으면 클릭해서 열린 주소를 공고 주소로 쓴다 (창신대·김해대).
+
+    목록 단계의 주소는 임시값이라, 그대로 두면 중복 판정과 리포트 링크가 어긋난다.
+    """
+    cfg = make_source("fnboard2", "university", type="playwright", list_url=f"{server}/fnview",
+                      wait_for="div.board_list table tbody tr", row_selector="div.board_list table tbody tr",
+                      title_selector="td.left a", date_selector="td.c_gray",
+                      id_selector="td:first-child", link_url_template=f"{server}/fnview#row{{1}}",
+                      keywords=["강사"],
+                      detail={"fetch": True, "click": True, "url_from_page": True,
+                              "body_selector": "div.board_view"})
+    http = HttpClient(settings.collector)
+    ad = PlaywrightListAdapter(cfg, http, settings.collector, since=date(2026, 9, 1))
+    try:
+        listings = ad.fetch_list()
+        assert listings[0].url == f"{server}/fnview#row2"      # 목록 단계: 임시 주소
+        raw = ad.fetch_detail(listings[0])
+        assert raw.url == f"{server}/fnview"                   # 클릭 뒤 실제 주소로 교체
+        assert "seq 88118" in raw.body_text
+    finally:
+        ad.close()
+        http.close()
+
+
+@pytest.mark.skipif(not playwright_ready(), reason="playwright 패키지 또는 Chromium 없음")
 def test_playwright_source_user_agent_override(settings, server):
     """adapter.user_agent 로 이 게시판에서만 UA 를 갈아 끼운다.
 
