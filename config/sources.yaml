@@ -639,22 +639,38 @@ sources:
       robots.txt 는 404(302 → 에러 페이지)라 차단 없음. 작성자 열이 담당자 이름이라 org_name 고정값.
 
   - id: ch_lifelong
-    name: 춘해보건대학교 평생교육원
+    name: 춘해보건대학교 평생교육원 공지사항
     org_type: university
     tier: 3
-    enabled: false
+    enabled: true
+    verified: true
     homepage: https://edu.ch.ac.kr
-    region_hint: [울산]
+    region_hint: [울산, 울주]
     adapter:
-      type: playwright
-      list_url: TODO
+      type: html_list
+      tls_verify: false   # 중간 인증서 누락
+      org_name: 춘해보건대학교 평생교육원
+      list_url: https://edu.ch.ac.kr/waybbs/way_bbs.php?bo_table=notice&page={page}
+      encoding: euc-kr
+      row_selector: table.board_list tbody tr
+      title_selector: td.subject a
+      date_selector: td.datetime
+      date_formats: ["%Y-%m-%d"]
+      keywords: [강사, 교강사, 강의, 지도사, 초빙, 위촉, 강좌 개설]
+      paging: { max_pages: 2 }
+      detail: { fetch: false }
     notes: >-
-      2026-09-24 러너 확인. 평문 요청은 연결 시간 초과인데 크로미움으로는 열린다(/main/main.php).
-      그런데 게시판 주소 sub05/01.php·01_1.php 는 단독으로 열면 11KB 짜리 빈 껍데기다.
-      글 목록은 메인 페이지 탭(div#tab1.tab-content > ul.list01 > li > a → /sub05/01.php?wr_id=N)에만 있고
-      거기에는 날짜 칸이 없다. 날짜 없이 켜면 2018년 글까지 들어온다(영산대에서 같은 사고).
-      목록에 '유아숲지도사 양성과정 모집 공고' 같은 대상 공고가 있어 값어치는 있으니,
-      날짜가 있는 진짜 목록 주소(파라미터 필요 추정)를 찾은 뒤 켤 것.
+      공지사항(waybbs, 2026-09-24 러너에서 gia probe 로 검증: 400일 창에 목록 5건·날짜·링크 정상).
+      sub05/01.php 가 11KB 껍데기였던 이유는 게시판을 iframe 으로 물고 있어서다 —
+      실제 목록은 iframe src 인 /waybbs/way_bbs.php?bo_table=notice 이고 여기에는 날짜 칸(td.datetime,
+      'YYYY-MM-DD')과 잘리지 않은 제목이 있다. 총 27건·2페이지. 일반공지사항(sub05/02.php)은 같은
+      waybbs 의 bo_table=event 다.
+      상세(?wr_id=N)는 로그인 벽이라 비회원에게 '권한이 없습니다' 알림과 login.php 리다이렉트만 온다
+      (323 bytes) → detail.fetch: false 로 두고 제목·날짜·링크만 쓴다. 본문이 없어 마감일은 unknown 이
+      되지만, 점수는 제목만으로도 난다('유아숲지도사 양성과정 모집 공고' → 제목 핵심어).
+      게시가 뜸하다(총 27건, 2023년까지 거슬러 감). 400일 창에 잡힌 5건은 모두 수강생 모집이라
+      점수 0 으로 정상 제외됐고, 강사 대상 공고(유아숲지도사)는 그보다 오래됐다 — 새 공고가 뜨면 잡힌다.
+      인증서 체인이 끊겨 tls_verify: false.
 
   - id: ks_lifelong
     name: 경성대학교 평생교육원
