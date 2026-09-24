@@ -42,11 +42,17 @@ on:
         description: "덤프 출력을 줄여 여러 사이트를 한 번에 훑기 (true/false)"
         default: "false"
 permissions:
-  contents: read
+  contents: write
 jobs:
   probe:
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    env:
+      # 러너 로그는 저장소 밖(blob storage)에서 받아야 해서 네트워크가 좁은 환경에서는 읽을 수 없다.
+      # 덤프 단계의 출력을 이 파일에 모아 probe-results 브랜치로 올리면 contents API 로 읽힌다.
+      # runner 컨텍스트는 잡 레벨 env 에서 쓸 수 없어 고정 경로를 쓴다 (작업 디렉터리 밖이라
+      # 브랜치를 갈아타도 남는다).
+      PROBE_OUT: /tmp/probe-out.txt
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -69,7 +75,9 @@ jobs:
           URLS: ${{ github.event.inputs.urls }}
           BODY_SELECTOR: ${{ github.event.inputs.body_selector }}
           BRIEF: ${{ github.event.inputs.brief == 'true' && '1' || '' }}
-        run: python scripts/dump_structure.py
+        run: |
+          set -o pipefail
+          python scripts/dump_structure.py 2>&1 | tee -a "$PROBE_OUT"
       - name: dump structure (rendered)
         if: ${{ github.event.inputs.urls != '' && github.event.inputs.render == 'true' }}
         env:
@@ -82,7 +90,9 @@ jobs:
           DUMP_UA: ${{ github.event.inputs.ua }}
           RENDER_TIMEOUT_SEC: ${{ github.event.inputs.render_timeout }}
           BRIEF: ${{ github.event.inputs.brief == 'true' && '1' || '' }}
-        run: python scripts/dump_rendered.py
+        run: |
+          set -o pipefail
+          python scripts/dump_rendered.py 2>&1 | tee -a "$PROBE_OUT"
       - name: gia probe
         if: ${{ github.event.inputs.sources != '' }}
         env:
@@ -92,6 +102,8 @@ jobs:
           DAYS: ${{ github.event.inputs.days }}
           IGNORE_KEYWORDS: ${{ github.event.inputs.ignore_keywords }}
         run: |
+          set -o pipefail
+          {
           if [ -n "$DAYS" ]; then
             sed -i "s/^\(\s*default_days:\s*\).*/\1$DAYS/" config/settings.yaml
             grep -n "default_days" config/settings.yaml
@@ -105,3 +117,27 @@ jobs:
             fi
             echo "::endgroup::"
           done
+          } 2>&1 | tee -a "$PROBE_OUT"
+      - name: publish probe output
+        if: ${{ always() }}
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          [ -s "$PROBE_OUT" ] || echo "(probe 출력 없음 — urls·sources 입력이 비었거나 단계가 건너뛰어졌다)" > "$PROBE_OUT"
+          dest="runs/${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}.txt"
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if git fetch --depth=1 origin probe-results 2>/dev/null; then
+            # gia probe 단계가 settings.yaml 을 고쳤을 수 있다. 출력은 runner.temp 에 있으니 버려도 된다.
+            git checkout -f -B probe-results FETCH_HEAD
+          else
+            git checkout --orphan probe-results
+            git rm -rf --cached . >/dev/null 2>&1 || true
+          fi
+          mkdir -p runs
+          cp "$PROBE_OUT" "$dest"
+          cp "$PROBE_OUT" latest.txt
+          git add -- "$dest" latest.txt
+          git commit -q -m "probe: run ${GITHUB_RUN_ID} 출력"
+          git push -q origin probe-results
+          echo "probe-results 브랜치에 올림: $dest"
