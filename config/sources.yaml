@@ -642,7 +642,8 @@ sources:
     name: 춘해보건대학교 평생교육원 공지사항
     org_type: university
     tier: 3
-    enabled: false
+    enabled: true
+    verified: true
     homepage: https://edu.ch.ac.kr
     region_hint: [울산, 울주]
     adapter:
@@ -659,13 +660,16 @@ sources:
       paging: { max_pages: 2 }
       detail: { fetch: false }
     notes: >-
-      공지사항(waybbs). sub05/01.php 가 11KB 껍데기였던 이유는 게시판을 iframe 으로 물고 있어서다 —
+      공지사항(waybbs, 2026-09-24 러너에서 gia probe 로 검증: 400일 창에 목록 5건·날짜·링크 정상).
+      sub05/01.php 가 11KB 껍데기였던 이유는 게시판을 iframe 으로 물고 있어서다 —
       실제 목록은 iframe src 인 /waybbs/way_bbs.php?bo_table=notice 이고 여기에는 날짜 칸(td.datetime,
       'YYYY-MM-DD')과 잘리지 않은 제목이 있다. 총 27건·2페이지. 일반공지사항(sub05/02.php)은 같은
       waybbs 의 bo_table=event 다.
       상세(?wr_id=N)는 로그인 벽이라 비회원에게 '권한이 없습니다' 알림과 login.php 리다이렉트만 온다
       (323 bytes) → detail.fetch: false 로 두고 제목·날짜·링크만 쓴다. 본문이 없어 마감일은 unknown 이
       되지만, 점수는 제목만으로도 난다('유아숲지도사 양성과정 모집 공고' → 제목 핵심어).
+      게시가 뜸하다(총 27건, 2023년까지 거슬러 감). 400일 창에 잡힌 5건은 모두 수강생 모집이라
+      점수 0 으로 정상 제외됐고, 강사 대상 공고(유아숲지도사)는 그보다 오래됐다 — 새 공고가 뜨면 잡힌다.
       인증서 체인이 끊겨 tls_verify: false.
 
   - id: ks_lifelong
