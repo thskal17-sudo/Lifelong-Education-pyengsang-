@@ -80,8 +80,11 @@ class PlaywrightListAdapter(SourceAdapter):
         self.http.throttle(url)
         page = self._page()
         try:
-            timeout_ms = int(self.settings.request_timeout_sec * 1000)
-            page.goto(url, wait_until="domcontentloaded", timeout=timeout_ms)
+            # adapter.timeout_sec: 무거운 목록 페이지용 (김해대는 기본 20초로 domcontentloaded 도 못 넘긴다)
+            timeout_ms = int(float(self.a.get("timeout_sec") or self.settings.request_timeout_sec) * 1000)
+            # commit 으로 먼저 붙고 wait_for 로 기다린다. domcontentloaded 까지 기다리면
+            # 광고·폰트까지 묶여서, 정작 목록은 다 그려졌는데 시간만 넘긴다
+            page.goto(url, wait_until="commit", timeout=timeout_ms)
             if wait_for:
                 page.wait_for_selector(wait_for, timeout=timeout_ms)
             else:

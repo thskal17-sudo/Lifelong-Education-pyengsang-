@@ -278,6 +278,7 @@ sources:
       type: playwright
       org_name: 김해대학교 평생직업교육원
       list_url: https://www.gimhae.ac.kr/www/board/47?page={page}
+      timeout_sec: 60
       wait_for: table#ScListBoard tbody td.tit
       row_selector: table#ScListBoard tbody tr
       title_selector: td.tit a
@@ -295,6 +296,7 @@ sources:
       진짜 주소로 바꾼다(url_from_page). 상단 고정글은 순번이 없어 건너뛴다.
       순번 칸은 행에 따라 th.num 이기도 하고 td 이기도 하다. td:first-child 만 잡았더니
       2026-09-24 probe 에서 목록 0건이 나왔다 — 둘 다 받게 해 둘 것.
+      페이지가 무거워 기본 20초로는 목록도 못 받는다(Page.goto 타임아웃) → timeout_sec 60.
       조교 채용·입찰이 대부분이라 keywords 로 강사 관련만 거른다.
       상세 본문 셀렉터는 추정이라 첫 probe 에서 확인할 것.
 
