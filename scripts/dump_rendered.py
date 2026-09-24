@@ -16,6 +16,7 @@ from __future__ import annotations
 import os
 import re
 import sys
+from urllib.parse import urljoin
 
 from bs4 import BeautifulSoup
 
@@ -109,6 +110,13 @@ def dump(url: str) -> None:
     else:
         dump_list(soup)
         dump_links(soup, final)
+    # 목록이 안 보일 때 가장 흔한 원인: 표가 iframe 안에 있다.
+    # page.content() 는 iframe 속을 안 담으므로 주소만이라도 알려 준다
+    frames = [f for f in (i.get("src") or "" for i in soup.find_all(["iframe", "frame"])) if f]
+    if frames:
+        print(f"\n[IFRAME] ({len(frames)}) — 목록이 이 안에 있으면 이 주소를 직접 떠야 한다")
+        for f in frames[:10]:
+            print("  ", urljoin(final, f))
     # JS 로 여는 상세 링크는 onclick 에 있으므로 따로 보여 준다
     onclicks = []
     for a in soup.find_all(["a", "tr", "li", "button"]):
