@@ -283,7 +283,7 @@ sources:
       title_selector: td.tit a
       date_selector: td:nth-last-child(2)
       date_formats: ["%Y-%m-%d %H:%M:%S", "%Y-%m-%d"]
-      id_selector: td:first-child
+      id_selector: th.num, td:first-child
       link_url_template: https://www.gimhae.ac.kr/www/board/47#no{1}
       keywords: [강사, 교강사, 강의, 지도사, 초빙, 위촉, 강좌 개설]
       paging: { max_pages: 1 }
@@ -293,6 +293,8 @@ sources:
       제목이 href=javascript:void(0) 이고 글 번호가 DOM 에 없다. 첫 칸 순번은 상단 고정글에서 비어 있어
       화면상 순서로 보이므로 식별자로 믿을 수 없다 → 순번으로 임시 주소만 만들고 클릭해 열린
       진짜 주소로 바꾼다(url_from_page). 상단 고정글은 순번이 없어 건너뛴다.
+      순번 칸은 행에 따라 th.num 이기도 하고 td 이기도 하다. td:first-child 만 잡았더니
+      2026-09-24 probe 에서 목록 0건이 나왔다 — 둘 다 받게 해 둘 것.
       조교 채용·입찰이 대부분이라 keywords 로 강사 관련만 거른다.
       상세 본문 셀렉터는 추정이라 첫 probe 에서 확인할 것.
 
@@ -317,14 +319,16 @@ sources:
       link_url_template: https://ice.cs.ac.kr/board/71faa983-6ed2-4ea9-868d-d2c318cae543#no{1}
       keywords: [강사, 교강사, 강의, 지도사, 초빙, 위촉, 강좌 개설]
       paging: { max_pages: 1 }
-      detail: { fetch: true, click: true, url_from_page: true, body_selector: div.notice_view }
+      detail: { fetch: true, click: true, url_from_page: true, body_selector: div.post-detail }
     notes: >-
       알림마당(2026-09-24 러너 렌더 덤프로 구조 확인). Nuxt SPA 라 브라우저가 필요하고,
       구형 TLS 는 크로미움이 알아서 넘긴다(평문 요청만 SECLEVEL 을 낮춰야 했다).
       목록 행에 상세 링크가 없다 — 상세 주소는 /board/{게시판UUID}/{글UUID} 인데 UUID 가 목록에 안 나온다.
       그래서 목록 단계에서는 No 칸으로 임시 주소를 만들고, 클릭해 열린 진짜 주소로 바꾼다(url_from_page).
       wait_for 는 반드시 데이터 칸(td.tit)으로 잡을 것 — tr 로 잡으면 Nuxt 가 채우기 전
-      '등록된 글이 없습니다' 행을 떠 버린다. 상세 본문 셀렉터는 추정이라 첫 probe 에서 확인할 것.
+      '등록된 글이 없습니다' 행을 떠 버린다.
+      2026-09-24 probe: 목록 9건 정상. 상세 본문은 div.post-detail (제목·날짜·본문 628자,
+      본문에서 '2026. 8. 24' 같은 마감일이 잡힌다). 추정했던 div.notice_view 는 없는 셀렉터였다.
 
   - id: cwmc_lifelong
     name: 창원문성대학교 평생교육원
