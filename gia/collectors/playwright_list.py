@@ -126,7 +126,8 @@ class PlaywrightListAdapter(SourceAdapter):
         self.http.throttle(list_url)
         page = self._page()
         try:
-            timeout_ms = int(self.settings.request_timeout_sec * 1000)
+            # 목록을 다시 여는 것이므로 목록과 같은 대기 시간을 쓴다(adapter.timeout_sec)
+            timeout_ms = int(float(self.a.get("timeout_sec") or self.settings.request_timeout_sec) * 1000)
             # 클릭 뒤에는 폼 전체를 다시 올리는 게시판이 있다 (신라대는 뷰스테이트가 1.6MB).
             # 목록을 받는 시간과 상세가 열리는 시간은 자릿수가 달라서 따로 잡는다
             detail_ms = int(float(d.get("timeout_sec") or max(self.settings.request_timeout_sec, 60)) * 1000)
