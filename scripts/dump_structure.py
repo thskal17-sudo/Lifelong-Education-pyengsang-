@@ -235,6 +235,7 @@ def dump(url: str) -> None:
         for node in soup.select(sel_env)[:3]:
             print(f"\n[BODY TEXT] {short_path(node)}")
             print(node.get_text("\n", strip=True)[:3000])
+    dump_frames(soup, r.url)
     if DETAIL.search(url):
         dump_detail(soup)
     else:
@@ -242,6 +243,38 @@ def dump(url: str) -> None:
         dump_links(soup, r.url)
 
 
+def dump_frames(soup, base: str) -> None:
+    """목록이 안 잡히는 껍데기 페이지의 원인을 찾는다 — 프레임과 JS 가 부르는 게시판 경로."""
+    from urllib.parse import urljoin
+
+    frames = [
+        (t.name, urljoin(base, t.get("src") or t.get("data") or ""))
+        for t in soup.find_all(["iframe", "frame", "object", "embed"])
+        if t.get("src") or t.get("data")
+    ]
+    if frames:
+        print(f"\n[FRAMES] ({len(frames)})")
+        for name, src in frames[: 5 if BRIEF else 20]:
+            print(f"   {name} -> {src[:140]}")
+
+    # 인라인 스크립트가 location/ajax 로 부르는 게시판스러운 경로. 껍데기 페이지에서
+    # 진짜 목록 주소를 찾는 단서가 된다.
+    hits, seen = [], set()
+    for s in soup.find_all("script"):
+        if s.get("src"):
+            continue
+        for m in re.finditer(r"""['"]([^'"\s]*\.(?:php|jsp|asp|aspx|do)\b[^'"\s]*)['"]""", s.get_text() or ""):
+            p = m.group(1)
+            if not SCRIPT_PATH_WORDS.search(p) or p in seen:
+                continue
+            seen.add(p)
+            hits.append(f"   {p[:140]}  -> {urljoin(base, p)[:140]}")
+    if hits:
+        print(f"\n[SCRIPT PATHS] 게시판스러운 경로 ({len(hits)})")
+        print("\n".join(hits[: 5 if BRIEF else 20]))
+
+
+SCRIPT_PATH_WORDS = re.compile(r"(board|bbs|notice|list|view|lecture|sub\d|wr_id|bo_table)", re.I)
 LINK_WORDS = re.compile(r"(공지|알림|소식|채용|모집|구인|강사|게시판|공고|notice|recruit|job)", re.I)
 
 
