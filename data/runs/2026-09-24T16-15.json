@@ -1,0 +1,57 @@
+{
+ "finished_at": "2026-09-24T16:16:08.582645+09:00",
+ "llm_cache_read_tokens": 0,
+ "llm_calls": 0,
+ "llm_errors": 0,
+ "llm_excluded": 0,
+ "llm_input_tokens": 0,
+ "llm_output_tokens": 0,
+ "llm_refusals": 0,
+ "notes": [
+  "백필 180일"
+ ],
+ "run_id": "2026-09-24T16-15",
+ "sources": [
+  {
+   "detail_fetched": 1,
+   "duration_ms": 48027,
+   "errors": [],
+   "listed": 1,
+   "llm_excluded": 0,
+   "new": 1,
+   "source_id": "gimhae_college_lifelong",
+   "status": "ok",
+   "updated": 0
+  },
+  {
+   "detail_fetched": 0,
+   "duration_ms": 5656,
+   "errors": [],
+   "listed": 0,
+   "llm_excluded": 0,
+   "new": 0,
+   "source_id": "changshin_lifelong",
+   "status": "empty",
+   "updated": 0
+  },
+  {
+   "detail_fetched": 1,
+   "duration_ms": 2098,
+   "errors": [],
+   "listed": 1,
+   "llm_excluded": 0,
+   "new": 1,
+   "source_id": "uc_lifelong",
+   "status": "ok",
+   "updated": 0
+  }
+ ],
+ "started_at": "2026-09-24T16:15:20.516143+09:00",
+ "totals": {
+  "closing_soon": 0,
+  "expired": 7,
+  "merged": 0,
+  "new": 2,
+  "updated": 0
+ }
+}
