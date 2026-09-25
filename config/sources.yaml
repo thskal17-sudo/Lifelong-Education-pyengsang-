@@ -333,22 +333,36 @@ sources:
       본문에서 '2026. 8. 24' 같은 마감일이 잡힌다). 추정했던 div.notice_view 는 없는 셀렉터였다.
 
   - id: cwmc_lifelong
-    name: 창원문성대학교 평생교육원
+    name: 창원문성대학교 평생교육원 공지사항
     org_type: university
     tier: 3
-    enabled: false
+    enabled: true
+    verified: false
     homepage: https://ps.cmu.ac.kr
     region_hint: [경남, 창원]
+    schedule: daily_light
     adapter:
       type: html_list
-      tls_legacy: true   # 구형 TLS 서버 (#15) — 이 호스트만 구형 컨텍스트·검증 생략
-      list_url: TODO
-      candidate_list_url: https://ps.cmu.ac.kr/homepage/ps/page/subLocation.do?menu_no=20010801
+      org_name: 창원문성대학교 평생교육원
+      tls_legacy: true
+      list_url: https://ps.cmu.ac.kr/jsp/module/board/list01.do?conf_no=22&board_no=&category_cd=&flag=&menu_no=20010801
+      row_selector: table.board_list tbody tr
+      title_selector: td:nth-child(2) a
+      date_selector: td:nth-child(4)
+      date_formats: ["%Y-%m-%d", "%Y.%m.%d"]
+      keywords: [강사, 교강사, 강의, 지도사, 초빙, 위촉, 강좌 개설]
+      paging: { max_pages: 1 }
+      detail: { fetch: true, body_selector: div.board_view }
     notes: >-
-      ps.cmu.ac.kr 은 구형 TLS 라 러너 기본 설정으로는 handshake 실패, SECLEVEL 낮춘 컨텍스트로 열림(2026-09-22). adapter.tls_legacy: true 로 열 수 있게 됨(#15). 그러나 '게시판'(menu_no=20010801) 페이지는 gnb 만 있고 목록이 없음(2026-09-22 러너 덤프) — 실제 게시판 URL(iframe/별도 경로) 확인 필요. lead.cmu.ac.kr(평생직업교육대학)은 DNS 실패.
-      2026-09-23 재확인: 남은 후보 '모집안내'(menu_no=20010201)도 게시판이 아니라 접수기간·자격증 목록이
-      든 정적 안내 페이지였다. 사이트 전체의 링크 후보가 3개(모집안내·게시판·대학일자리센터)뿐이고
-      그중 게시판이 없다 → 이 사이트에는 공지 게시판 자체가 없는 것으로 본다.
+      게시판 표가 iframe 안에 있었다(2026-09-25 확인). 바깥 페이지
+      /homepage/ps/page/subLocation.do?menu_no=20010801 은 제목만 '목록 - 평생교육원' 이고
+      표가 없어서 오랫동안 '목록 없음'으로 잘못 봤다. 실제 목록은 위 list01.do 주소다.
+      구형 TLS 라 tls_legacy: true 가 필요하다(크로미움은 그냥 넘지만 httpx 는 못 넘는다).
+      verified 는 false 다 — 게시판이 지금 '자료가 없습니다' 로 비어 있어서, 머리글
+      (번호|제목|작성자|작성일|조회)로 열 위치만 추정했고 실제 행으로 맞춰 본 적이 없다.
+      상세 본문 셀렉터도 추정이다. 글이 올라오면 그때 probe 로 맞출 것.
+      빈 게시판이라 수집 0건이 정상이고, 오류는 나지 않는다('자료가 없습니다' 행은
+      제목 링크가 없어 그냥 건너뛴다).
 
   - id: dist_lifelong
     name: 동원과학기술대학교 평생교육원 공지사항 (양산)
@@ -659,12 +673,16 @@ sources:
       type: playwright
       list_url: TODO
     notes: >-
-      2026-09-24 러너 확인. 평문 요청은 연결 시간 초과인데 크로미움으로는 열린다(/main/main.php).
-      그런데 게시판 주소 sub05/01.php·01_1.php 는 단독으로 열면 11KB 짜리 빈 껍데기다.
-      글 목록은 메인 페이지 탭(div#tab1.tab-content > ul.list01 > li > a → /sub05/01.php?wr_id=N)에만 있고
-      거기에는 날짜 칸이 없다. 날짜 없이 켜면 2018년 글까지 들어온다(영산대에서 같은 사고).
-      목록에 '유아숲지도사 양성과정 모집 공고' 같은 대상 공고가 있어 값어치는 있으니,
-      날짜가 있는 진짜 목록 주소(파라미터 필요 추정)를 찾은 뒤 켤 것.
+      공지사항 게시판이 회원 로그인을 요구한다 → 수집 대상 아님(2026-09-25 확정).
+      /sub05/01.php?wr_id=317 을 열면 /member/login.php?url=./way_bbs.php?bo_table=notice&wr_id=317
+      로 넘어간다. 실제 게시판 스크립트 way_bbs.php 를 루트·/member/ 양쪽에서 직접 열어 봤지만
+      둘 다 1,046 바이트짜리 Error 페이지다.
+      앞서 '날짜 있는 목록 주소를 못 찾았다'고 적었던 것은 증상만 본 진단이었다. sub05/01.php·01_1.php 가
+      빈 껍데기인 것도, 메인 페이지 탭(div#tab1 ul.list01)에 제목만 있고 날짜가 없는 것도
+      전부 로그인 벽 때문이다 — 메인의 목록은 맛보기다.
+      메인의 과정 표(div.con-box04 table)에는 모집기간이 제대로 들어 있지만
+      (예: 2026-09-15 ~ 2026-10-13) 그건 수강생 모집이라 우리 대상이 아니다.
+      로그인을 우회하지 않는다. 기관이 게시판을 공개로 바꾸거나 허락을 주면 그때 켤 것.
 
   - id: ks_lifelong
     name: 경성대학교 평생교육원
