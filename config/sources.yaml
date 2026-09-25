@@ -332,6 +332,35 @@ sources:
       2026-09-24 probe: 목록 9건 정상. 상세 본문은 div.post-detail (제목·날짜·본문 628자,
       본문에서 '2026. 8. 24' 같은 마감일이 잡힌다). 추정했던 div.notice_view 는 없는 셀렉터였다.
 
+  - id: changshin_lifelong_notice
+    name: 창신대학교 부설 평생교육원 공지사항
+    org_type: university
+    tier: 3
+    enabled: true
+    verified: true
+    homepage: https://ice.cs.ac.kr
+    region_hint: [경남, 창원]
+    adapter:
+      type: playwright
+      org_name: 창신대학교 부설 평생교육원
+      list_url: https://ice.cs.ac.kr/board/24b4032f-1281-4042-93a8-861340ff16bd
+      wait_for: div.notice_list table tbody td.tit
+      row_selector: div.notice_list table tbody tr
+      title_selector: td.tit
+      date_selector: td:nth-child(5)
+      date_formats: ["%Y-%m-%d"]
+      id_selector: td:first-child
+      link_url_template: https://ice.cs.ac.kr/board/24b4032f-1281-4042-93a8-861340ff16bd#no{1}
+      keywords: [강사, 교강사, 강의, 지도사, 초빙, 위촉, 강좌 개설]
+      paging: { max_pages: 1 }
+      detail: { fetch: true, click: true, url_from_page: true, body_selector: div.post-detail }
+    notes: >-
+      알림마당과 같은 Nuxt 표 구조를 쓰는 두 번째 게시판(2026-09-23 덤프에서
+      '[모집 중] 생활공간 정리수납 2급 자격증 과정 교육생 모집' 2026-09-09 확인).
+      알림마당보다 오히려 최근 글이 있다. 설정은 알림마당과 같고 게시판 UUID 만 다르다.
+      wait_for 는 반드시 td.tit 로 잡을 것 — td 나 tr 로 잡으면 Nuxt 가 채우기 전
+      '등록된 글이 없습니다' 행에 걸려 빈 게시판으로 읽는다. 덤프에서 두 번 속았다.
+
   - id: cwmc_lifelong
     name: 창원문성대학교 평생교육원 공지사항
     org_type: university
@@ -792,6 +821,32 @@ sources:
       상단 고정글(tr.isnotice)이 아래 목록에도 그대로 한 번 더 나와서 같은 주소가 두 번 잡힌다.
       주소가 같으니 저장 단계에서 하나로 합쳐진다 — 고정글이 정작 중요한 공고인 경우가 많아
       셀렉터로 걸러내지 않는다(일반과정 게시판은 유일한 글이 고정글이었다).
+
+  - id: dongseo_lifelong_50plus
+    name: 동서대학교 평생교육원 50+생애재설계대학 게시판
+    org_type: university
+    tier: 3
+    enabled: true
+    verified: true
+    homepage: https://uni.dongseo.ac.kr/continuing/
+    region_hint: [부산]
+    schedule: daily_light
+    adapter:
+      type: html_list
+      org_name: 동서대학교 평생교육원
+      list_url: https://uni.dongseo.ac.kr/continuing/index.php?pCode=MN4000075
+      row_selector: table.isDataList.board-list-table tbody tr
+      title_selector: td.f-tit.subject a
+      date_selector: td.f-date.date
+      date_formats: ["%Y-%m-%d"]
+      keywords: [강사, 교강사, 강의, 지도사, 초빙, 위촉, 강좌 개설]
+      paging: { max_pages: 1 }
+      detail: { fetch: false }
+    notes: >-
+      50+생애재설계대학 게시판(2026-09-25 러너 렌더 덤프로 구조 확인: 1건,
+      '이차전지 전문가 양성과정' 2026-04-23). 일반과정·학점은행제 게시판과 같은 표 구조라
+      셀렉터가 동일하다. detail.fetch 는 같은 이유로 false(글 내용이 이미지).
+      중장년 대상 과정이라 강사·지도자 모집이 올라올 여지가 있어 켜 둔다.
 
   - id: tu_lifelong
     name: 동명대학교 부설 평생교육원 공지사항
