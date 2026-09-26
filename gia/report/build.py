@@ -128,9 +128,15 @@ def render_email(data: ReportData, now: datetime, site_url: str = "") -> str:
     return env.get_template("email.html.j2").render(r=data, now=now, site_url=site_url)
 
 
-def email_subject(data: ReportData, now: datetime) -> str:
+def email_subject(data: ReportData, now: datetime, test: bool = False) -> str:
+    """채널 제목. 표시를 여기서 붙여야 채널이 늘어도 빠지지 않는다.
+
+    점검 발송(--notify-test)은 공고가 없는 날에도 나가므로, 제목만 보고 진짜
+    공고 알림과 구별되어야 한다.
+    """
     d = now.astimezone(KST)
-    return f"[부울경 평생교육원 강사공고] {d.month:02d}/{d.day:02d} 신규 {len(data.new)} · 마감임박 {len(data.closing)}"
+    head = "[테스트] " if test else ""
+    return f"{head}[부울경 평생교육원 강사공고] {d.month:02d}/{d.day:02d} 신규 {len(data.new)} · 마감임박 {len(data.closing)}"
 
 
 def write_report(md: str, reports_dir: Path, now: datetime) -> Path:

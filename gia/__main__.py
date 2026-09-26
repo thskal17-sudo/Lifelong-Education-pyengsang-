@@ -111,6 +111,7 @@ def main(argv: list[str] | None = None) -> int:
         failures: list[str] = []
         if args.send:
             channels = bundle.settings.notify.channels
+            subject = email_subject(data, now, test=args.notify_test)
             if "telegram" in channels:
                 token, chat = os.environ.get("TELEGRAM_BOT_TOKEN"), os.environ.get("TELEGRAM_CHAT_ID")
                 if not token or not chat:
@@ -130,7 +131,7 @@ def main(argv: list[str] | None = None) -> int:
                 else:
                     try:
                         html = render_email(data, now, os.environ.get("SITE_URL", ""))
-                        n = send_email(cfg, email_subject(data, now), html, md)
+                        n = send_email(cfg, subject, html, md)
                         print(f"[report] 이메일 {n}명에게 전송", file=sys.stderr)
                     except Exception as e:  # noqa: BLE001
                         failures.append(f"email: {e}")
@@ -145,9 +146,6 @@ def main(argv: list[str] | None = None) -> int:
                     from .notify.github_issue import (
                         default_assignees, issue_body, send_issue,
                     )
-                    subject = email_subject(data, now)
-                    if args.notify_test:
-                        subject = "[테스트] " + subject
                     try:
                         who = os.environ.get("NOTIFY_ASSIGNEES", "")
                         assignees = ([w.strip() for w in who.split(",") if w.strip()]

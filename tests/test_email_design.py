@@ -43,3 +43,15 @@ def test_email_marks_closing_soon_red():
     calm = ReportData(date_str="d", new=[_posting("여유 있음", 30)], closing_days=3)
     assert "#f04452" in render_email(urgent, NOW)
     assert "#f04452" not in render_email(calm, NOW)
+
+
+def test_subject_marks_test_sends():
+    """점검 발송은 제목만 보고 진짜 공고 알림과 구별돼야 한다."""
+    from gia.report.build import email_subject
+
+    data = ReportData(date_str="2026-09-26 (토)", new=[_posting("공고", 5)], closing_days=3)
+    real = email_subject(data, NOW)
+    test = email_subject(data, NOW, test=True)
+    assert not real.startswith("[테스트]")
+    assert test == "[테스트] " + real
+    assert "09/26" in real and "신규 1" in real
