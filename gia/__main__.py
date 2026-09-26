@@ -131,8 +131,24 @@ def main(argv: list[str] | None = None) -> int:
                         print(f"[report] 이메일 {n}명에게 전송", file=sys.stderr)
                     except Exception as e:  # noqa: BLE001
                         failures.append(f"email: {e}")
+            if "github" in channels:
+                repo, token = os.environ.get("GITHUB_REPOSITORY"), os.environ.get("GITHUB_TOKEN")
+                if not repo or not token:
+                    failures.append("github: GITHUB_REPOSITORY/GITHUB_TOKEN 없음")
+                elif not (data.new or data.closing):
+                    # 조용한 날에는 열지 않는다. 매일 이슈가 열리면 알림이 배경 소음이 된다
+                    print("[report] 깃허브 이슈 생략(신규·마감임박 없음)", file=sys.stderr)
+                else:
+                    from .notify.github_issue import issue_body, send_issue
+                    try:
+                        url = send_issue(repo, token, email_subject(data, now),
+                                         issue_body(md, os.environ.get("SITE_URL", "")),
+                                         labels=["공고"])
+                        print(f"[report] 깃허브 이슈 {url}", file=sys.stderr)
+                    except Exception as e:  # noqa: BLE001
+                        failures.append(f"github: {e}")
             for ch in channels:
-                if ch not in ("telegram", "email"):
+                if ch not in ("telegram", "email", "github"):
                     failures.append(f"{ch}: 지원하지 않는 채널")
             for f in failures:
                 print(f"[report] 발송 실패 {f}", file=sys.stderr)

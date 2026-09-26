@@ -37,4 +37,8 @@ interests:
   keywords: []         # 예: [한국어, 디지털, 성인문해]
 
 notify:
-  channels: [telegram]   # email을 추가하려면 SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASSWORD, EMAIL_FROM, EMAIL_TO 설정
+  # github: 설정할 게 없다. 워크플로의 GITHUB_TOKEN 으로 이슈를 열면 GitHub 이
+  #         저장소를 지켜보는 사람에게 메일·푸시를 보낸다. 신규나 마감임박이 있는 날만 연다.
+  # email:  SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASSWORD, EMAIL_FROM, EMAIL_TO 를 비밀값으로 넣어야 한다.
+  # telegram: TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID 필요.
+  channels: [github]
