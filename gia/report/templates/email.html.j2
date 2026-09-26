@@ -1,28 +1,106 @@
+{#
+  토스 증권 리포트 디자인을 메일로 옮긴 것. gia/site.py 와 색·타이포를 맞춘다.
+
+  메일은 웹이 아니다. 지메일은 <link> 웹폰트를 막으므로 Pretendard 는 기기에 깔려
+  있을 때만 잡히고, 아니면 시스템 한글 폰트로 떨어진다. flex·grid 는 아웃룩에서
+  깨지므로 표로 짠다. CSS 는 <style> 블록이 잘려 나가는 클라이언트가 있어 전부 인라인.
+#}
+{% set F = "'Pretendard Variable',Pretendard,-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo','Malgun Gothic',system-ui,sans-serif" %}
+{% macro card(p, show_summary=True) %}
+{% set hot = p|urgent %}
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:0 0 10px;">
+  <tr><td style="background:#ffffff;border:1px solid #e5e8eb;border-radius:16px;padding:18px 20px;">
+    <div style="font-size:13px;color:#8b95a1;line-height:1.5;margin:0 0 8px;">
+      <span style="background:#e8f3ff;color:#1b64da;font-weight:700;font-size:12px;padding:3px 9px;border-radius:999px;">{{ p.field|field_name }}</span>
+      <span style="color:#4e5968;font-weight:600;">&nbsp;{{ p.org_name }}</span>
+    </div>
+    <a href="{{ p.primary_url }}" style="display:block;font-size:17px;font-weight:700;line-height:1.4;letter-spacing:-0.02em;color:#191f28;text-decoration:none;margin:0 0 8px;">{{ p.title }}</a>
+    {% if show_summary and p.one_line_summary %}
+    <div style="font-size:14px;color:#4e5968;line-height:1.55;margin:0 0 10px;">{{ p.one_line_summary }}{% if p.pay %} · {{ p.pay }}{% endif %}</div>
+    {% endif %}
+    <div style="font-size:13px;font-weight:600;color:{{ '#f04452' if hot else '#4e5968' }};line-height:1.6;">
+      마감 <b style="color:{{ '#f04452' if hot else '#191f28' }};">{{ p|deadline_str }}</b>
+      {% if p|dday %}<span style="background:{{ '#fff0f1' if hot else '#f2f4f6' }};color:{{ '#f04452' if hot else '#4e5968' }};font-size:12px;font-weight:700;padding:3px 8px;border-radius:7px;">{{ p|dday }}</span>{% endif %}
+      <span style="color:#8b95a1;font-weight:500;">&nbsp;{{ p.region|region_str }} · {{ p.employment_type }}</span>
+    </div>
+    {% if '판별유보' in p.flags or '재공고' in p.flags or ('첨부추출실패' in p.flags and not p.deadline) %}
+    <div style="font-size:12px;color:#8b95a1;margin:8px 0 0;">
+      {% if '판별유보' in p.flags %}⚠ 강사 공고 여부 확인 필요{% endif %}
+      {% if '재공고' in p.flags %}{% if '판별유보' in p.flags %} · {% endif %}재공고{% endif %}
+      {% if '첨부추출실패' in p.flags and not p.deadline %} · 첨부 추출 실패{% endif %}
+    </div>
+    {% endif %}
+  </td></tr>
+</table>
+{% endmacro %}
+{% macro heading(text) %}
+<div style="font-size:15px;font-weight:700;color:#191f28;letter-spacing:-0.01em;margin:28px 0 12px;">{{ text }}</div>
+{% endmacro %}
+{% macro empty() %}
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:0 0 10px;">
+  <tr><td style="background:#f2f4f6;border-radius:14px;padding:28px 20px;text-align:center;font-size:14px;color:#8b95a1;">없음</td></tr>
+</table>
+{% endmacro %}
 <!DOCTYPE html>
-<html lang="ko"><head><meta charset="utf-8"><title>부·울·경 평생교육원 강사공고 {{ r.date_str }}</title></head>
-<body style="font-family:-apple-system,'Apple SD Gothic Neo','Malgun Gothic',sans-serif;font-size:14px;line-height:1.5;color:#222;max-width:720px;margin:0 auto;padding:16px;">
-<h2 style="margin:0 0 4px;">부·울·경 대학 평생교육원 강사공고 일일 요약 — {{ r.date_str }}</h2>
-<p style="margin:0 0 16px;color:#555;">신규 <b>{{ r.new|length }}건</b> · 마감 임박 <b>{{ r.closing|length }}건</b> · 변경 <b>{{ r.updated|length }}건</b></p>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>부·울·경 평생교육원 강사공고 {{ r.date_str }}</title></head>
+<body style="margin:0;padding:0;background:#f2f4f6;">
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:#f2f4f6;">
+<tr><td align="center" style="padding:24px 12px 40px;">
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="600" style="width:100%;max-width:600px;font-family:{{ F }};">
 
-{% if r.overview %}<p style="background:#f4f6f8;padding:8px 12px;border-radius:6px;">{{ r.overview }}</p>{% endif %}
-<h3 style="border-bottom:1px solid #ddd;padding-bottom:4px;">⏰ 마감 임박 ({{ r.closing_days }}일 이내)</h3>
-{% for p in r.closing %}
-<p style="margin:0 0 12px;"><b>[{{ p.field|field_name }}] {{ p.org_name }} · <a href="{{ p.primary_url }}">{{ p.title }}</a></b> — {{ p|dday }}<br>
-<span style="color:#555;">마감 {{ p|deadline_str }} · {{ p.region|region_str }} · {{ p.employment_type }}{% if '판별유보' in p.flags %} · ⚠ 강사 공고 여부 확인 필요{% endif %}{% if '재공고' in p.flags %} · 재공고{% endif %}</span></p>
-{% else %}<p>없음</p>{% endfor %}
+  {# 표지. 아웃룩은 gradient 를 못 읽으므로 bgcolor 로 받쳐 둔다 #}
+  <tr><td bgcolor="#dcefff" style="background:#dcefff;background-image:linear-gradient(180deg,#eaf5ff 0%,#dcefff 38%,#a9d4f7 78%,#7cbdf2 100%);border-radius:20px;padding:38px 28px 34px;">
+    <div style="font-size:13px;font-weight:600;color:#1b64da;letter-spacing:-0.01em;margin:0 0 10px;">
+      {{ r.date_str }}{% if r.run %}{% set c = r.run.counts() %} · 수집 소스 {{ c.ok + c.empty }}/{{ c.ok + c.empty + c.fail + c.unconfigured }} 정상{% endif %}
+    </div>
+    <div style="font-size:27px;font-weight:800;line-height:1.3;letter-spacing:-0.035em;color:#191f28;margin:0 0 14px;">
+      부·울·경 대학 평생교육원<br>강사공고 일일 요약
+    </div>
+    <div style="font-size:14px;font-weight:600;color:#1b64da;">
+      신규 <b style="color:#191f28;">{{ r.new|length }}건</b> · 마감 임박 <b style="color:#191f28;">{{ r.closing|length }}건</b> · 변경 <b style="color:#191f28;">{{ r.updated|length }}건</b>
+    </div>
+  </td></tr>
 
-<h3 style="border-bottom:1px solid #ddd;padding-bottom:4px;">🆕 신규 공고</h3>
-{% for p in r.new %}
-<p style="margin:0 0 12px;"><b>[{{ p.field|field_name }}] {{ p.org_name }} · <a href="{{ p.primary_url }}">{{ p.title }}</a></b><br>
-<span style="color:#555;">마감 {{ p|deadline_str }} · {{ p.region|region_str }} · {{ p.employment_type }}{% if '판별유보' in p.flags %} · ⚠ 강사 공고 여부 확인 필요{% endif %}{% if '재공고' in p.flags %} · 재공고{% endif %}{% if '첨부추출실패' in p.flags and not p.deadline %} · 첨부 추출 실패{% endif %}</span>{% if p.one_line_summary %}<br><span>{{ p.one_line_summary }}{% if p.pay %} · {{ p.pay }}{% endif %}</span>{% endif %}</p>
-{% else %}<p>없음</p>{% endfor %}
+  <tr><td style="padding:0 2px;">
+    {% if r.overview %}
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:24px 0 0;">
+      <tr><td style="border-left:3px solid #3182f6;background:#ffffff;border-radius:0 12px 12px 0;padding:14px 18px;font-size:14px;line-height:1.6;color:#4e5968;">{{ r.overview }}</td></tr>
+    </table>
+    {% endif %}
 
-<h3 style="border-bottom:1px solid #ddd;padding-bottom:4px;">🔄 변경 공고</h3>
-{% for p in r.updated %}
-<p style="margin:0 0 8px;">[{{ p.field|field_name }}] {{ p.org_name }} · <a href="{{ p.primary_url }}">{{ p.title }}</a> — 마감 {{ p|deadline_str }}{% if p.flags %} ({{ p.flags|join(', ') }}){% endif %}</p>
-{% else %}<p>없음</p>{% endfor %}
+    {{ heading("⏰ 마감 임박 (%d일 이내)"|format(r.closing_days)) }}
+    {% for p in r.closing %}{{ card(p, show_summary=False) }}{% else %}{{ empty() }}{% endfor %}
 
-{% if r.run %}{% set c = r.run.counts() %}
-<p style="margin-top:24px;color:#888;font-size:12px;">수집 소스 정상 {{ c.ok + c.empty }} / 실패 {{ c.fail }} / 미설정 {{ c.unconfigured }}{% if c.fail %} · 실패: {% for s in r.run.sources if s.status == 'fail' %}{{ s.source_id }}{% if not loop.last %}, {% endif %}{% endfor %}{% endif %}</p>
-{% endif %}
+    {{ heading("🆕 신규 공고") }}
+    {% for p in r.new %}{{ card(p) }}{% else %}{{ empty() }}{% endfor %}
+
+    {{ heading("🔄 변경 공고") }}
+    {% for p in r.updated %}{{ card(p, show_summary=False) }}{% else %}{{ empty() }}{% endfor %}
+
+    {% if r.run %}{% set c = r.run.counts() %}
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:28px 0 0;">
+      <tr><td style="background:#ffffff;border:1px solid #e5e8eb;border-radius:16px;padding:16px 20px;font-size:12px;line-height:1.7;color:#8b95a1;">
+        수집 소스 정상 <b style="color:#4e5968;">{{ c.ok + c.empty }}</b> · 실패 <b style="color:{{ '#f04452' if c.fail else '#4e5968' }};">{{ c.fail }}</b> · 미설정 <b style="color:#4e5968;">{{ c.unconfigured }}</b>
+        {% if c.fail %}<br>실패 소스: {% for s in r.run.sources if s.status == 'fail' %}{{ s.source_id }}{% if not loop.last %}, {% endif %}{% endfor %}{% endif %}
+      </td></tr>
+    </table>
+    {% endif %}
+
+    {% if site_url %}
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:20px 0 0;">
+      <tr><td align="center" style="padding:4px 0;">
+        <a href="{{ site_url }}" style="display:inline-block;background:#3182f6;color:#ffffff;font-size:15px;font-weight:700;letter-spacing:-0.01em;text-decoration:none;padding:15px 32px;border-radius:14px;">전체 목록 보기</a>
+      </td></tr>
+    </table>
+    {% endif %}
+
+    <div style="margin:24px 0 0;text-align:center;font-size:12px;color:#8b95a1;line-height:1.7;">
+      부·울·경 대학 평생교육원 강사공고 자동 수집<br>
+      전체 아카이브 reports/ · 오탐·미탐 신고 data/feedback.jsonl
+    </div>
+  </td></tr>
+
+</table>
+</td></tr></table>
 </body></html>

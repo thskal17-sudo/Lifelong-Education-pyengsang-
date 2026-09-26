@@ -113,10 +113,19 @@ def render_telegram(data: ReportData, now: datetime) -> str:
     return env.get_template("telegram.html.j2").render(r=data, now=now)
 
 
-def render_email(data: ReportData, now: datetime) -> str:
+def is_urgent(p: Posting, now: datetime, days: int = 3) -> bool:
+    """마감이 코앞이면 메일에서 빨갛게 세운다. site.py 의 .urgent 와 같은 기준."""
+    if not p.deadline:
+        return False
+    left = (p.deadline.astimezone(KST).date() - now.astimezone(KST).date()).days
+    return 0 <= left <= days
+
+
+def render_email(data: ReportData, now: datetime, site_url: str = "") -> str:
     env = _env()
     env.filters["dday"] = lambda p: dday(p, now)
-    return env.get_template("email.html.j2").render(r=data, now=now)
+    env.filters["urgent"] = lambda p: is_urgent(p, now, data.closing_days)
+    return env.get_template("email.html.j2").render(r=data, now=now, site_url=site_url)
 
 
 def email_subject(data: ReportData, now: datetime) -> str:

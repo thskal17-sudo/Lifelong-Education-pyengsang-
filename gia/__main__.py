@@ -129,7 +129,8 @@ def main(argv: list[str] | None = None) -> int:
                     failures.append("email: SMTP_HOST/EMAIL_TO 없음")
                 else:
                     try:
-                        n = send_email(cfg, email_subject(data, now), render_email(data, now), md)
+                        html = render_email(data, now, os.environ.get("SITE_URL", ""))
+                        n = send_email(cfg, email_subject(data, now), html, md)
                         print(f"[report] 이메일 {n}명에게 전송", file=sys.stderr)
                     except Exception as e:  # noqa: BLE001
                         failures.append(f"email: {e}")
