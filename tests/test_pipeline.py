@@ -132,3 +132,25 @@ def test_build_posting_survives_broken_text(settings, tmp_path, monkeypatch):
     assert "\ud83d" not in p.title and "\udc00" not in p.title
     p.content_hash.encode("utf-8")
     assert p.deadline is not None and p.deadline.isoformat() == "2026-09-30T18:00:00+09:00"
+
+
+def test_disabled_source_runs_only_when_named(settings, tmp_path):
+    """--sources 로 이름을 대면 꺼진 소스도 돈다.
+
+    러너 IP 가 막힌 대학을 국내 IP 에서 손으로 돌리려면 이 문이 필요하다.
+    반대로 이름을 대지 않으면 평소처럼 건너뛰어야 한다 — 매일 도는 수집이
+    꺼 둔 소스까지 긁으면 실패 로그만 쌓인다.
+    """
+    src = make_source("board", "university", type="html_list",
+                      list_url="https://site.example.org/board/list",
+                      row_selector="table.board tbody tr", title_selector="td.title a",
+                      date_selector="td.date", detail={"fetch": False})
+    src.enabled = False
+    bundle = _bundle(settings, [src])
+    http = _http(settings)
+    try:
+        assert collect(bundle, Store(tmp_path / "a"), http, now=NOW).sources == []
+        named = collect(bundle, Store(tmp_path / "b"), http, only=["board"], now=NOW)
+        assert [s.source_id for s in named.sources] == ["board"]
+    finally:
+        http.close()

@@ -25,6 +25,12 @@ python -m gia report                     # 요약본 생성·출력 (reports/)
 python -m gia site --out site            # Pages 아카이브 생성
 ```
 
+## 국내 IP에서 손으로 돌리기
+
+대학 5곳(부경대·동의과학대·경성대·인제대·가야대)은 GitHub 러너에서 접속이 막혀
+매일 수집에서 빠져 있다. 한국에서 접속되는 컴퓨터로 채우는 방법은
+[docs/LOCAL_RUN.md](docs/LOCAL_RUN.md).
+
 ## 수집 범위
 
 | 지역 | 상태 |

@@ -239,7 +239,12 @@ def collect(bundle: ConfigBundle, store: Store, http: HttpClient, only: list[str
     now = now or datetime.now(KST)
     cs = bundle.settings.collector
     since = now.date() - timedelta(days=backfill_days if backfill_days else cs.default_days)
-    selected = [s for s in bundle.sources if s.enabled and (only is None or s.id in only) and (not light or s.schedule == "daily_light")]
+    # --sources 로 이름을 직접 댄 소스는 꺼져 있어도 돌린다. 러너 IP 가 막힌 대학을
+    # 국내 IP 에서 손으로 돌려 보려면 이 문이 필요하다. robots 차단은 여기가 아니라
+    # fetch 단계에서 걸리므로(collectors/base.py), 이 문으로 정책이 뚫리지는 않는다.
+    selected = [s for s in bundle.sources
+                if (s.id in only if only is not None else s.enabled)
+                and (not light or s.schedule == "daily_light")]
     run = RunLog(run_id=now.strftime("%Y-%m-%dT%H-%M"), started_at=now)
     if backfill_days:
         run.notes.append(f"백필 {backfill_days}일")
