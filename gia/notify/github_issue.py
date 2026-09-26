@@ -24,12 +24,26 @@ def issue_body(markdown: str, site_url: str = "") -> str:
     return body
 
 
+def default_assignees(repo: str) -> list[str]:
+    """저장소 주인을 담당자로 쓴다.
+
+    저장소를 지켜보지(watch) 않으면 이슈가 열려도 메일이 오지 않는다 — API 로 만든
+    저장소는 주인조차 구독이 안 걸려 있다. 담당자로 지정된 사람에게는 watch 와
+    무관하게 항상 알림이 가므로, 알림이 설정에 좌우되지 않게 못을 박아 둔다.
+    """
+    owner = repo.split("/", 1)[0].strip()
+    return [owner] if owner else []
+
+
 def send_issue(repo: str, token: str, title: str, body: str,
-               labels: list[str] | None = None, timeout: float = 20.0) -> str:
+               labels: list[str] | None = None, timeout: float = 20.0,
+               assignees: list[str] | None = None) -> str:
     """이슈를 열고 주소를 돌려준다. repo 는 'owner/name' 형식."""
     payload: dict = {"title": title, "body": body}
     if labels:
         payload["labels"] = labels
+    if assignees:
+        payload["assignees"] = assignees
     headers = {
         "Authorization": f"Bearer {token}",
         "Accept": "application/vnd.github+json",
@@ -37,9 +51,9 @@ def send_issue(repo: str, token: str, title: str, body: str,
     }
     url = f"{API}/repos/{repo}/issues"
     r = httpx.post(url, json=payload, headers=headers, timeout=timeout)
-    if r.status_code == 422 and labels:
-        # 라벨이 없는 저장소에서 422 가 날 수 있다. 라벨은 포기하고 이슈는 연다
-        payload.pop("labels")
-        r = httpx.post(url, json=payload, headers=headers, timeout=timeout)
+    if r.status_code == 422 and (labels or assignees):
+        # 라벨이 없거나 담당자가 협업자가 아니면 422 가 난다. 장식은 포기하고 이슈는 연다
+        r = httpx.post(url, json={"title": title, "body": body},
+                       headers=headers, timeout=timeout)
     r.raise_for_status()
     return r.json()["html_url"]

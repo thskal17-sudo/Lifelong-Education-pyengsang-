@@ -1,7 +1,12 @@
 import httpx
 import pytest
 
-from gia.notify.github_issue import BODY_LIMIT, issue_body, send_issue
+from gia.notify.github_issue import (
+    BODY_LIMIT,
+    default_assignees,
+    issue_body,
+    send_issue,
+)
 
 
 def _client(handler):
@@ -35,21 +40,41 @@ def test_send_issue_posts_and_returns_url(monkeypatch):
     assert seen["headers"]["Authorization"] == "Bearer tok"
 
 
-def test_send_issue_retries_without_labels_on_422(monkeypatch):
-    """라벨이 없는 저장소에서 422 가 나면 라벨을 빼고 다시 연다."""
+def test_default_assignees_is_repo_owner():
+    assert default_assignees("thskal17-sudo/repo") == ["thskal17-sudo"]
+    assert default_assignees("") == []
+
+
+def test_send_issue_assigns(monkeypatch):
+    """담당자를 넣어야 watch 설정과 무관하게 메일이 간다."""
+    seen = {}
+
+    def handler(url, payload, headers):
+        seen.update(payload)
+        return httpx.Response(201, json={"html_url": "https://github.com/o/r/issues/9"},
+                              request=httpx.Request("POST", url))
+
+    monkeypatch.setattr(httpx, "post", _client(handler))
+    send_issue("o/r", "tok", "제목", "본문", assignees=["o"])
+    assert seen["assignees"] == ["o"]
+
+
+def test_send_issue_retries_bare_on_422(monkeypatch):
+    """라벨·담당자가 거부되면 둘 다 빼고 이슈만은 연다."""
     calls = []
 
     def handler(url, payload, headers):
         calls.append(payload)
-        if "labels" in payload:
+        if "labels" in payload or "assignees" in payload:
             return httpx.Response(422, json={"message": "Validation Failed"},
                                   request=httpx.Request("POST", url))
         return httpx.Response(201, json={"html_url": "https://github.com/o/r/issues/8"},
                               request=httpx.Request("POST", url))
 
     monkeypatch.setattr(httpx, "post", _client(handler))
-    assert send_issue("o/r", "tok", "제목", "본문", labels=["공고"]).endswith("/8")
-    assert len(calls) == 2 and "labels" not in calls[1]
+    assert send_issue("o/r", "tok", "제목", "본문",
+                      labels=["공고"], assignees=["nobody"]).endswith("/8")
+    assert len(calls) == 2 and calls[1] == {"title": "제목", "body": "본문"}
 
 
 def test_send_issue_raises_on_error(monkeypatch):

@@ -141,14 +141,19 @@ def main(argv: list[str] | None = None) -> int:
                     # 조용한 날에는 열지 않는다. 매일 이슈가 열리면 알림이 배경 소음이 된다
                     print("[report] 깃허브 이슈 생략(신규·마감임박 없음)", file=sys.stderr)
                 else:
-                    from .notify.github_issue import issue_body, send_issue
+                    from .notify.github_issue import (
+                        default_assignees, issue_body, send_issue,
+                    )
                     subject = email_subject(data, now)
                     if args.notify_test:
                         subject = "[테스트] " + subject
                     try:
+                        who = os.environ.get("NOTIFY_ASSIGNEES", "")
+                        assignees = ([w.strip() for w in who.split(",") if w.strip()]
+                                     if who else default_assignees(repo))
                         url = send_issue(repo, token, subject,
                                          issue_body(md, os.environ.get("SITE_URL", "")),
-                                         labels=["공고"])
+                                         labels=["공고"], assignees=assignees)
                         print(f"[report] 깃허브 이슈 {url}", file=sys.stderr)
                     except Exception as e:  # noqa: BLE001
                         failures.append(f"github: {e}")
