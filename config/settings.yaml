@@ -41,4 +41,8 @@ notify:
   #         저장소를 지켜보는 사람에게 메일·푸시를 보낸다. 신규나 마감임박이 있는 날만 연다.
   # email:  SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASSWORD, EMAIL_FROM, EMAIL_TO 를 비밀값으로 넣어야 한다.
   # telegram: TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID 필요.
-  channels: [github]
+  #
+  # 둘을 같이 쓴다. email 은 디자인을 입힌 본문을 매일 보내 파이프라인이 살아 있음을
+  # 알리고(조용한 날에도 온다), github 는 신규·마감임박이 있는 날만 열어 진짜 알림이
+  # 된다. 한쪽이 죽어도 다른 쪽이 남는다.
+  channels: [github, email]
