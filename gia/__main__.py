@@ -42,6 +42,8 @@ def _parser() -> argparse.ArgumentParser:
     r.add_argument("--send", action="store_true", help="채널로 발송하고 보고 상태를 기록")
     r.add_argument("--mark", action="store_true", help="발송 없이 보고 상태만 기록")
     r.add_argument("--print", dest="print_md", action="store_true", help="Markdown을 표준출력으로")
+    r.add_argument("--notify-test", action="store_true",
+                   help="공고가 없어도 알림을 한 번 보내 채널이 살아 있는지 확인 (제목에 [테스트] 표시)")
 
     pr = sub.add_parser("probe", help="소스 하나를 시험 수집")
     pr.add_argument("source_id")
@@ -135,13 +137,16 @@ def main(argv: list[str] | None = None) -> int:
                 repo, token = os.environ.get("GITHUB_REPOSITORY"), os.environ.get("GITHUB_TOKEN")
                 if not repo or not token:
                     failures.append("github: GITHUB_REPOSITORY/GITHUB_TOKEN 없음")
-                elif not (data.new or data.closing):
+                elif not (data.new or data.closing or args.notify_test):
                     # 조용한 날에는 열지 않는다. 매일 이슈가 열리면 알림이 배경 소음이 된다
                     print("[report] 깃허브 이슈 생략(신규·마감임박 없음)", file=sys.stderr)
                 else:
                     from .notify.github_issue import issue_body, send_issue
+                    subject = email_subject(data, now)
+                    if args.notify_test:
+                        subject = "[테스트] " + subject
                     try:
-                        url = send_issue(repo, token, email_subject(data, now),
+                        url = send_issue(repo, token, subject,
                                          issue_body(md, os.environ.get("SITE_URL", "")),
                                          labels=["공고"])
                         print(f"[report] 깃허브 이슈 {url}", file=sys.stderr)

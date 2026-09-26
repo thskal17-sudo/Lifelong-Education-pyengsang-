@@ -7,6 +7,9 @@ on:
       send:
         description: "실제 발송 여부 (false면 파일만 생성)"
         default: "true"
+      notify_test:
+        description: "공고가 없어도 알림을 한 번 보내 채널 점검 (true/false)"
+        default: "false"
 concurrency:
   group: pipeline
   cancel-in-progress: false
@@ -42,6 +45,8 @@ jobs:
         run: |
           if [ "${{ github.event.inputs.send }}" = "false" ]; then
             python -m gia report --print
+          elif [ "${{ github.event.inputs.notify_test }}" = "true" ]; then
+            python -m gia report --send --notify-test
           else
             python -m gia report --send
           fi
