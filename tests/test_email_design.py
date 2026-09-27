@@ -33,16 +33,21 @@ def test_email_uses_site_design_tokens():
     assert "Pretendard" in html
     # 지메일은 웹폰트를 막는다. 시스템 한글 폰트로 떨어질 자리가 있어야 한다
     assert "Apple SD Gothic Neo" in html and "Malgun Gothic" in html
-    # 아웃룩은 gradient 를 못 읽는다. bgcolor 로 받쳐 둔 표지가 있어야 한다
-    assert 'bgcolor="#dcefff"' in html
+    # 본문은 표로 짠다. flex·grid 는 아웃룩에서 깨진다
+    assert "<table" in html and "display:flex" not in html and "display:grid" not in html
     assert "https://example.org/site/" in html  # 전체 목록 버튼
 
 
 def test_email_marks_closing_soon_red():
+    """마감 임박 줄만 빨간 바탕이어야 한다.
+
+    머리말의 마감임박 건수는 0건일 때도 빨간 글씨이므로, 색 이름만으로는 구별이
+    안 된다. 줄 바탕색(#fff0f1)을 본다.
+    """
     urgent = ReportData(date_str="d", closing=[_posting("내일 마감", 1)], closing_days=3)
     calm = ReportData(date_str="d", new=[_posting("여유 있음", 30)], closing_days=3)
-    assert "#f04452" in render_email(urgent, NOW)
-    assert "#f04452" not in render_email(calm, NOW)
+    assert "#fff0f1" in render_email(urgent, NOW)
+    assert "#fff0f1" not in render_email(calm, NOW)
 
 
 def test_subject_marks_test_sends():
@@ -54,4 +59,4 @@ def test_subject_marks_test_sends():
     test = email_subject(data, NOW, test=True)
     assert not real.startswith("[테스트]")
     assert test == "[테스트] " + real
-    assert "09/26" in real and "신규 1" in real
+    assert "9/26(토)" in real and "신규 1건" in real

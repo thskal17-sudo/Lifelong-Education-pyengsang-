@@ -130,9 +130,24 @@ def main(argv: list[str] | None = None) -> int:
                     failures.append("email: SMTP_HOST/EMAIL_TO 없음")
                 else:
                     try:
-                        html = render_email(data, now, os.environ.get("SITE_URL", ""))
-                        n = send_email(cfg, subject, html, md)
-                        print(f"[report] 이메일 {n}명에게 전송", file=sys.stderr)
+                        # 전체 목록·수집 현황은 첨부로 뺀다. 본문에 다 넣으면 길어서
+                        # 정작 급한 건을 놓친다
+                        xlsx: list[tuple[str, bytes]] = []
+                        try:
+                            from .report.excel import build_workbook, workbook_name
+                            xlsx = [(workbook_name(now), build_workbook(data, store, bundle, now))]
+                        except Exception as e:  # noqa: BLE001
+                            # 첨부가 실패해도 본문은 보낸다 — 알림이 통째로 빠지는 쪽이 더 나쁘다
+                            print(f"[report] 엑셀 첨부 생략: {e}", file=sys.stderr)
+                        active_total = sum(1 for p in store.values()
+                                           if p.status.value != "expired"
+                                           and not (p.deadline and p.deadline < now)
+                                           and "피드백제외" not in p.flags)
+                        html = render_email(data, now, os.environ.get("SITE_URL", ""),
+                                            active_total=active_total, attached=bool(xlsx))
+                        n = send_email(cfg, subject, html, md, attachments=xlsx)
+                        print(f"[report] 이메일 {n}명에게 전송"
+                              + (f" (첨부 {xlsx[0][0]})" if xlsx else " (첨부 없음)"), file=sys.stderr)
                     except Exception as e:  # noqa: BLE001
                         failures.append(f"email: {e}")
             if "github" in channels:

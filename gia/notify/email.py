@@ -29,19 +29,27 @@ class SmtpConfig:
         )
 
 
-def build_message(cfg: SmtpConfig, subject: str, html: str, text: str) -> EmailMessage:
+def build_message(cfg: SmtpConfig, subject: str, html: str, text: str,
+                  attachments: list[tuple[str, bytes]] | None = None) -> EmailMessage:
     msg = EmailMessage()
     msg["Subject"] = subject
     msg["From"] = f"부울경 평생교육원 강사공고 알림 <{cfg.sender}>" if cfg.sender else "부울경 평생교육원 강사공고 알림"
     msg["To"] = ", ".join(cfg.to)
     msg.set_content(text)
     msg.add_alternative(html, subtype="html")
+    for name, blob in attachments or []:
+        # add_attachment 를 set_content 뒤에 부르면 multipart/mixed 로 올려 주므로
+        # 본문 대체(text/plain + text/html) 구조는 그대로 유지된다
+        msg.add_attachment(blob, maintype="application", filename=name,
+                           subtype="vnd.openxmlformats-officedocument.spreadsheetml.sheet")
     return msg
 
 
-def send_email(cfg: SmtpConfig, subject: str, html: str, text: str, smtp_factory: Callable | None = None) -> int:
+def send_email(cfg: SmtpConfig, subject: str, html: str, text: str,
+               smtp_factory: Callable | None = None,
+               attachments: list[tuple[str, bytes]] | None = None) -> int:
     """메일을 보내고 수신자 수를 돌려준다. smtp_factory는 테스트용 주입점."""
-    msg = build_message(cfg, subject, html, text)
+    msg = build_message(cfg, subject, html, text, attachments)
     use_ssl = cfg.use_ssl if cfg.use_ssl is not None else cfg.port == 465
     factory = smtp_factory or (smtplib.SMTP_SSL if use_ssl else smtplib.SMTP)
     with factory(cfg.host, cfg.port, timeout=30) as smtp:

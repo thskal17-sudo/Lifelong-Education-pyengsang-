@@ -126,11 +126,15 @@ def is_urgent(p: Posting, now: datetime, days: int = 3) -> bool:
     return 0 <= left <= days
 
 
-def render_email(data: ReportData, now: datetime, site_url: str = "") -> str:
+def render_email(data: ReportData, now: datetime, site_url: str = "",
+                 active_total: int | None = None, attached: bool = False) -> str:
     env = _env()
     env.filters["dday"] = lambda p: dday(p, now)
     env.filters["urgent"] = lambda p: is_urgent(p, now, data.closing_days)
-    return env.get_template("email.html.j2").render(r=data, now=now, site_url=site_url)
+    if active_total is None:
+        active_total = len(data.closing) + len(data.new) + len(data.updated)
+    return env.get_template("email.html.j2").render(
+        r=data, now=now, site_url=site_url, active_total=active_total, attached=attached)
 
 
 def email_subject(data: ReportData, now: datetime, test: bool = False) -> str:
@@ -141,7 +145,8 @@ def email_subject(data: ReportData, now: datetime, test: bool = False) -> str:
     """
     d = now.astimezone(KST)
     head = "[테스트] " if test else ""
-    return f"{head}[부울경 평생교육원 강사공고] {d.month:02d}/{d.day:02d} 신규 {len(data.new)} · 마감임박 {len(data.closing)}"
+    return (f"{head}[부울경 평생교육원 강사공고] {d.month}/{d.day}({_WEEKDAYS[d.weekday()]}) "
+            f"신규 {len(data.new)}건 · 마감임박 {len(data.closing)}건")
 
 
 def write_report(md: str, reports_dir: Path, now: datetime) -> Path:
