@@ -103,10 +103,13 @@ sources:
       title_selector: td.text-left a
       date_selector: td:nth-child(6)
       paging: { max_pages: 1 }
-      detail: { fetch: true, body_selector: div.board-view-cont }
+      # 목록 앵커가 제목을 '…평생교육과정 신규…'로 잘라 내준다. 상세에서 다시 읽는다
+      detail: { fetch: true, body_selector: div.board-view-cont, title_selector: div.board-view-title }
     notes: >-
       강좌 개설 신청 공고(강사가 강좌를 제안하는 모집, 2026-09-22 러너에서 gia probe 검증: 목록 3건·본문 659자·마감 추출 정상). 모든 행이 강사 대상이므로 keywords 없음.
       6열 '신청기간'(2026.06.01 00:00 ~ 2026.06.30 00:00)의 첫 날짜가 게시일로 잡힘 → 실제 게시일보다 이르게 기록될 수 있음.
+      목록 앵커가 제목을 잘라 내주므로(2026-09-27 러너 확인: '…평생교육과정 신규…' 43자) detail.title_selector 로 상세 div.board-view-title 의 첫 줄을 쓴다.
+      그 칸에는 제목 아래로 학년도·교육과정·조회수가 줄줄이 따라붙어 216자라, 첫 줄만 쓰는 것이 핵심이다.
 
   - id: yonam_lifelong
     name: 연암공과대학교 평생교육원 (진주)

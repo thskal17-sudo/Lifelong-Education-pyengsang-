@@ -118,6 +118,27 @@ def parse_list_html(html: str, page_url: str, a: dict, cfg, since: date) -> tupl
     return out, oldest_on_page
 
 
+def extract_title_html(html: str, selector: str) -> str:
+    """상세 페이지에서 제목을 읽는다. 첫 줄만 쓴다.
+
+    목록에 내주는 제목을 잘라 버리는 게시판이 있다(마산대 강좌 개설 신청:
+    '…평생교육과정 신규…'). 그런 곳은 상세에서 다시 읽어야 온전한 제목이 나온다.
+
+    제목 칸에 게시일·조회수 같은 것이 함께 들어 있는 경우가 많아, 줄로 끊어
+    첫 줄만 쓴다. 제목이 한 줄이 아닌 게시판이 나오면 그때 더 좁은 셀렉터를
+    적으면 된다 — 여기서 여러 줄을 이어 붙이면 메타데이터가 제목에 섞인다.
+    """
+    tree = HTMLParser(html)
+    node = tree.css_first(selector)
+    if node is None:
+        return ""
+    for line in node.text(separator="\n", strip=True).split("\n"):
+        line = line.strip()
+        if line:
+            return line[:300]
+    return ""
+
+
 def extract_body_html(html: str, selector: str) -> str:
     tree = HTMLParser(html)
     for tag in ("script", "style", "noscript"):
@@ -170,4 +191,10 @@ class HtmlListAdapter(SourceAdapter):
         html = decode_html(r, d.get("encoding") or self.a.get("encoding"))
         body = extract_body_html(html, d.get("body_selector") or "body")
         attachments = extract_attachments_html(html, listing.url, d.get("attachment_selector"))
-        return RawPosting(**listing.model_dump(), body_text=body, attachments=attachments, fetched_at=datetime.now(KST))
+        data = listing.model_dump()
+        if d.get("title_selector"):
+            # 목록이 제목을 잘라서 내주는 게시판. 상세에서 다시 읽는다
+            full = extract_title_html(html, d["title_selector"])
+            if len(full) > len(data["title"]):
+                data["title"] = full
+        return RawPosting(**data, body_text=body, attachments=attachments, fetched_at=datetime.now(KST))
