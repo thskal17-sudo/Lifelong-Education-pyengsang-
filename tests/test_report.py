@@ -1,7 +1,9 @@
-from datetime import timedelta
+from datetime import datetime, timedelta
 
+from gia.models import Status
 from gia.notify.telegram import split_message
-from gia.report.build import ReportData, deadline_str, dday, render_markdown, render_telegram
+from gia.report.build import ReportData, deadline_str, dday, render_markdown, render_telegram, select_postings
+from gia.store import Store
 from tests.conftest import NOW, make_posting
 
 
@@ -41,3 +43,27 @@ def test_split_message_respects_limit():
     chunks = split_message(text, limit=4000)
     assert all(len(c) <= 4000 for c in chunks)
     assert "".join(c.replace("\n\n", "") for c in chunks).count("섹션") == 10
+
+
+def test_closing_window_counts_whole_days(settings, bundle, tmp_path):
+    """마감이 그날 23:59 여도 D-3 에 잡혀야 한다.
+
+    지금 시각에 3일을 더해 자르면 23:59 마감 공고가 15시간 차이로 밀려나,
+    D-3 이 한 번도 뜨지 않고 D-2 에야 처음 나온다. 한국 공고는 23:59 마감이
+    대부분이라 경고가 통째로 하루 늦어진다.
+    """
+    from gia.extract.deadline import KST
+
+    now = datetime(2026, 9, 27, 8, 59, tzinfo=KST)
+    store = Store(tmp_path)
+    edge = make_posting("사흘 뒤 자정 마감", deadline=datetime(2026, 9, 30, 23, 59, tzinfo=KST), now=now)
+    late = make_posting("나흘 뒤 마감", deadline=datetime(2026, 10, 1, 23, 59, tzinfo=KST), now=now)
+    for p in (edge, late):
+        p.status = Status.active
+        store.upsert(p)
+    bundle.settings.report.closing_soon_days = 3
+
+    data = select_postings(bundle, store, now)
+    titles = [p.title for p in data.closing]
+    assert "사흘 뒤 자정 마감" in titles, "D-3 이 창 밖으로 밀렸다"
+    assert "나흘 뒤 마감" not in titles, "창이 너무 넓어졌다"

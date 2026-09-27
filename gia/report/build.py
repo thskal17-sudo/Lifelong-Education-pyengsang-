@@ -36,7 +36,12 @@ class ReportData:
 
 def select_postings(bundle: ConfigBundle, store: Store, now: datetime) -> ReportData:
     rs = bundle.settings.report
-    horizon = now + timedelta(days=rs.closing_soon_days)
+    # '3일 이내'는 날짜로 센다. 지금 시각에 N일을 더하면 마감이 그날 23:59 인 공고가
+    # 창 밖으로 밀려, D-3 짜리가 하루 늦은 D-2 에야 처음 뜬다. 한국 공고는 마감이
+    # 23:59 인 경우가 대부분이라 사실상 경고가 하루씩 늦어진다. dday() 와 site.py 의
+    # urgent 표시도 날짜 차이로 재므로, 여기만 시각 기준이면 표시와 선별이 어긋난다.
+    horizon = (now.astimezone(KST) + timedelta(days=rs.closing_soon_days)).replace(
+        hour=23, minute=59, second=59, microsecond=999999)
     closing: list[Posting] = []
     new: list[Posting] = []
     updated: list[Posting] = []
