@@ -74,6 +74,33 @@
     {% endif %}
   </td></tr>
 
+  {% if r.weekly %}
+  <tr><td style="padding:0 26px;">
+    {{ heading("📊 주간 통계", "%d일"|format(r.weekly.days)) }}
+    <div style="font-size:13px;color:#4e5968;line-height:1.7;margin:0 0 10px;">
+      최근 {{ r.weekly.days }}일 신규 <b style="color:#191f28;">{{ r.weekly.total }}건</b> ·
+      현재 활성 <b style="color:#191f28;">{{ r.weekly.active_total }}건</b> ·
+      7일 내 마감 <b style="color:#f04452;">{{ r.weekly.closing_next_week }}건</b>
+    </div>
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="border-collapse:collapse;">
+      <tr>
+        {% for label, items in [("분야", r.weekly.by_field|dictsort(by='value', reverse=true)),
+                                ("지역", r.weekly.by_region|dictsort(by='value', reverse=true))] %}
+        <td width="50%" valign="top" style="padding:0 8px 0 0;">
+          <div style="font-size:12px;font-weight:700;color:#8b95a1;margin:0 0 6px;">{{ label }}</div>
+          {% for k, v in items[:5] %}
+          <div style="font-size:13px;color:#4e5968;padding:4px 0;border-bottom:1px solid #f2f4f6;">
+            {{ k|field_name if label == "분야" else k }}
+            <b style="color:#191f28;float:right;">{{ v }}</b>
+          </div>
+          {% endfor %}
+        </td>
+        {% endfor %}
+      </tr>
+    </table>
+  </td></tr>
+  {% endif %}
+
   <tr><td style="padding:22px 26px 26px;">
     {% if r.run %}{% set c = r.run.counts() %}
     <div style="font-size:12px;color:#8b95a1;line-height:1.7;border-top:1px solid #e5e8eb;padding-top:14px;">

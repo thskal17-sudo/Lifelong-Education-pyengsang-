@@ -60,3 +60,24 @@ def test_subject_marks_test_sends():
     assert not real.startswith("[테스트]")
     assert test == "[테스트] " + real
     assert "9/26(토)" in real and "신규 1건" in real
+
+
+def test_weekly_stats_reach_the_email_not_only_the_markdown():
+    """월요일 주간 통계가 메일에서만 빠지면 안 된다.
+
+    마크다운·깃허브 이슈에는 나오는데 메일 템플릿이 weekly_md 를 안 그려서
+    월요일 메일만 통계가 통째로 빠져 있었다. 메일은 마크다운을 못 그리므로
+    같은 값을 Stats 구조체로 받아 표로 그린다.
+    """
+    from datetime import timedelta
+
+    from gia.stats import compute_stats
+
+    p = _posting("어느 대학 강사 모집", 9)
+    weekly = compute_stats([p], NOW, 7)
+    data = ReportData(date_str="2026-09-28 (월)", new=[p], closing_days=3, weekly=weekly)
+    html = render_email(data, NOW)
+    assert "주간 통계" in html
+    assert f"{weekly.total}건" in html
+    # 통계가 없는 날에는 그 자리가 통째로 빠져야 한다
+    assert "주간 통계" not in render_email(ReportData(date_str="d", new=[p], closing_days=3), NOW)

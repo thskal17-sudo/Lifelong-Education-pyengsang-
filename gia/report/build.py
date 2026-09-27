@@ -10,7 +10,7 @@ from jinja2 import Environment, PackageLoader, select_autoescape
 from ..config import ConfigBundle
 from ..extract.deadline import KST
 from ..models import FIELD_NAMES, ORG_TYPE_ORDER, Posting, RunLog, Status
-from ..stats import compute_stats
+from ..stats import Stats, compute_stats
 from ..store import Store
 
 _WEEKDAYS = "월화수목금토일"
@@ -29,6 +29,7 @@ class ReportData:
     repo_url: str = ""
     overview: str | None = None
     weekly_md: str | None = None
+    weekly: "Stats | None" = None   # 메일은 마크다운을 못 그린다. 같은 값을 구조체로도 들고 간다
 
     def keys(self) -> list[str]:
         return [p.canonical_key for p in self.closing + self.new + self.updated]
@@ -60,11 +61,12 @@ def select_postings(bundle: ConfigBundle, store: Store, now: datetime) -> Report
     updated.sort(key=lambda p: p.last_seen_at, reverse=True)
     names = {s.id: s.name for s in bundle.sources}
     d = now.astimezone(KST)
-    weekly = compute_stats(store.values(), now, 7).to_markdown() if rs.weekly_stats_weekday == d.weekday() else None
+    weekly = compute_stats(store.values(), now, 7) if rs.weekly_stats_weekday == d.weekday() else None
     return ReportData(
         date_str=f"{d:%Y-%m-%d} ({_WEEKDAYS[d.weekday()]})",
         closing=closing, new=new, updated=updated, run=store.last_run(), source_names=names,
-        telegram_max_items=rs.telegram_max_items, closing_days=rs.closing_soon_days, weekly_md=weekly,
+        telegram_max_items=rs.telegram_max_items, closing_days=rs.closing_soon_days,
+        weekly_md=weekly.to_markdown() if weekly else None, weekly=weekly,
         repo_url=bundle.settings.collector.user_agent.split("+")[-1].rstrip(")") if "+" in bundle.settings.collector.user_agent else "",
     )
 
