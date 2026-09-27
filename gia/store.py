@@ -97,6 +97,15 @@ class Store:
     def values(self) -> Iterable[Posting]:
         return self.postings.values()
 
+    def drop(self, key: str) -> Posting | None:
+        """저장된 공고를 지운다. 되살아나지 않게 주소를 제외 목록으로 옮긴다."""
+        p = self.postings.pop(key, None)
+        if p is None:
+            return None
+        for src in p.sources:
+            self.seen_urls.pop(src.url, None)
+        return p
+
     # ---- state machine -----------------------------------------------
     def refresh_statuses(self, now: datetime, closing_days: int) -> None:
         """docs/DESIGN.md 8.2. 우선순위: expired > (미보고 new/updated) > closing_soon > active."""

@@ -57,3 +57,38 @@ def test_non_instructor_penalty_not_applied_when_title_has_core_word():
     r = score_posting("하동국민체육센터 기간제근로자(헬스지도자, 청사관리원, 매표안내원) 채용", "하동군 체육센터", None)
     assert r.score >= 70
     assert not any("비강사" in x for x in r.reasons)
+
+
+# ---- 수강생 모집 거부권 -------------------------------------------------
+def test_student_call_is_vetoed_not_merely_penalised():
+    """감점만으로는 모자랐다.
+
+    울산과학대 '노인학습지도사 수강생 모집'은 과정 이름에 강사 핵심어(지도사)가
+    박혀 있어 +50 을 먹고, -60 을 맞고도 35점으로 살아남아 목록에 남아 있었다.
+    """
+    from gia.classify.rules import score_posting
+
+    r = score_posting("[모집](수업료 무료)2026 울산 시민학사 '노인학습지도사' 수강생 모집",
+                      body="평생교육원 강사가 지도합니다", org_name="울산과학대학교 평생교육원")
+    assert r.score == 0 and "수강생 모집" in r.reasons[0]
+
+
+def test_combined_notice_survives_the_veto():
+    """'강사 및 수강생 모집'은 강사를 부르는 글이기도 하다."""
+    from gia.classify.rules import score_posting
+
+    for t in ("2026학년도 2학기 평생교육원 강사 및 수강생 모집",
+              "평생교육원 강사 모집 및 수강생 모집 안내"):
+        r = score_posting(t, org_name="부산대학교 평생교육원")
+        assert r.score >= 70, f"{t} → {r.score}점 · {r.reasons}"
+
+
+def test_title_veto_needs_no_body():
+    """gia prune 은 본문을 갖고 있지 않다. 본문이 필요한 판단을 섞으면 멀쩡한 공고를 지운다."""
+    from gia.classify.rules import title_veto
+
+    assert title_veto("2026 바리스타 과정 수강생 모집")
+    assert title_veto("평생교육원 시간강사 모집 공고") is None
+    assert title_veto("2026학년도 제2학기 신규 개설강좌 공모") is None
+    # 본문에만 단서가 있는 글은 제목 거부권 대상이 아니다
+    assert title_veto("2026학년도 2학기 공지사항") is None

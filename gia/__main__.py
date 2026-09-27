@@ -65,6 +65,9 @@ def _parser() -> argparse.ArgumentParser:
     ev.add_argument("--labeled", default="tests/eval/labeled.jsonl")
     ev.add_argument("--llm", action="store_true", help="LLM 판별까지 포함 (ANTHROPIC_API_KEY 필요)")
 
+    pn = sub.add_parser("prune", help="저장된 공고를 지금 규칙으로 다시 판정해 미달분을 지운다")
+    pn.add_argument("--apply", action="store_true", help="실제로 지운다 (없으면 보여주기만)")
+
     st = sub.add_parser("stats", help="최근 N일 통계")
     st.add_argument("--days", type=int, default=7)
 
@@ -181,6 +184,30 @@ def main(argv: list[str] | None = None) -> int:
             store.save()
         sent_any = args.send and len(failures) < len(bundle.settings.notify.channels)
         return 0 if (not args.send or sent_any) else 1
+
+    if args.cmd == "prune":
+        # 판별 규칙은 바뀐다. 이미 저장된 공고는 그때 규칙으로 들어온 것이라 그대로 남는다.
+        # 다만 저장소에 본문이 없으므로, 본문 없이도 판정이 서는 것(title_veto)만 본다.
+        # 점수 전반을 다시 매기려면 collect --refetch 로 본문까지 다시 가져와야 한다
+        from .classify.rules import title_veto
+
+        doomed = [(p, v) for p in list(store.values()) if (v := title_veto(p.title))]
+        if not doomed:
+            print("[prune] 제목만으로 걸러낼 공고 없음")
+            return 0
+        for p, why in doomed:
+            print(f"  {p.relevance_score:>3}점  {p.org_name} · {p.title[:46]}")
+            print(f"       {why}")
+        if not args.apply:
+            print(f"[prune] {len(doomed)}건. 실제로 지우려면 --apply", file=sys.stderr)
+            return 0
+        for p, _ in doomed:
+            store.drop(p.canonical_key)
+            for src in p.sources:
+                store.mark_excluded(src.url, now)
+        store.save()
+        print(f"[prune] {len(doomed)}건 삭제", file=sys.stderr)
+        return 0
 
     if args.cmd == "probe":
         cfg = next((s for s in bundle.sources if s.id == args.source_id), None)

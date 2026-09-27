@@ -31,6 +31,16 @@ python -m gia site --out site            # Pages 아카이브 생성
 매일 수집에서 빠져 있다. 한국에서 접속되는 컴퓨터로 채우는 방법은
 [docs/LOCAL_RUN.md](docs/LOCAL_RUN.md).
 
+## 판별 규칙을 고친 뒤
+
+이미 저장된 공고는 그때 규칙으로 들어온 것이라 목록에 그대로 남는다.
+
+    python -m gia prune            # 제목만으로 걸러지는 것을 보여준다
+    python -m gia prune --apply    # 실제로 지운다
+
+저장소에 본문은 없으므로 prune 은 본문 없이도 판정이 서는 것만 본다. 점수 전반을
+다시 매기려면 `collect --refetch` 로 본문까지 다시 가져와야 한다.
+
 ## 수집 범위
 
 | 지역 | 상태 |

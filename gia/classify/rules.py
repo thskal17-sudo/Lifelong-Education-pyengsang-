@@ -35,6 +35,21 @@ EXCLUDE_TITLE = [
     # 게시판 운영 공지
     "휴무", "휴강", "휴원", "정전", "점검 안내",
 ]
+# 제목이 수강생을 부르면 강사 공고가 아니다. 감점(-60)만으로는 모자랐다 — 과정 이름에
+# 강사 핵심어가 박혀 있으면 +50 을 먹고 살아남는다. 울산과학대 '노인학습지도사 수강생
+# 모집'이 35점으로 통과해 목록에 남아 있었다. 그래서 감점이 아니라 거부권으로 둔다.
+STUDENT_CALL_WORDS = [
+    "수강생 모집", "수강생모집", "수강생 선발", "수강생 추가", "수강생 추가모집",
+    "교육생 모집", "교육생모집", "교육생 선발", "학습자 모집", "수강자 모집",
+]
+# 다만 '강사 및 수강생 모집' 처럼 한 글에 같이 실리는 공지가 있다. 강사를 부르는 말이
+# 제목에 같이 있으면 거부하지 않고 평소대로 점수를 매긴다.
+INSTRUCTOR_CALL_WORDS = [
+    "강사 모집", "강사모집", "강사 채용", "강사채용", "강사 위촉", "강사위촉",
+    "강사 선발", "강사 공고", "강사공고", "교강사", "강사 및", "강사·", "강사 초빙",
+]
+# 강사를 부르는 공지에 곁다리로 섞이는 수강생 쪽 낱말
+STUDENT_SIDE_WORDS = ["수강생", "교육생", "수강 신청", "수강신청", "학생 모집", "참가자", "참여자"]
 PROCUREMENT_WORDS = ["입찰", "물품", "시설", "임대", "공사"]
 SERVICE_OK_WORDS = ["강의 용역", "교육 용역", "교육 운영 용역", "강사 운영", "교육과정 운영 용역", "교육 위탁"]
 # 수집 대상은 부산·울산·경남이므로 이 셋은 타지역이 아니다
@@ -74,6 +89,20 @@ class RuleResult:
     reasons: list[str] = field(default_factory=list)
     field: str = "other"
     employment_type: str = "기타"
+
+
+def title_veto(title: str) -> str | None:
+    """제목만으로 확실히 걸러지는 경우. 아니면 None.
+
+    본문 없이도 판정이 서는 것만 여기 둔다. 저장된 공고를 나중에 다시 재는
+    gia prune 은 본문을 갖고 있지 않아서, 본문이 필요한 판단을 여기 섞으면
+    멀쩡한 공고를 지운다.
+    """
+    t = nfkc(title)
+    if any(w in t for w in STUDENT_CALL_WORDS) and not any(w in t for w in INSTRUCTOR_CALL_WORDS):
+        # 아무리 점수가 높아도 수강생을 부르는 글은 강사 공고가 아니다
+        return f"제외: 수강생 모집({next(w for w in STUDENT_CALL_WORDS if w in t)})"
+    return None
 
 
 def score_posting(title: str, body: str = "", region_text: str | None = None, org_name: str | None = None) -> RuleResult:
@@ -123,6 +152,10 @@ def score_posting(title: str, body: str = "", region_text: str | None = None, or
             reasons.append(f"-40 비강사 직종({jobs[0]})")
 
     excl = [w for w in EXCLUDE_TITLE if w in t]
+    if excl and any(w in t for w in INSTRUCTOR_CALL_WORDS):
+        # '강사 및 수강생 모집' 처럼 한 글에 같이 실린 공지. 강사를 부르는 말이 제목에
+        # 있으면 수강생 쪽 낱말은 곁가지이므로 그것만 빼고 나머지 제외어로 판단한다
+        excl = [w for w in excl if w not in STUDENT_SIDE_WORDS]
     if excl:
         score -= 60
         reasons.append(f"-60 제외어({excl[0]})")
@@ -136,6 +169,11 @@ def score_posting(title: str, body: str = "", region_text: str | None = None, or
     if other:
         score -= 50
         reasons.append(f"-50 타지역({other})")
+
+    veto = title_veto(title)
+    if veto:
+        return RuleResult(score=0, reasons=[veto],
+                          field=guess_field(t, b), employment_type=guess_employment(t, b))
 
     score = max(0, min(100, score))
     return RuleResult(score=score, reasons=reasons, field=guess_field(t, b), employment_type=guess_employment(t, b))
