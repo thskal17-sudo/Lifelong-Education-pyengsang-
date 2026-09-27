@@ -12,6 +12,20 @@ CORE_WORDS = [
 ]
 HIRE_WORDS = ["모집", "채용", "공모", "위촉", "공개채용", "인력풀", "선발", "공개모집", "구인", "채용공고", "위촉공고", "초빙"]
 LECTURE_WORDS = ["강의", "수업", "교육과정 운영", "프로그램 운영", "출강", "강좌", "교육 운영", "교육운영"]
+# 대학 평생교육원이 강사를 구하는 주된 방식은 '강좌 개설 제안·공모'다. 강사가 강좌를
+# 제안하면 심사해서 개설하고 그 사람이 강의를 맡는다. 제목에 '강사'가 없을 뿐 강사를
+# 뽑는 공고이므로 제목 핵심어에 준해 센다.
+#
+# '신규 개설강좌 안내' 같은 수강생 대상 공지가 끼지 않도록, 낱말이 아니라 제안·공모·
+# 신청·희망까지 붙은 구를 본다. 목록 단계 필터(gia/config.py)는 더 느슨해도 되지만
+# 여기서는 좁게 잡는다 — 통과시킨 뒤 점수로 거르는 편이 반대보다 낫다.
+COURSE_OPEN_WORDS = [
+    "강좌 개설 제안", "강좌개설 제안", "개설 제안", "개설제안",
+    "강좌 개설 신청", "강좌개설 신청", "개설 신청", "개설신청",
+    "강좌 개설 희망", "개설 희망자", "개설희망",
+    "개설강좌 공모", "개설 강좌 공모", "강좌 공모", "신규강좌 공모", "신규 강좌 공모",
+    "강좌 제안",
+]
 EXCLUDE_TITLE = [
     "수강생", "교육생", "학생 모집", "참가자", "참여자", "합격자", "발표", "강사료", "지급",
     "만족도", "결과", "수료", "신청 안내", "교육 안내", "프로그램 안내", "입학", "수강 신청", "수강신청",
@@ -70,9 +84,14 @@ def score_posting(title: str, body: str = "", region_text: str | None = None, or
     reasons: list[str] = []
 
     core_t = [w for w in CORE_WORDS if w in t]
+    open_t = [w for w in COURSE_OPEN_WORDS if w in t]
     if core_t:
         score += 50
         reasons.append(f"+50 제목 핵심어({core_t[0]})")
+    elif open_t:
+        # 제목에 '강사'가 없어도 강좌 개설 제안·공모는 강사를 구하는 공고다
+        score += 45
+        reasons.append(f"+45 강좌 개설 제안({open_t[0]})")
     else:
         core_b = [w for w in CORE_WORDS if w in b]
         if core_b:
@@ -97,7 +116,7 @@ def score_posting(title: str, body: str = "", region_text: str | None = None, or
         score += 15
         reasons.append("+15 부·울·경 지역")
 
-    if not core_t:
+    if not core_t and not open_t:
         jobs = [w for w in NON_INSTRUCTOR_JOBS if w in t]
         if jobs:
             score -= 40

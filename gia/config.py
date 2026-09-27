@@ -125,6 +125,28 @@ def load_settings(path: Path) -> Settings:
     return Settings.model_validate(raw)
 
 
+# 대학 평생교육원이 강사를 구하는 주된 방식은 '강좌 개설 제안·공모'다. 제목에 '강사'가
+# 없어서 목록 단계 keywords 에 걸리지 않으면 점수를 매길 기회조차 없으므로, 소스마다
+# 적어 두는 대신 여기서 한 번에 얹는다. 소스별로 적으면 변형을 빠뜨린다 — 실제로
+# '강좌 개설'만 적힌 소스가 '개설강좌 공모'를 놓치고 있었다.
+#
+# 여기는 넓게 잡는다. 통과한 뒤 gia/classify/rules.py 가 좁은 구로 다시 거른다.
+COURSE_OPEN_KEYWORDS = [
+    "강좌 개설", "강좌개설", "개설 강좌", "개설강좌",
+    "개설 제안", "개설제안", "개설 신청", "개설신청", "개설 희망", "개설희망",
+    "신규 강좌", "신규강좌", "강좌 공모", "강좌 제안", "특강 개설",
+]
+
+
+def with_course_open_keywords(keywords: list[str] | None) -> list[str] | None:
+    """목록 필터에 강좌 개설 계열을 얹는다. keywords 가 없으면 전부 통과이므로 그대로 둔다."""
+    if not keywords:
+        return keywords
+    out = list(keywords)
+    out.extend(k for k in COURSE_OPEN_KEYWORDS if k not in out)
+    return out
+
+
 def load_sources(path: Path) -> list[SourceConfig]:
     with path.open(encoding="utf-8") as f:
         raw = yaml.safe_load(f) or {}
@@ -134,6 +156,8 @@ def load_sources(path: Path) -> list[SourceConfig]:
     for item in raw.get("sources", []) or []:
         merged = deep_merge(defaults, item)
         cfg = SourceConfig.model_validate(merged)
+        if cfg.adapter.get("keywords"):
+            cfg.adapter = {**cfg.adapter, "keywords": with_course_open_keywords(cfg.adapter["keywords"])}
         if cfg.id in seen:
             raise ValueError(f"중복된 source id: {cfg.id}")
         seen.add(cfg.id)
