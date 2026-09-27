@@ -92,3 +92,38 @@ def test_title_veto_needs_no_body():
     assert title_veto("2026학년도 제2학기 신규 개설강좌 공모") is None
     # 본문에만 단서가 있는 글은 제목 거부권 대상이 아니다
     assert title_veto("2026학년도 2학기 공지사항") is None
+
+
+# ---- 소스 region_hint ---------------------------------------------------
+def test_source_region_hint_fills_the_gap_bare_sigun_names_leave():
+    """extract_regions 는 맨 시군 이름을 일부러 인정하지 않는다.
+
+    '고성→고성능', '양산→대량양산' 오탐을 막으려는 절충인데, 그 바람에
+    '진주보건대학교'의 '진주'도 놓쳐 +15 를 못 받는다. config/sources.yaml 의
+    region_hint 는 우리가 적어 둔 값이므로 그 판단을 거치지 않아도 된다.
+    """
+    from gia.classify.rules import score_posting
+
+    t = "2026학년도 2학기 진주보건대학교 평생교육원 강좌 개설 신청 공고"
+    assert score_posting(t).score == 55
+    assert score_posting(t, source_regions=["경남", "진주"]).score == 70
+
+
+def test_source_region_hint_is_not_added_twice():
+    from gia.classify.rules import score_posting
+
+    r = score_posting("부산대학교 평생교육원 시간강사 모집", source_regions=["부산"])
+    assert sum(1 for x in r.reasons if "부·울·경 지역" in x) == 1
+
+
+def test_source_region_hint_does_not_mask_other_region_penalty():
+    """기관이 경남에 있어도 근무지가 서울이면 그대로 깎여야 한다.
+
+    타지역 감점은 공고가 스스로 밝힌 근무지를 보는 것이다. 기관 소재지로
+    덮으면 서울 일자리가 부·울·경 목록에 섞인다.
+    """
+    from gia.classify.rules import score_posting
+
+    r = score_posting("평생교육원 협력기관 강사 모집", body="근무지: 서울특별시 강남구",
+                      source_regions=["경남", "진주"])
+    assert any("타지역(서울)" in x for x in r.reasons)

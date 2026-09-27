@@ -105,7 +105,19 @@ def title_veto(title: str) -> str | None:
     return None
 
 
-def score_posting(title: str, body: str = "", region_text: str | None = None, org_name: str | None = None) -> RuleResult:
+def score_posting(title: str, body: str = "", region_text: str | None = None, org_name: str | None = None,
+                  source_regions: list[str] | None = None) -> RuleResult:
+    """관련성 점수.
+
+    source_regions 는 config/sources.yaml 의 region_hint — 그 게시판이 어느 지역
+    기관의 것인지 우리가 적어 둔 값이다. 기관명만으로는 지역이 안 잡히는 경우가
+    있어서 따로 받는다: extract_regions 는 '고성→고성능', '양산→대량양산' 같은
+    오탐을 막으려고 맨 시군 이름을 인정하지 않는데, 그 바람에 '진주보건대학교'의
+    '진주'도 놓친다. 우리가 적어 둔 값이니 그 판단을 거치지 않아도 된다.
+
+    다만 타지역 감점(_other_region)에는 넣지 않는다. 그건 공고가 스스로 밝힌
+    근무지를 보는 것이라, 기관이 부·울·경에 있다는 사실로 덮으면 안 된다.
+    """
     t = nfkc(title)
     b = nfkc(body)[:4000]
     r = nfkc(region_text or "")
@@ -144,6 +156,9 @@ def score_posting(title: str, body: str = "", region_text: str | None = None, or
     if mentions_target_region(region_blob):
         score += 15
         reasons.append("+15 부·울·경 지역")
+    elif source_regions:
+        score += 15
+        reasons.append(f"+15 부·울·경 지역(소스 {source_regions[0]})")
 
     if not core_t and not open_t:
         jobs = [w for w in NON_INSTRUCTOR_JOBS if w in t]

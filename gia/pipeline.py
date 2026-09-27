@@ -41,7 +41,7 @@ def build_posting(raw: RawPosting, cfg: SourceConfig, bundle: ConfigBundle, now:
     title, flags = normalize_title(strip_surrogates(raw.title))
     org = standardize_org(raw.org_name or cfg.adapter.get("org_name") or cfg.name, bundle.aliases)  # adapter.org_name: 게시판 이름 대신 쓸 기관명
     body = mask_pii(raw.body_text or "")
-    rule = score_posting(title, body, raw.region_text, org)
+    rule = score_posting(title, body, raw.region_text, org, source_regions=cfg.region_hint)
     if rule.score < cs.review_threshold:
         return None
     if rule.score < cs.include_threshold:
