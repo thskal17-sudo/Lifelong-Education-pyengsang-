@@ -160,8 +160,9 @@ def main(argv: list[str] | None = None) -> int:
                         html = render_email(data, now, os.environ.get("SITE_URL", ""),
                                             active_total=active_total, attached=bool(xlsx))
                         n = send_email(cfg, subject, html, md, attachments=xlsx)
+                        names = ", ".join(name for name, _ in xlsx)
                         print(f"[report] 이메일 {n}명에게 전송"
-                              + (f" (첨부 {xlsx[0][0]})" if xlsx else " (첨부 없음)"), file=sys.stderr)
+                              + (f" (첨부 {names})" if xlsx else " (첨부 없음)"), file=sys.stderr)
                     except Exception as e:  # noqa: BLE001
                         failures.append(f"email: {e}")
             if "github" in channels:
