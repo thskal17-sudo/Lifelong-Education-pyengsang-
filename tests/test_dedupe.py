@@ -57,3 +57,28 @@ def test_merge_prefer_incoming_fixes_wrong_deadline():
     assert changed and merged.deadline == earlier.deadline
     merged, changed = merge(later, make_posting("강사 모집", deadline=NOW + timedelta(days=20)), NOW, prefer_incoming=True)
     assert not changed
+
+
+def test_merge_fills_body_excerpt_added_later():
+    """body_excerpt 는 나중에 추가된 칸이라 그 전 공고는 비어 있다.
+
+    재수집으로 채워지지 않으면 강사잇다 양식의 '상세 내용'(필수 칸)이 영영 빈다.
+    """
+    from datetime import timedelta
+
+    from gia.dedupe import merge
+    from tests.conftest import NOW, make_posting
+
+    old = make_posting("강사 모집", deadline=NOW + timedelta(days=5))
+    old.body_excerpt = ""
+    new = make_posting("강사 모집", deadline=NOW + timedelta(days=5))
+    new.body_excerpt = "주 1회 3시간 과정입니다."
+
+    filled, changed = merge(old, new, NOW)
+    assert filled.body_excerpt == "주 1회 3시간 과정입니다."
+    assert not changed, "본문 발췌가 생긴 것만으로 '변경 공고'가 되면 알림이 시끄럽다"
+
+    # 재수집이면 이미 있는 값도 새 본문으로 간다
+    stale = make_posting("강사 모집", deadline=NOW + timedelta(days=5))
+    stale.body_excerpt = "옛 본문"
+    assert merge(stale, new, NOW, prefer_incoming=True)[0].body_excerpt == "주 1회 3시간 과정입니다."

@@ -70,6 +70,11 @@ def merge(existing: Posting, incoming: Posting, now: datetime, prefer_incoming: 
         p.deadline = incoming.deadline
         p.deadline_type = incoming.deadline_type
         p.deadline_text = incoming.deadline_text
+    if incoming.body_excerpt and (prefer_incoming or not p.body_excerpt):
+        # 재수집이면 새 본문으로 갈고, 아니면 비어 있을 때만 채운다 — body_excerpt 는
+        # 나중에 추가된 칸이라 그 전에 저장된 공고는 비어 있다.
+        # changed 로 치지 않는다: 본문 발췌가 생겼다고 '변경 공고'로 올리면 알림이 시끄럽다
+        p.body_excerpt = incoming.body_excerpt
     for f in incoming.flags:
         if f not in p.flags:
             p.flags.append(f)
