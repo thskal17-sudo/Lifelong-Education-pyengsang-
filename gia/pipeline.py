@@ -35,6 +35,19 @@ class SourceOutcome:
     bodies: dict[str, tuple[str, str | None]] = field(default_factory=dict)  # canonical_key → (본문, 근무지 필드) — LLM 입력용
 
 
+def _body_excerpt(raw: RawPosting, cfg: SourceConfig) -> str:
+    """강사잇다 양식의 '상세 내용' 에 넣을 본문 앞부분.
+
+    본문 셀렉터가 없어 페이지 전체를 본문으로 삼는 소스가 있다. 그 글의 앞부분은
+    공고 내용이 아니라 'Skip Menu 본문 바로가기 주메뉴…' 같은 메뉴다. 업로드
+    양식에 그런 값이 실리면 빈 칸보다 나쁘므로, 제대로 된 셀렉터가 있을 때만 담는다.
+    """
+    d = cfg.adapter.get("detail") or {}
+    if (d.get("body_selector") or "body") == "body":
+        return ""
+    return " ".join((raw.body_text or "").split())[:1500]
+
+
 def build_posting(raw: RawPosting, cfg: SourceConfig, bundle: ConfigBundle, now: datetime) -> Posting | None:
     """RawPosting → Posting. 관련성이 낮으면 None."""
     cs = bundle.settings.classifier
@@ -83,7 +96,7 @@ def build_posting(raw: RawPosting, cfg: SourceConfig, bundle: ConfigBundle, now:
         relevance_score=rule.score, score_reasons=rule.reasons, flags=flags,
         sources=[SourceRef(source_id=cfg.id, url=clean_url(raw.url), fetched_at=raw.fetched_at or now)],
         attachments=list(raw.attachments), content_hash=content_hash,
-        body_excerpt=" ".join((raw.body_text or "").split())[:1500],
+        body_excerpt=_body_excerpt(raw, cfg),
         first_seen_at=now, last_seen_at=now, status=Status.new,
     )
 

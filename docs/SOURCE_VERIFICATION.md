@@ -163,3 +163,17 @@ python -m gia collect --dry-run --sources <source_id>
 | `SSLV3_ALERT_HANDSHAKE_FAILURE`, `DH_KEY_TOO_SMALL` | TLS 1.0/약한 암호만 지원하는 구형 서버 (창신대·창원문성대·거제대 평생교육원, 밀양문화관광재단) | `scripts/dump_structure.py` 는 SECLEVEL 낮춘 컨텍스트로 재시도해 구조를 볼 수 있음. gia 는 `adapter.tls_legacy: true` 를 주면 그 소스의 호스트만 구형 TLS 컨텍스트(검증 생략)로 연다. playwright 어댑터에는 적용되지 않음 |
 | 연결 시간초과(ConnectTimeout)가 여러 사이트에서 동시에 남 | GitHub 호스티드 러너 IP 대역을 지자체 방화벽이 차단. 같은 시각 다른 러너(Azure 리전)에서는 열리기도 함 (2026-09-21 관측: eastus2 러너는 창원·김해·하동·거창 정상, eastus 러너는 전부 시간초과) | 재실행해 다른 러너에 배정되길 기다리거나, 국내 IP(자체 호스팅 러너·프록시)로 수집. `collect` 워크플로도 같은 영향을 받으므로 소스별 실패를 일시 장애로 취급하고 다음 날 재시도 |
 | 재실행해도 특정 사이트만 계속 실패 (시간초과, 400 'Request Blocked', 1.4KB 차단 페이지, error.html 리다이렉트, DNS 실패) | 해당 사이트가 GitHub 호스티드 러너 IP 대역을 일관되게 차단 (2026-09-22 관측: 브라우저형 헤더·Referer·재시도를 적용하고 westus3·centralus 러너 3회로 시도해도 진주·거제·의령·함안·창녕·고성·남해·산청·함양·합천·경남도청 12곳은 동일하게 실패. UA 문제가 아님) | 러너 재실행으로는 해결되지 않음. 국내 IP가 필요: (1) PC에서 `python -m gia probe <id> --detail` 을 직접 실행해 셀렉터를 채우거나, (2) 국내 자체 호스팅 러너(`runs-on: self-hosted`)를 등록하거나, (3) 국내 HTTP 프록시를 Secrets(`HTTPS_PROXY`)로 넣는다. 그때까지 해당 소스는 `list_url: TODO`(미검증)로 두고 `candidate_list_url`만 유지 |
+
+## 본문 셀렉터가 없는 소스 (2026-09-28)
+
+아래 6곳은 `detail.body_selector` 를 찾지 못해 페이지 전체(`body`)를 본문으로 삼는다.
+
+    koje_lifelong · youngsan_lifelong · pnu_lifelong
+    deu_lifelong · bhu_lifelong · ulsan_lifelong
+
+그 '본문' 의 앞부분은 공고 내용이 아니라 'Skip Menu 본문 바로가기 주메뉴…' 같은
+메뉴다. 그래서 강사잇다 업로드 양식의 '상세 내용' 칸에는 담지 않는다
+(`gia/pipeline.py` 의 `_body_excerpt`). 점수 판별에는 여전히 쓰이므로, 메뉴에 섞인
+낱말이 점수에 잡히는 오탐 여지도 남아 있다.
+
+각 상세 페이지를 probe 로 떠서 본문 컨테이너를 찾아 넣으면 둘 다 해결된다.

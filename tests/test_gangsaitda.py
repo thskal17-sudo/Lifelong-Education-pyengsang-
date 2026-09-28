@@ -81,3 +81,24 @@ def test_rejects_a_template_whose_columns_moved(tmp_path, monkeypatch):
 
 def test_file_name_carries_the_date():
     assert workbook_name(NOW) == "강사잇다_공고업로드_2026-09-28.xlsx"
+
+
+def test_whole_page_body_never_becomes_detail_text(settings, bundle):
+    """본문 셀렉터가 없는 소스의 '본문' 은 메뉴다. 업로드 칸에 실으면 빈 칸보다 나쁘다."""
+    from datetime import datetime
+
+    from gia.models import RawPosting
+    from gia.pipeline import _body_excerpt
+    from tests.conftest import make_source
+
+    raw = RawPosting(source_id="s", title="강사 모집", url="https://e.org/1",
+                     body_text="Skip Menu 본문 바로가기 주메뉴 바로가기 …", fetched_at=datetime.now())
+
+    whole = make_source("whole", "university", detail={"fetch": True, "body_selector": "body"})
+    assert _body_excerpt(raw, whole) == ""
+
+    none_set = make_source("none", "university", detail={"fetch": True})
+    assert _body_excerpt(raw, none_set) == ""
+
+    real = make_source("real", "university", detail={"fetch": True, "body_selector": "div.view"})
+    assert _body_excerpt(raw, real).startswith("Skip Menu")
