@@ -481,7 +481,8 @@ sources:
       date_formats: ["%Y/%m/%d"]
       keywords: [강사, 교강사, 강의, 지도사, 초빙, 위촉, 강좌 개설]
       paging: { max_pages: 1 }
-      detail: { fetch: true, body_selector: body, encoding: euc-kr }
+      # 본문 669자(2026-09-28 러너 확인). EUC-KR 게시판
+      detail: { fetch: true, body_selector: td.si_b, encoding: euc-kr }
     notes: >-
       공지사항(2026-09-23 러너 검증: 중첩 table 이라 행은 tr, 제목 앵커는 List2Content.asp?board_idx=N).
       해운대캠퍼스 수강생 모집이 대부분이고 게시가 뜸해 daily_light. 날짜는 4열 'YYYY/MM/DD'
@@ -503,7 +504,8 @@ sources:
       link_selector: a.notice-box
       date_selector: span.date
       paging: { max_pages: 1 }
-      detail: { fetch: true, body_selector: body }
+      # 본문 560자(2026-09-28 러너 확인). 전체 페이지를 쓰면 앞부분이 메뉴다
+      detail: { fetch: true, body_selector: div.board-view-cont }
     notes: >-
       게시판 본 페이지(/page?menuCD=000000000000561)는 목록이 서버 HTML 에 없고 브라우저로도
       열리지 않는다(2026-09-23 playwright, 25초·90초 모두 접속 시간 초과 — 러너 IP 차단으로 보임).
@@ -571,7 +573,8 @@ sources:
       date_selector: span.summery
       keywords: [강사, 교강사, 강의, 지도사, 초빙, 위촉, 강좌 개설, 강좌 제안]
       paging: { max_pages: 1 }
-      detail: { fetch: true, body_selector: body }
+      # 본문 147자(2026-09-28 러너 확인). 이 게시판은 본문을 이미지로 올려 글자가 적다
+      detail: { fetch: true, body_selector: div.divStyle01 }
     notes: >-
       공지사항&뉴스 게시판(2026-09-23 러너 렌더 덤프로 검증: dl > dt > p.notice > a#IContent_rptList_hlnkTitle_N,
       날짜는 span.summery 의 '분류 / YYYY.MM.DD' 에서 느슨하게 추출). 상대경로 BoardView.aspx 로 이어진다.
@@ -622,7 +625,8 @@ sources:
       date_formats: ["%Y.%m.%d"]
       keywords: [강사, 교강사, 강의, 지도사, 초빙, 위촉, 강좌 개설]
       paging: { max_pages: 1 }
-      detail: { fetch: true, body_selector: body }
+      # 본문 372자(2026-09-28 러너 확인). 부산대와 같은 CMS
+      detail: { fetch: true, body_selector: div.board-view-cont }
     notes: >-
       공지사항 게시판(2026-09-23 러너 렌더 덤프로 검증: tbody tr, td.text-left a#IContent_rptList_hlnkTitle_N →
       상대경로 BoardView.aspx?...BoardNo=N, 작성일 4열 'YYYY.MM.DD'). 사회복지 현장실습·수강생 모집이
@@ -660,7 +664,8 @@ sources:
       date_selector: td.bdlDate
       keywords: [강사, 교강사, 강의, 지도사, 초빙, 강좌 개설, 위촉]
       paging: { max_pages: 1 }
-      detail: { fetch: true, body_selector: body }
+      # 본문 298자(2026-09-28 러너 확인). div.bdCont 는 제목·작성자까지 물고 온다
+      detail: { fetch: true, body_selector: td.bdvEdit }
     notes: >-
       공지사항 게시판(2026-09-23 러너 구조 검증: table.a_brdList, 제목 td.bdlTitle a → ?action=view&no=NNNN,
       작성일 td.bdlDate 'YYYY-MM-DD'). 수강생 모집 공고가 대부분이라 keywords 로 강사 관련만 거른다.
