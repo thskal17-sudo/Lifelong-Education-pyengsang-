@@ -34,7 +34,7 @@ HEADERS = {
 }
 BRIEF = bool(os.environ.get("BRIEF"))  # 여러 URL 을 한 번에 훑을 때 출력 축약
 NOISE = re.compile(r"(?<![a-z])(nav|menu|header|footer|lnb|gnb|tnb|snb|anb|topmenu|depth|sitemap|quick|util|breadcrumb|location|family|skip|m_menu|slide|banner|share|foot|head)(?![a-z0-9])", re.I)
-DETAIL = re.compile(r"(amode=view|(?<!sub)View\.do|Detail\.do|regSn=|/view\.|nttNo=|dataSid=|wr_id=|pan=read|List2Content|NttInfo|artclView|/boardview/|/lectopen/view/|bMode=view|btype=view|mode=view|mode=READ|mod=document|_view\.asp|/view/)", re.I)
+DETAIL = re.compile(r"(amode=view|(?<!sub)View\.do|Detail\.do|regSn=|/view\.|nttNo=|dataSid=|wr_id=|pan=read|List2Content|NttInfo|artclView|/boardview/|/lectopen/view/|bMode=view|btype=view|mode=view|mode=DETAIL|action=view|BoardView\.aspx|mode=READ|mod=document|_view\.asp|/view/)", re.I)
 
 
 def sel(tag) -> str:
@@ -235,7 +235,10 @@ def dump(url: str) -> None:
         for node in soup.select(sel_env)[:3]:
             print(f"\n[BODY TEXT] {short_path(node)}")
             print(node.get_text("\n", strip=True)[:3000])
-    if DETAIL.search(url):
+    if os.environ.get("DETAIL") or DETAIL.search(url) or DETAIL.search(str(r.url)):
+        # DETAIL=1 은 '이 주소는 상세다' 라고 사람이 알려 준 것이다. 주소 규칙에
+        # 없는 형태(mode=DETAIL, action=view, BoardView.aspx …)가 계속 나오므로
+        # 규칙에 안 걸려도 시키는 대로 상세로 분석한다
         dump_detail(soup)
     else:
         dump_list(soup)

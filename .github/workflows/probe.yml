@@ -74,6 +74,9 @@ jobs:
         env:
           URLS: ${{ github.event.inputs.urls }}
           BODY_SELECTOR: ${{ github.event.inputs.body_selector }}
+          # 렌더 덤프에만 넘기고 있었다. 주소 규칙에 안 걸리는 상세(mode=DETAIL,
+          # action=view, BoardView.aspx …)가 목록으로 분석돼 본문 후보가 안 나왔다
+          DETAIL: ${{ github.event.inputs.detail == 'true' && '1' || '' }}
           BRIEF: ${{ github.event.inputs.brief == 'true' && '1' || '' }}
         run: |
           set -o pipefail
