@@ -31,7 +31,7 @@ build-backend = "setuptools.build_meta"
 include = ["gia*"]
 
 [tool.setuptools.package-data]
-gia = ["report/templates/*.j2"]
+gia = ["report/templates/*.j2", "report/assets/*.xlsx"]   # 강사잇다 업로드 양식
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

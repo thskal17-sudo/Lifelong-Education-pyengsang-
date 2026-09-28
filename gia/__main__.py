@@ -138,10 +138,21 @@ def main(argv: list[str] | None = None) -> int:
                         xlsx: list[tuple[str, bytes]] = []
                         try:
                             from .report.excel import build_workbook, workbook_name
-                            xlsx = [(workbook_name(now), build_workbook(data, store, bundle, now))]
+                            xlsx.append((workbook_name(now), build_workbook(data, store, bundle, now)))
                         except Exception as e:  # noqa: BLE001
                             # 첨부가 실패해도 본문은 보낸다 — 알림이 통째로 빠지는 쪽이 더 나쁘다
                             print(f"[report] 엑셀 첨부 생략: {e}", file=sys.stderr)
+                        try:
+                            from .report import gangsaitda
+                            blob, n = gangsaitda.build_workbook(store, now)
+                            if n:
+                                xlsx.append((gangsaitda.workbook_name(now), blob))
+                                print(f"[report] 강사잇다 업로드 양식 {n}줄", file=sys.stderr)
+                            else:
+                                # 마감일이 살아 있는 공고가 없으면 빈 양식을 보내 봐야 쓸 데가 없다
+                                print("[report] 강사잇다 양식 생략(올릴 공고 없음)", file=sys.stderr)
+                        except Exception as e:  # noqa: BLE001
+                            print(f"[report] 강사잇다 양식 생략: {e}", file=sys.stderr)
                         active_total = sum(1 for p in store.values()
                                            if p.status.value != "expired"
                                            and not (p.deadline and p.deadline < now)

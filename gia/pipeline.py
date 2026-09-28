@@ -83,6 +83,7 @@ def build_posting(raw: RawPosting, cfg: SourceConfig, bundle: ConfigBundle, now:
         relevance_score=rule.score, score_reasons=rule.reasons, flags=flags,
         sources=[SourceRef(source_id=cfg.id, url=clean_url(raw.url), fetched_at=raw.fetched_at or now)],
         attachments=list(raw.attachments), content_hash=content_hash,
+        body_excerpt=" ".join((raw.body_text or "").split())[:1500],
         first_seen_at=now, last_seen_at=now, status=Status.new,
     )
 

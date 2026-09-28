@@ -102,6 +102,9 @@ class Posting(BaseModel):
     flags: list[str] = Field(default_factory=list)
     sources: list[SourceRef] = Field(default_factory=list)
     attachments: list[str] = Field(default_factory=list)
+    # 강사잇다 업로드 양식의 '상세 내용' 칸을 채우려면 본문이 있어야 한다. 전문을
+    # 들고 있을 이유는 없으므로 앞부분만 남긴다(gia/report/gangsaitda.py)
+    body_excerpt: str = ""
     content_hash: str = ""
     first_seen_at: datetime
     last_seen_at: datetime
