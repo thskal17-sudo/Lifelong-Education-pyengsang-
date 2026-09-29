@@ -1,10 +1,13 @@
 name: report
 on:
+  # 예약 수집이 끝나면 곧바로 보낸다. 따로 예약하면 수집과 리포트가 각각 몇 시간씩 밀린다
+  # (06:05 예약이 09:45~10:01 에 돌았다, 2026-09-26~28)
+  workflow_run:
+    workflows: [collect]
+    types: [completed]   # 수집이 일부 실패해도 보낸다 — 실패 소스는 리포트 부록에 적힌다
   schedule:
-    # 06:05 KST. 정시·반시를 피해 잡는다 — 07:30 으로 두었더니 실제로는 09:45~10:01 에
-    # 돌았다(2026-09-26~28 스케줄 실행 기록, 2시간 15분~31분 지연). 밀려도 07시대에
-    # 도착하도록 당겼다
-    - cron: "5 21 * * *"    # 06:05 KST
+    # 예비: 수집 예약이 이날 한 번도 돌지 않았을 때. 이미 보냈으면 --once-daily 가 건너뛴다
+    - cron: "59 22 * * *"   # 07:59 KST
   workflow_dispatch:
     inputs:
       send:
@@ -21,6 +24,8 @@ permissions:
   issues: write   # 알림을 이슈로 연다(gia/notify/github_issue.py)
 jobs:
   report:
+    # 손으로 돌린 수집(소스 하나 재수집 등) 뒤에는 보내지 않는다
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.event == 'schedule'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -50,8 +55,12 @@ jobs:
             python -m gia report --print
           elif [ "${{ github.event.inputs.notify_test }}" = "true" ]; then
             python -m gia report --send --notify-test
-          else
+          elif [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            # 손으로 돌린 것은 하루 한 번 제한을 걸지 않는다. 보내라고 누른 것이다
             python -m gia report --send
+          else
+            # 수집 뒤 자동 실행과 예비 예약이 같은 날 겹칠 수 있다. 먼저 돈 쪽만 보낸다
+            python -m gia report --send --once-daily
           fi
       - name: commit report
         if: always()

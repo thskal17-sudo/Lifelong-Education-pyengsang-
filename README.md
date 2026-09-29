@@ -5,9 +5,11 @@
 
 ## 하는 일
 
-1. `config/sources.yaml` 에 등록된 평생교육원 게시판을 매일 06:30 KST 에 수집한다 (`collect` 워크플로).
+1. `config/sources.yaml` 에 등록된 평생교육원 게시판을 매일 01:29 KST(예비 04:29)에 수집한다 (`collect` 워크플로). GitHub 예약 실행이 몇 시간씩 밀려서(2~4시간 관측) 새벽으로 잡고 두 번으로 나눴다.
 2. 제목·본문·첨부(HWP·PDF·DOCX)에서 강사 공고 여부를 규칙으로 가려내고 마감일을 뽑는다.
-3. 07:30 KST 에 `reports/YYYY-MM-DD.md` 로 요약을 만든다 (`report` 워크플로).
+3. 예약 수집이 끝나면 곧바로 `reports/YYYY-MM-DD.md` 로 요약을 만들고 보낸다 (`report` 워크플로,
+   `workflow_run`). 따로 예약하면 수집과 발송이 각각 밀린다. 07:59 KST 예비 예약은 그날 수집이
+   한 번도 돌지 않았을 때를 위한 것이고, `--once-daily` 가 하루 한 번만 나가게 막는다.
    텔레그램·이메일 설정이 없으면 파일만 만들고 보고 상태를 기록한다.
 4. `data/` 의 공고를 GitHub Pages 아카이브로 배포한다 (`pages` 워크플로).
 
@@ -22,6 +24,7 @@ python -m gia collect --dry-run          # 전체 수집, 저장 안 함
 python -m gia collect                    # 수집·저장 (data/)
 python -m gia collect --refetch --sources <id>   # 이미 아는 URL도 다시 파싱 (파서 수정 후 보정)
 python -m gia report                     # 요약본 생성·출력 (reports/)
+python -m gia report --send --once-daily # 그날 이미 보냈으면 건너뛴다 (자동 실행이 겹칠 때)
 python -m gia site --out site            # Pages 아카이브 생성
 ```
 

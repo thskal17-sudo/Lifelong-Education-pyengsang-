@@ -3,10 +3,11 @@ from __future__ import annotations
 
 import json
 from collections import defaultdict
-from datetime import datetime, timedelta
+from datetime import date, datetime, timedelta
 from pathlib import Path
 from typing import Iterable
 
+from .extract.deadline import KST
 from .models import Posting, RunLog, Status
 
 
@@ -130,6 +131,21 @@ class Store:
                 p.status = Status.active
         self.refresh_statuses(now, closing_days)
         self.state["last_report_at"] = now.isoformat()
+
+    def reported_on(self, day: date) -> bool:
+        """그날(KST) 보고를 이미 기록했는가.
+
+        수집이 끝나면 곧바로 보고하도록(workflow_run) 바꾸면서 예비 예약까지 걸어
+        두었다. 둘 다 돌면 같은 날 메일이 두 번 간다. 날짜로 센다 — '24시간 지났나'로
+        세면 밀려서 늦게 돈 날의 시각이 다음 날 기준이 되어 하루씩 뒤로 끌린다.
+        """
+        last = self.state.get("last_report_at")
+        if not last:
+            return False
+        try:
+            return datetime.fromisoformat(last).astimezone(KST).date() == day
+        except ValueError:
+            return False
 
     # ---- helpers -----------------------------------------------------
     @staticmethod
