@@ -37,6 +37,32 @@ def file_extension(name: str) -> str:
     return ext
 
 
+_QUERY_NAME_KEYS = ("file", "filename", "file_name", "fileName", "fn", "attachfile", "orgfilename")
+
+
+def filename_from_url(url: str) -> str:
+    """URL 에서 쓸 만한 파일 이름. 경로에 없으면 물음표 뒤 값에서 찾는다.
+
+    'download.asp?bid=1&file=공고문%2Epdf' 꼴로 주는 곳이 있다. 경로만 보면 확장자가
+    '.asp' 라 형식을 모르는 파일로 버려진다.
+    """
+    from urllib.parse import parse_qs, unquote, urlsplit
+
+    parts = urlsplit(url or "")
+    last = unquote(parts.path.rsplit("/", 1)[-1])
+    if file_extension(last):
+        return last
+    q = parse_qs(parts.query)
+    for key, vals in q.items():
+        if key.lower().replace("-", "_") not in {k.lower() for k in _QUERY_NAME_KEYS}:
+            continue
+        for v in vals:
+            v = unquote(v).strip()
+            if file_extension(v):
+                return v.rsplit("/", 1)[-1]
+    return last
+
+
 def extract_text(data: bytes, filename: str, max_chars: int = 20000) -> ExtractResult:
     from ..normalize import strip_surrogates  # 순환 import 방지
     ext = file_extension(filename)

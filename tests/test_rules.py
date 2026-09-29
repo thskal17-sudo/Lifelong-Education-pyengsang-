@@ -127,3 +127,34 @@ def test_source_region_hint_does_not_mask_other_region_penalty():
     r = score_posting("평생교육원 협력기관 강사 모집", body="근무지: 서울특별시 강남구",
                       source_regions=["경남", "진주"])
     assert any("타지역(서울)" in x for x in r.reasons)
+
+
+# --- 2026-09-29: 경남 저장소에서 찾은 것을 옮긴다 ---
+
+def test_fixed_term_worker_without_teaching_word_is_excluded():
+    """'기간제근로자'만 적힌 제목은 행정·관리 자리다. 본문에 '지도사'가 있어도 제외한다."""
+    from gia.classify.rules import score_posting, title_veto
+
+    assert score_posting("진해국민체육센터 기간제근로자(초단시간) 채용공고", "생활체육 지도사 협조. 창원시", None).score < 30
+    assert title_veto("하동군 청소년방과후아카데미 기간제근로자 채용 공고") == "제외: 비강사 직종(기간제근로자)"
+
+
+def test_non_instructor_veto_spares_titles_with_a_teaching_word():
+    """가르치는 자리를 함께 뽑는 공고는 제목만으로 잘라내지 않는다."""
+    from gia.classify.rules import score_posting, title_veto
+
+    assert title_veto("체육센터 기간제근로자(헬스지도자, 청사관리원) 채용") is None
+    r = score_posting("체육센터 기간제근로자(헬스지도자, 청사관리원) 채용", "부산시", None)
+    assert not any("비강사" in x for x in r.reasons)
+    # 청원경찰도 마찬가지다 — 제목에 핵심어가 없을 때만 걸린다
+    assert title_veto("2026년 창원시 청원경찰 채용시험 계획 공고") == "제외: 비강사 직종(청원경찰)"
+    assert title_veto("평생교육원 시간강사 모집") is None
+
+
+def test_lesson_word_counts_as_instructor_posting():
+    """체육 계열은 가르치는 자리를 '수영강습'처럼 강습으로만 적는다."""
+    from gia.classify.rules import score_posting, title_veto
+
+    assert score_posting("시민생활체육관 수영강습 강사 모집", "부산시", None).score >= 70
+    # 수강생을 부르는 글은 강습이 들어가도 그대로 걸러진다
+    assert title_veto("2026년 하반기 수영강습 수강생 모집") is not None
