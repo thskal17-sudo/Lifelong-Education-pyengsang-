@@ -3,11 +3,11 @@ from __future__ import annotations
 
 import hashlib
 import logging
+import re
 import time
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass, field
 from datetime import date, datetime, timedelta
-from urllib.parse import unquote, urlsplit
 
 from .classify.llm import Extraction, LlmClassifier
 from .classify.rules import score_posting
@@ -16,7 +16,7 @@ from .collectors.registry import build_adapter
 from .config import ConfigBundle, MissingSecret, SourceConfig
 from .dedupe import canonical_key, find_duplicate, merge
 from .feedback import apply_feedback, feedback_path, load_feedback
-from .extract.attachments import extract_text, file_extension
+from .extract.attachments import extract_text, file_extension, filename_from_url
 from .extract.deadline import KST, DeadlineType, parse_deadline, parse_known_format
 from .models import Posting, RawPosting, RunLog, SourceRef, SourceRunResult, Status
 from .models import FIELD_NAMES
@@ -101,12 +101,28 @@ def build_posting(raw: RawPosting, cfg: SourceConfig, bundle: ConfigBundle, now:
     )
 
 
+_FORM_NAME = re.compile(r"(서식|응시원서|지원서|이력서|자기소개서|동의서|신청서|양식|서약서|개인정보)")
+_NOTICE_NAME = re.compile(r"(공고|모집|채용|안내|계획)")
+
+
+def _attachment_rank(name: str) -> int:
+    """읽을 차례. 공고문을 먼저, 빈 서식을 나중에.
+
+    첨부는 attachment_max_files 개까지만 읽는다. 서식이 먼저 걸리면 그 칸을 다 쓰고도
+    남는 것은 빈 응시원서뿐이라 일정도 자격도 나오지 않는다.
+    """
+    if _FORM_NAME.search(name) and not _NOTICE_NAME.search(name):
+        return 2
+    return 0 if _NOTICE_NAME.search(name) else 1
+
+
 def enrich_attachments(raw: RawPosting, http: HttpClient, cs) -> None:
     """첨부파일 텍스트를 본문 뒤에 붙인다. 실패는 extra['attachment_errors']에 기록."""
     if cs.attachment_max_files <= 0 or not raw.attachments:
         return
     allowed = {e.lower() for e in cs.attachment_extensions}
-    picked = [u for u in raw.attachments if file_extension(u) in allowed or file_extension(u) == ""][: cs.attachment_max_files]
+    usable = [u for u in raw.attachments if file_extension(filename_from_url(u)) in allowed or file_extension(filename_from_url(u)) == ""]
+    picked = sorted(usable, key=lambda u: _attachment_rank(filename_from_url(u)))[: cs.attachment_max_files]
     parts: list[str] = []
     errors: list[str] = []
     for u in picked:
@@ -115,7 +131,7 @@ def enrich_attachments(raw: RawPosting, http: HttpClient, cs) -> None:
         except FetchError as e:
             errors.append(str(e)[:200])
             continue
-        name = header_name or unquote(urlsplit(u).path.rsplit("/", 1)[-1]) or "attachment"
+        name = header_name or filename_from_url(u) or "attachment"
         if file_extension(name) not in allowed:
             errors.append(f"{name}: 지원하지 않는 형식")
             continue
