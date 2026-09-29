@@ -76,6 +76,9 @@ def _parser() -> argparse.ArgumentParser:
     si = sub.add_parser("site", help="GitHub Pages용 정적 아카이브 생성")
     si.add_argument("--out", default="site")
 
+    gs = sub.add_parser("gangsaitda", help="강사잇다 공고 올리기 양식(.xlsx) 저장")
+    gs.add_argument("--out", default=None, help="저장 경로 (기본 reports/강사잇다_공고업로드_YYYY-MM-DD.xlsx)")
+
     sub.add_parser("status", help="저장소 요약")
     return p
 
@@ -310,6 +313,16 @@ def main(argv: list[str] | None = None) -> int:
     if args.cmd == "site":
         info = build_site(list(store.values()), Path(args.reports_dir), Path(args.out), now)
         print(f"[site] {args.out}/ 생성 · 활성 공고 {info['active']}건 · 리포트 {info['reports']}개")
+        return 0
+
+    if args.cmd == "gangsaitda":
+        # 울산 저장소의 '오늘의 브리핑'이 reports/gangsaitda/latest.xlsx 를 읽어 세 지역 합본으로 첨부한다
+        from .report import gangsaitda
+        blob, n = gangsaitda.build_workbook(store, now)
+        out = Path(args.out or f"reports/{gangsaitda.workbook_name(now)}")
+        out.parent.mkdir(parents=True, exist_ok=True)
+        out.write_bytes(blob)
+        print(f"[gangsaitda] {out} · {n}줄")
         return 0
 
     if args.cmd == "status":

@@ -62,6 +62,12 @@ jobs:
             # 수집 뒤 자동 실행과 예비 예약이 같은 날 겹칠 수 있다. 먼저 돈 쪽만 보낸다
             python -m gia report --send --once-daily
           fi
+      # 울산 저장소(ulsan-shcool-public-company)의 '오늘의 브리핑'이 이 파일을 읽어
+      # 울산·경남·평생교육원 강사잇다 양식을 한 파일로 합쳐 첨부한다. 실패해도 리포트 커밋은 계속한다
+      - name: 강사잇다 양식 저장 (브리핑 합본용)
+        if: always()
+        continue-on-error: true
+        run: python -m gia gangsaitda --out reports/gangsaitda/latest.xlsx
       - name: commit report
         if: always()
         run: |

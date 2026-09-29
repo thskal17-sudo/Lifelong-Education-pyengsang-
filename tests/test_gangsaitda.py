@@ -102,3 +102,20 @@ def test_whole_page_body_never_becomes_detail_text(settings, bundle):
 
     real = make_source("real", "university", detail={"fetch": True, "body_selector": "div.view"})
     assert _body_excerpt(raw, real).startswith("Skip Menu")
+
+
+def test_cli_saves_latest_for_briefing(tmp_path, monkeypatch):
+    """울산 저장소 브리핑이 읽는 reports/gangsaitda/latest.xlsx 를 CLI 로 저장한다."""
+    from openpyxl import load_workbook
+
+    from gia.__main__ import main
+
+    monkeypatch.chdir(tmp_path)
+    data = tmp_path / "data"
+    data.mkdir()
+    out = tmp_path / "reports" / "gangsaitda" / "latest.xlsx"
+    from pathlib import Path
+
+    config = Path(__file__).resolve().parents[1] / "config"
+    assert main(["--config-dir", str(config), "--data-dir", str(data), "gangsaitda", "--out", str(out)]) == 0
+    assert load_workbook(out)["공고"].cell(1, 1).value == "제목"
