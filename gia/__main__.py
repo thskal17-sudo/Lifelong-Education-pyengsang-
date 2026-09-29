@@ -44,6 +44,8 @@ def _parser() -> argparse.ArgumentParser:
     r.add_argument("--print", dest="print_md", action="store_true", help="Markdown을 표준출력으로")
     r.add_argument("--notify-test", action="store_true",
                    help="공고가 없어도 알림을 한 번 보내 채널이 살아 있는지 확인 (제목에 [테스트] 표시)")
+    r.add_argument("--once-daily", action="store_true",
+                   help="오늘(KST) 이미 보고했으면 아무것도 하지 않음 — 수집 직후 실행과 예비 예약 실행이 겹쳐도 한 번만 나가게")
 
     pr = sub.add_parser("probe", help="소스 하나를 시험 수집")
     pr.add_argument("source_id")
@@ -100,6 +102,9 @@ def main(argv: list[str] | None = None) -> int:
         return 0
 
     if args.cmd == "report":
+        if args.once_daily and store.reported_on(now.date()):
+            print(f"[report] 오늘 이미 보고함({store.state['last_report_at']}) — 건너뜀", file=sys.stderr)
+            return 0
         data = select_postings(bundle, store, now)
         if bundle.settings.report.daily_overview_llm and (data.new or data.closing):
             llm = LlmClassifier.from_settings(bundle.settings.classifier)
