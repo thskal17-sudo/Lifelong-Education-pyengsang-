@@ -6,7 +6,10 @@ from datetime import date, datetime, timedelta
 from urllib.parse import urljoin
 
 import httpx
-from selectolax.parser import HTMLParser
+# lexbor 백엔드. selectolax 1.0 이 옛 Modest 백엔드를 지웠고(2026-10-04 수집·보고가
+# 멈췄다), lexbor 가 HTML5 표준을 따르는 후속이다. 쓰는 API(css·css_first·text·
+# attributes·decompose·body)가 같아 이름만 바꿔 받는다.
+from selectolax.lexbor import LexborHTMLParser as HTMLParser
 
 from ..extract.deadline import KST
 from ..models import RawListing, RawPosting
