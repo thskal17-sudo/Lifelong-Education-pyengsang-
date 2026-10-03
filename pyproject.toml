@@ -8,7 +8,10 @@ dependencies = [
   "pydantic>=2.6",
   "pyyaml>=6.0",
   "jinja2>=3.1",
-  "selectolax>=0.3",
+  # 1.0 에서 Modest 백엔드가 빠졌다. gia/collectors/html_list.py 가 쓰는
+  # selectolax.parser.HTMLParser 가 그것이라, 1.0 이 깔리면 import 에서 죽는다
+  # (2026-10-04 러너에서 두 저장소 수집·보고가 모두 멈췄다). lexbor 로 옮기기 전까지 묶는다
+  "selectolax>=0.3,<1.0",
   "rapidfuzz>=3.0",
   "pypdf>=4.0",
   "olefile>=0.46",
