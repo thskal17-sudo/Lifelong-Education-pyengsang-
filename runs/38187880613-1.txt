@@ -1,0 +1,78 @@
+====================================================================================================
+URL: https://lifelong.deu.ac.kr/Board/BoardList.aspx?MENU_ID=146&PAGE_NO=&BoardMstNo=1
+status=503 final=https://lifelong.deu.ac.kr/Board/BoardList.aspx?MENU_ID=146&PAGE_NO=&BoardMstNo=1 encoding=UTF-8 bytes=1396
+title: 서비스 점검중 입니다.
+body (short): <!-- [공통] - [점검] - [서비스 점검 안내] --> <!DOCTYPE html> <html lang="ko"> <head> <meta charset="UTF-8"> <meta http-equiv="X-UA-Compatible" content="IE=edge;chrome=1"> <meta name="viewport" content="width=device-width, initial-scale=1"> <meta name="mobile-web-app-capable" content="yes"> <meta name="apple-mobile-web-app-capable" content="yes"> <title>서비스 점검중 입니다.</title> <link rel="stylesheet" type="text/css" href="/sitebreak/css/default.css"> <link rel="stylesheet" type="text/css" href="/sitebreak/css/sitebreak.css"> </head> <body> <div class="wrap"> <!-- 내용 START --> <div class="loading-wrap loading
+====================================================================================================
+URL: https://lifelong.deu.ac.kr/
+status=503 final=https://lifelong.deu.ac.kr/ encoding=UTF-8 bytes=1396
+title: 서비스 점검중 입니다.
+body (short): <!-- [공통] - [점검] - [서비스 점검 안내] --> <!DOCTYPE html> <html lang="ko"> <head> <meta charset="UTF-8"> <meta http-equiv="X-UA-Compatible" content="IE=edge;chrome=1"> <meta name="viewport" content="width=device-width, initial-scale=1"> <meta name="mobile-web-app-capable" content="yes"> <meta name="apple-mobile-web-app-capable" content="yes"> <title>서비스 점검중 입니다.</title> <link rel="stylesheet" type="text/css" href="/sitebreak/css/default.css"> <link rel="stylesheet" type="text/css" href="/sitebreak/css/sitebreak.css"> </head> <body> <div class="wrap"> <!-- 내용 START --> <div class="loading-wrap loading
+====================================================================================================
+URL: https://www.deu.ac.kr/
+  (connect failed, retrying once: ('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer')))
+status=200 final=https://www.deu.ac.kr/www/index.do encoding=UTF-8 bytes=155178
+title: 동의대학교 대표
+
+[LIST] div.edu-wrap > dlv.edu-board-wrap > ul  items=4
+   li: li -> [국제언어교육원] 2026학년도 10월 모의토익 접수안내 2026.10.06
+      a.item href=/www/deu-education.do?mode=view&articleNo=495152 onclick= :: own='' all='[국제언어교육원] 2026학년도 10월 모의토익 접수안내 2026.10.06'
+      div.board-subject :: own='[국제언어교육원] 2026학년도 10월 모의토익 접수안내' all='[국제언어교육원] 2026학년도 10월 모의토익 접수안내'
+      span.board-date :: own='2026.10.06' all='2026.10.06'
+[DATES] sample: ['2026. 10. 23', '2026-10-08', '2026.10.12', '2026-10-08', '2026.10.12']
+
+[ANCHORS] most common link paths
+   x40 div.tab-con-wrap > div.tab-con > div.board-wrap > a.item  href=/www/deu-bids.do?mode=view&articleNo=496892 {'title': '자세히 보러가기'} text='입찰공고 [입찰공고]제2026-17호_[대학혁신지원사업/국고] 방사선학과'
+   x11 div.aside-info-wrap > div.aside-info-inner > div.info > a.info-item  href=https://door.deu.ac.kr/Account/Index {'target': '_blank', 'title': '새 창으로 열림'} text='학습관리시스템(DOOR)'
+   x4 dlv.edu-board-wrap > ul > li > a.item  href=/www/deu-education.do?mode=view&articleNo=495152 {'title': '자세히 보러가기'} text='[국제언어교육원] 2026학년도 10월 모의토익 접수안내 2026.10.'
+      row? li :: '[국제언어교육원] 2026학년도 10월 모의토익 접수안내 2026.10.06'
+   x3 section.main-service > div.minner > div.ico-wrap > a.item  href=https://placement.deu.ac.kr/ {'target': '_blank', 'title': '새 창으로 열림'} text='현장실습 운영시스템'
+
+[LINKS] board candidates (42)
+   '정보공개' -> https://www.deu.ac.kr/www/deu-council-notice.do
+   '정보광장' -> https://www.deu.ac.kr/www/deu-notice.do
+   '교육·모집' -> https://www.deu.ac.kr/www/deu-education.do
+   '채용' -> https://www.deu.ac.kr/www/deu-job.do
+   '동의소식' -> https://www.deu.ac.kr/www/deu-today.do
+   '소식지' -> https://www.deu.ac.kr/www/deu-newsletter.do
+   '입찰공고 [입찰공고]제2026-17호_[대학혁신지원사업' -> https://www.deu.ac.kr/www/deu-bids.do?mode=view&articleNo=496892
+   '장학공지 2026 하반기 서울 은평구민 장학생 선발 공' -> https://www.deu.ac.kr/www/deu-scholarship.do?mode=view&articleNo=496865
+   '공지사항 [2026년 박물관 하반기 특별전] 청춘, 부' -> https://www.deu.ac.kr/www/deu-notice.do?mode=view&articleNo=496715
+   '장학공지 2026-2학기 중소기업 취업연계 장학금(희망' -> https://www.deu.ac.kr/www/deu-scholarship.do?mode=view&articleNo=496158
+   '공지사항 [예비군연대] 2026년도 학생 예비군 훈련(' -> https://www.deu.ac.kr/www/deu-notice.do?mode=view&articleNo=496125
+   '입찰공고 [입찰공고] 산학협력단 제2026-34호 동의' -> https://www.deu.ac.kr/www/deu-bids.do?mode=view&articleNo=496115
+   '입찰공고 [입찰공고] 산학협력단 제2026-32호 설치' -> https://www.deu.ac.kr/www/deu-bids.do?mode=view&articleNo=496114
+   '장학공지 (재)아산사회복지재단 2027년 북한이탈청소년' -> https://www.deu.ac.kr/www/deu-scholarship.do?mode=view&articleNo=494733
+   '공지사항 대학 동아리 축제에 따른 차량통행 통제구역 안' -> https://www.deu.ac.kr/www/deu-notice.do?mode=view&articleNo=488623
+   '공지사항 [안전관리팀] 교내 장기간 방치된 이륜차(오토' -> https://www.deu.ac.kr/www/deu-notice.do?mode=view&articleNo=488499
+   '공지사항 [교수학습개발센터]2026학년도 신입생 기초학' -> https://www.deu.ac.kr/www/deu-notice.do?mode=view&articleNo=484182
+   '공지사항 2026학년도 2학기 등록금 분할 2차 납부 ' -> https://www.deu.ac.kr/www/deu-notice.do?mode=view&articleNo=481185
+   '공지사항 [대학혁신지원사업] 2026년 자기주도 학습 ' -> https://www.deu.ac.kr/www/deu-notice.do?mode=view&articleNo=480456
+   '공지사항 [후원의 집]아이시티안과  특별이벤트 ■\xa0 아' -> https://www.deu.ac.kr/www/deu-notice.do?mode=view&articleNo=477279
+   '장학공지 2027년도 대산장학생 선발 안내(농업리더장학' -> https://www.deu.ac.kr/www/deu-scholarship.do?mode=view&articleNo=491605
+   '장학공지 [한국장학재단] 희망사다리 장학생 대상 일자리' -> https://www.deu.ac.kr/www/deu-scholarship.do?mode=view&articleNo=489950
+   '장학공지 2026년 하반기 해운대구 장학금 신청 안내(' -> https://www.deu.ac.kr/www/deu-scholarship.do?mode=view&articleNo=489002
+   '장학공지 2026년도 하반기 재단법인 논산시장학회 장학' -> https://www.deu.ac.kr/www/deu-scholarship.do?mode=view&articleNo=488513
+   '장학공지 2026학년도 2학기 장학사정관제장학금(추가)' -> https://www.deu.ac.kr/www/deu-scholarship.do?mode=view&articleNo=477723
+   '채용공고 동의대학교 교수학습개발센터 연구교수 신규 채용' -> https://www.deu.ac.kr/www/deu-job.do?mode=view&articleNo=469317
+   '채용공고 [동의대학교 국제협력센터] 사업 전담 개발협력' -> https://www.deu.ac.kr/www/deu-job.do?mode=view&articleNo=452181
+   '채용공고 [동의대학교 국제협력센터] 2026-2027 ' -> https://www.deu.ac.kr/www/deu-job.do?mode=view&articleNo=262627
+   '채용공고 2026년 후반기 육군 학군사관후보생 67, ' -> https://www.deu.ac.kr/www/deu-job.do?mode=view&articleNo=253411
+   '채용공고 의료·보건·생활대학행정지원실 조교 모집 안내 ' -> https://www.deu.ac.kr/www/deu-job.do?mode=view&articleNo=91020
+   '채용공고 [AX교육센터] 2026학년도 2학기 교내 근' -> https://www.deu.ac.kr/www/deu-job.do?mode=view&articleNo=90658
+   '채용공고 한의학과 실습조교 모집 2026-08-20' -> https://www.deu.ac.kr/www/deu-job.do?mode=view&articleNo=90096
+   '채용공고 [조기취업형계약학과사업단] 2026-2학기 근' -> https://www.deu.ac.kr/www/deu-job.do?mode=view&articleNo=90062
+   '입찰공고 [입찰공고]제2026-19호_[대학혁신지원사업' -> https://www.deu.ac.kr/www/deu-bids.do?mode=view&articleNo=494246
+   '입찰공고 [입찰공고]제2026-18호_[AI기본교육과정' -> https://www.deu.ac.kr/www/deu-bids.do?mode=view&articleNo=494237
+   '입찰공고 [입찰공고] 산학협력단 제2026-31호 (동' -> https://www.deu.ac.kr/www/deu-bids.do?mode=view&articleNo=489020
+   '입찰공고 [입찰공고] 산학협력단 제2026-30호 (동' -> https://www.deu.ac.kr/www/deu-bids.do?mode=view&articleNo=488503
+   '입찰공고 [입찰공고]제2026-17호_[대학혁신지원사업' -> https://www.deu.ac.kr/www/deu-bids.do?mode=view&articleNo=479131
+   '[공지]  📢[대학혁신지원사업] 2026학년도 다전공 ' -> https://www.deu.ac.kr/www/deu-education.do?mode=view&articleNo=495037
+   '[중앙도서관] [대학혁신지원사업] 2026년 저자초청 ' -> https://www.deu.ac.kr/www/deu-education.do?mode=view&articleNo=490012
+::group::probe deu_lifelong
+INFO httpx: HTTP Request: GET https://lifelong.deu.ac.kr/robots.txt "HTTP/1.1 503 "
+INFO httpx: HTTP Request: GET https://lifelong.deu.ac.kr/Board/BoardList.aspx?MENU_ID=146&PAGE_NO=&BoardMstNo=1 "HTTP/1.1 503 "
+INFO httpx: HTTP Request: GET https://lifelong.deu.ac.kr/Board/BoardList.aspx?MENU_ID=146&PAGE_NO=&BoardMstNo=1 "HTTP/1.1 503 "
+INFO httpx: HTTP Request: GET https://lifelong.deu.ac.kr/Board/BoardList.aspx?MENU_ID=146&PAGE_NO=&BoardMstNo=1 "HTTP/1.1 503 "
+[probe] 동의대학교 미래교육원 공지사항: 목록 실패 — 재시도 실패: HTTP 503 https://lifelong.deu.ac.kr/Board/BoardList.aspx?MENU_ID=146&PAGE_NO=&BoardMstNo=1
+::endgroup::
