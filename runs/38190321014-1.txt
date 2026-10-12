@@ -1,0 +1,11 @@
+====================================================================================================
+URL: https://www.deu.ac.kr/www/deu-education.do
+  (connect failed, retrying once: ('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer')))
+status=200 final=https://www.deu.ac.kr/www/deu-education.do encoding=ascii bytes=384
+title: 
+body (short): <br> <br> <center> <h2> The request / response that are contrary to the Web firewall security policies have been blocked. </h2> <table> <tr> <td>Detect time</td> <td>2026-10-12 10:02:48</td> </tr> <tr> <td>Detect client IP</td> <td>132.196.19.17</td> </tr> <tr> <td>Detect URL</td> <td>https://www.deu.ac.kr/www/deu-education.do</td> </tr> </table> </center> <br>
+====================================================================================================
+URL: https://www.deu.ac.kr/www/deu-job.do
+status=200 final=https://www.deu.ac.kr/www/deu-job.do encoding=ascii bytes=378
+title: 
+body (short): <br> <br> <center> <h2> The request / response that are contrary to the Web firewall security policies have been blocked. </h2> <table> <tr> <td>Detect time</td> <td>2026-10-12 10:02:50</td> </tr> <tr> <td>Detect client IP</td> <td>132.196.19.17</td> </tr> <tr> <td>Detect URL</td> <td>https://www.deu.ac.kr/www/deu-job.do</td> </tr> </table> </center> <br>
