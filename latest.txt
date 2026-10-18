@@ -1,9 +1,52 @@
-24:  default_days: 120
-::group::probe deu_lifelong
-INFO httpx: HTTP Request: GET https://lifelong.deu.ac.kr/robots.txt "HTTP/1.1 302 "
-INFO httpx: HTTP Request: GET https://lifelong.deu.ac.kr/fro-end/member/login "HTTP/1.1 200 "
-INFO httpx: HTTP Request: GET https://lifelong.deu.ac.kr/Board/BoardList.aspx?MENU_ID=146&PAGE_NO=&BoardMstNo=1 "HTTP/1.1 302 "
-INFO httpx: HTTP Request: GET https://lifelong.deu.ac.kr/fro-end/member/login "HTTP/1.1 200 "
-[probe] keywords 무시: 목록 전부 표시
-[probe] 동의대학교 미래교육원 공지사항: 목록 0건
-::endgroup::
+====================================================================================================
+URL: https://lifelong.deu.ac.kr/
+status=200 final=https://lifelong.deu.ac.kr/fro-end/main encoding=UTF-8 bytes=53313
+title: 동의대학교 미래교육원
+[DATES] sample: ['2026. 11. 6']
+
+[RETRY without noise filter]
+
+[LIST] div.right > div.gnb > ul.dep01  items=6
+   li: li -> 수강 안내 Course Guide 수강 안내 접수 및 등록 안내 장학금/수강료 감면 전체교육과정 학사일정
+      a href=/fro-end/dep-01/1100 onclick= :: own='수강 안내' all='수강 안내'
+      div.nav-dep02 :: own='' all='Course Guide 수강 안내 접수 및 등록 안내 장학금/수강료 감면 전체교육과정 학사'
+      div.inner :: own='' all='Course Guide 수강 안내 접수 및 등록 안내 장학금/수강료 감면 전체교육과정 학사'
+      div.dep02-tit :: own='' all='Course Guide 수강 안내'
+      p.eng :: own='Course Guide' all='Course Guide'
+      p.kor :: own='수강 안내' all='수강 안내'
+      ul.dep02-list :: own='' all='접수 및 등록 안내 장학금/수강료 감면 전체교육과정 학사일정'
+      li :: own='' all='접수 및 등록 안내'
+      a href=/fro-end/dep-01/1100 onclick= :: own='접수 및 등록 안내' all='접수 및 등록 안내'
+      li :: own='' all='장학금/수강료 감면'
+      a href=/fro-end/dep-01/1200 onclick= :: own='장학금/수강료 감면' all='장학금/수강료 감면'
+      li :: own='' all='전체교육과정'
+      a href=/fro-end/dep-01/1300 onclick= :: own='전체교육과정' all='전체교육과정'
+      li :: own='' all='학사일정'
+
+[LIST] div.sitemap-wrap > div.inner > ul.nav-d01  items=6
+   li: li -> 수강 안내 접수 및 등록 안내 장학금/수강료 감면 전체교육과정 학사일정
+      span.lab.mobOn :: own='수강 안내' all='수강 안내'
+      ul.nav-d02 :: own='' all='접수 및 등록 안내 장학금/수강료 감면 전체교육과정 학사일정'
+      li :: own='' all='접수 및 등록 안내'
+      a href=/fro-end/dep-01/1100 onclick= :: own='접수 및 등록 안내' all='접수 및 등록 안내'
+      li :: own='' all='장학금/수강료 감면'
+      a href=/fro-end/dep-01/1200 onclick= :: own='장학금/수강료 감면' all='장학금/수강료 감면'
+      li :: own='' all='전체교육과정'
+      a href=/fro-end/dep-01/1300 onclick= :: own='전체교육과정' all='전체교육과정'
+      li :: own='' all='학사일정'
+      a href=/fro-end/dep-01/1400 onclick= :: own='학사일정' all='학사일정'
+[DATES] sample: ['2026. 11. 6']
+
+[ANCHORS] most common link paths
+   x5 div.course-slick > div.course-item > div.c-panel-tags > a  href=#none  text='부산진대학(평생학습관)'
+   x2 div.course-panel > div.course-slick > div.course-item > a.course-link  href=/fro-end/dep-02/2100  text='학점 은행제 과정 바로가기'
+   x1 div.layer-popup > div.inner > div.popup-btn > a.btn-close.today.btn_layerpop_close  href=#none {'title': '오늘하루열지않기'} text='오늘 하루 열지 않기'
+      row? div.popup-btn :: '오늘 하루 열지 않기 닫기'
+   x1 div.w1600 > div.contact-wrap > div.contact-links > a.contact-link.link-way  href=/fro-end/dep-06/6500  text='찾아오시는길 동의대학교 부설 미래교육원의 위치와 캠퍼스 주변 안내를 제공'
+      row? div.contact-links :: '찾아오시는길 동의대학교 부설 미래교육원의 위치와 캠퍼스 주변 안내를 제공합니다. FAQ 동의대학교 부설 미래교육원의 수강 및 이용 관련 자주 묻는 질문을 안내합니다. 자료실 동의대학교 부설 미래교육원의 학습 및 운영'
+
+[LINKS] board candidates (4)
+   '공지사항' -> https://lifelong.deu.ac.kr/fro-end/dep-05/5100
+   '모집요강' -> https://lifelong.deu.ac.kr/fro-end/dep-01/1100
+   '14 2026.10 2026년 학점은행제 교강사 법정의' -> https://lifelong.deu.ac.kr/fro-end/dep-05/5100/view/657
+   '13 2026.10 파크골프 2급지도자(강사) 양성과정' -> https://lifelong.deu.ac.kr/fro-end/dep-05/5100/view/655
