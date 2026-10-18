@@ -1,8 +1,8 @@
 ====================================================================================================
-URL: https://lifelong.deu.ac.kr/
-status=200 final=https://lifelong.deu.ac.kr/fro-end/main encoding=UTF-8 bytes=53313
+URL: https://lifelong.deu.ac.kr/fro-end/dep-05/5100
+status=200 final=https://lifelong.deu.ac.kr/fro-end/dep-05/5100 encoding=UTF-8 bytes=29011
 title: 동의대학교 미래교육원
-[DATES] sample: ['2026. 11. 6']
+[DATES] sample: []
 
 [RETRY without noise filter]
 
@@ -35,18 +35,21 @@ title: 동의대학교 미래교육원
       a href=/fro-end/dep-01/1300 onclick= :: own='전체교육과정' all='전체교육과정'
       li :: own='' all='학사일정'
       a href=/fro-end/dep-01/1400 onclick= :: own='학사일정' all='학사일정'
-[DATES] sample: ['2026. 11. 6']
+[DATES] sample: []
 
-[ANCHORS] most common link paths
-   x5 div.course-slick > div.course-item > div.c-panel-tags > a  href=#none  text='부산진대학(평생학습관)'
-   x2 div.course-panel > div.course-slick > div.course-item > a.course-link  href=/fro-end/dep-02/2100  text='학점 은행제 과정 바로가기'
-   x1 div.layer-popup > div.inner > div.popup-btn > a.btn-close.today.btn_layerpop_close  href=#none {'title': '오늘하루열지않기'} text='오늘 하루 열지 않기'
-      row? div.popup-btn :: '오늘 하루 열지 않기 닫기'
-   x1 div.w1600 > div.contact-wrap > div.contact-links > a.contact-link.link-way  href=/fro-end/dep-06/6500  text='찾아오시는길 동의대학교 부설 미래교육원의 위치와 캠퍼스 주변 안내를 제공'
-      row? div.contact-links :: '찾아오시는길 동의대학교 부설 미래교육원의 위치와 캠퍼스 주변 안내를 제공합니다. FAQ 동의대학교 부설 미래교육원의 수강 및 이용 관련 자주 묻는 질문을 안내합니다. 자료실 동의대학교 부설 미래교육원의 학습 및 운영'
-
-[LINKS] board candidates (4)
+[LINKS] board candidates (1)
    '공지사항' -> https://lifelong.deu.ac.kr/fro-end/dep-05/5100
-   '모집요강' -> https://lifelong.deu.ac.kr/fro-end/dep-01/1100
-   '14 2026.10 2026년 학점은행제 교강사 법정의' -> https://lifelong.deu.ac.kr/fro-end/dep-05/5100/view/657
-   '13 2026.10 파크골프 2급지도자(강사) 양성과정' -> https://lifelong.deu.ac.kr/fro-end/dep-05/5100/view/655
+====================================================================================================
+URL: https://lifelong.deu.ac.kr/fro-end/dep-05/5100/view/657
+status=200 final=https://lifelong.deu.ac.kr/fro-end/dep-05/5100/view/657 encoding=UTF-8 bytes=33126
+title: 동의대학교 미래교육원
+
+[BODY candidates]
+   div.sub-contents > div.sub-con.w1440 > div.bbs-wrap  textlen=1147 :: '학점은행제 2026년 학점은행제 교강사 법정의무교육 실시 안내 작성자 동의대관리자 작성일 2026-10-14 조회수 106 2026년 학점은행제'
+   div.viewer > div.view-con > div#bbsContents.contents  textlen=913 :: '2026년 학점은행제 교강사 법정의무교육 실시 안내 「아동복지법」제26조 제3항 및 「긴급복지지원법」제7조 제5항,「장애인복지법」제59조의 4 '
+   section.bbs-view > div.viewer > div.view-con  textlen=1042 :: '2026년 학점은행제 교강사 법정의무교육 실시 안내 「아동복지법」제26조 제3항 및 「긴급복지지원법」제7조 제5항,「장애인복지법」제59조의 4 '
+   div.view-con > div#bbsContents.contents > p  textlen=201 :: '「아동복지법」제26조 제3항 및 「긴급복지지원법」제7조 제5항,「장애인복지법」제59조의 4 제6항 및 7항에 따라 아동학대 신고의무자 교육, 예'
+   div.view-con > div#bbsContents.contents > p  textlen=182 :: '의무교육을 이수하지 않으신 분들은 다음학기부터 강의가 불가하니 반드시 기간내 제출하시기 바랍니다. 교육에 따라 수료증 출력은 과정 이수 후 1~'
+
+[ATTACH candidates]
+[DATES] sample: ['2026-10-14', '2026. 11. 6']
