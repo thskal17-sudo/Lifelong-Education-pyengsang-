@@ -1,0 +1,7 @@
+24:  default_days: 120
+::group::probe deu_lifelong
+INFO httpx: HTTP Request: GET https://lifelong.deu.ac.kr/robots.txt "HTTP/1.1 302 "
+INFO httpx: HTTP Request: GET https://lifelong.deu.ac.kr/fro-end/member/login "HTTP/1.1 200 "
+[probe] 동의대학교 미래교육원 공지사항: 목록 실패 — playwright 패키지가 없음: pip install playwright
+[probe] keywords 무시: 목록 전부 표시
+::endgroup::
