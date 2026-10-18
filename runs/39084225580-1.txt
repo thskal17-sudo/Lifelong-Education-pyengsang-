@@ -1,0 +1,14 @@
+24:  default_days: 120
+::group::probe deu_lifelong
+INFO httpx: HTTP Request: GET https://lifelong.deu.ac.kr/robots.txt "HTTP/1.1 302 "
+INFO httpx: HTTP Request: GET https://lifelong.deu.ac.kr/fro-end/member/login "HTTP/1.1 200 "
+[probe] keywords 무시: 목록 전부 표시
+[probe] 동의대학교 미래교육원 공지사항: 목록 50건
+  - 2026-10-14 | 동의대학교 미래교육원 | 2026년 학점은행제 교강사 법정의무교육 실시 안내 | https://lifelong.deu.ac.kr/fro-end/dep-05/5100/view/657
+  - 2026-10-13 | 동의대학교 미래교육원 | 파크골프 2급지도자(강사) 양성과정 모집안내(4기) | https://lifelong.deu.ac.kr/fro-end/dep-05/5100/view/655
+  - 2026-10-13 | 동의대학교 미래교육원 | [음악학전공] 2026-2학기 이론 중간고사 안내 | https://lifelong.deu.ac.kr/fro-end/dep-05/5100/view/652
+  - 2026-10-13 | 동의대학교 미래교육원 | [부동산,경영, 체육학전공] 2026년 2학기 중간고사 안내 | https://lifelong.deu.ac.kr/fro-end/dep-05/5100/view/651
+  - 2026-10-13 | 동의대학교 미래교육원 | ★10.12기준 전공실기 시간 변경■ 2026-2 전공실기 중간시험 일정 및 곡명작성 안내 | https://lifelong.deu.ac.kr/fro-end/dep-05/5100/view/650
+[detail] 본문 931자 · 마감 2026-11-06 23:59:00+09:00 (fixed, '2026. 11. 6.(금)') · 점수 60 ['+50 제목 핵심어(교강사)', '+10 강의어(강의)'] · 분야 counsel_welfare
+[posting] 포함: 2026년 학점은행제 교강사 법정의무교육 실시 안내
+::endgroup::
