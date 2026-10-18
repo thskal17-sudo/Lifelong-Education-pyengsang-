@@ -1,55 +1,33 @@
 ====================================================================================================
-URL: https://lifelong.deu.ac.kr/fro-end/dep-05/5100
-status=200 final=https://lifelong.deu.ac.kr/fro-end/dep-05/5100 encoding=UTF-8 bytes=29011
+URL: https://lifelong.deu.ac.kr/fro-end/dep-05/5100 (rendered) UA=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, l
+final=https://lifelong.deu.ac.kr/fro-end/dep-05/5100 bytes=44277
 title: 동의대학교 미래교육원
-[DATES] sample: []
 
-[RETRY without noise filter]
+[TABLE] section.bbs-list > div.table-wrap > table.bbs-table  rows=51
+   row: tr -> th.num:번호 | th.cate:카테고리 | th.tit:제목 | th.txt:작성자 | th.txt:작성일 | th.txt:조회수
+   row: tr -> td.num:공지 | td.cate:학점은행제 | td.tit:2026년 학점은행제 교강사 법정의무교육 실시  | td.txt:동의대관리자 | td.txt:2026.10.14 | td.txt.view:106
+      td.num :: own='' all='공지'
+      span.noti :: own='공지' all='공지'
+      td.cate :: own='학점은행제' all='학점은행제'
+      td.tit :: own='' all='2026년 학점은행제 교강사 법정의무교육 실시 안내'
+      a href=/fro-end/dep-05/5100/view/657 onclick= :: own='2026년 학점은행제 교강사 법정의무교육 실시 안내' all='2026년 학점은행제 교강사 법정의무교육 실시 안내'
+      td.txt :: own='동의대관리자' all='동의대관리자'
+      td.txt :: own='2026.10.14' all='2026.10.14'
+      td.txt.view :: own='106' all='106'
+[DATES] sample: ['2026.10.14', '2026.10.13', '2026.10.13', '2026.10.13', '2026.10.13']
 
-[LIST] div.right > div.gnb > ul.dep01  items=6
-   li: li -> 수강 안내 Course Guide 수강 안내 접수 및 등록 안내 장학금/수강료 감면 전체교육과정 학사일정
-      a href=/fro-end/dep-01/1100 onclick= :: own='수강 안내' all='수강 안내'
-      div.nav-dep02 :: own='' all='Course Guide 수강 안내 접수 및 등록 안내 장학금/수강료 감면 전체교육과정 학사'
-      div.inner :: own='' all='Course Guide 수강 안내 접수 및 등록 안내 장학금/수강료 감면 전체교육과정 학사'
-      div.dep02-tit :: own='' all='Course Guide 수강 안내'
-      p.eng :: own='Course Guide' all='Course Guide'
-      p.kor :: own='수강 안내' all='수강 안내'
-      ul.dep02-list :: own='' all='접수 및 등록 안내 장학금/수강료 감면 전체교육과정 학사일정'
-      li :: own='' all='접수 및 등록 안내'
-      a href=/fro-end/dep-01/1100 onclick= :: own='접수 및 등록 안내' all='접수 및 등록 안내'
-      li :: own='' all='장학금/수강료 감면'
-      a href=/fro-end/dep-01/1200 onclick= :: own='장학금/수강료 감면' all='장학금/수강료 감면'
-      li :: own='' all='전체교육과정'
-      a href=/fro-end/dep-01/1300 onclick= :: own='전체교육과정' all='전체교육과정'
-      li :: own='' all='학사일정'
+[ANCHORS] most common link paths
+   x50 tbody#searchResultBody > tr > td.tit > a  href=/fro-end/dep-05/5100/view/657  text='2026년 학점은행제 교강사 법정의무교육 실시 안내'
+      row? tr :: '공지 학점은행제 2026년 학점은행제 교강사 법정의무교육 실시 안내 동의대관리자 2026.10.14 106'
 
-[LIST] div.sitemap-wrap > div.inner > ul.nav-d01  items=6
-   li: li -> 수강 안내 접수 및 등록 안내 장학금/수강료 감면 전체교육과정 학사일정
-      span.lab.mobOn :: own='수강 안내' all='수강 안내'
-      ul.nav-d02 :: own='' all='접수 및 등록 안내 장학금/수강료 감면 전체교육과정 학사일정'
-      li :: own='' all='접수 및 등록 안내'
-      a href=/fro-end/dep-01/1100 onclick= :: own='접수 및 등록 안내' all='접수 및 등록 안내'
-      li :: own='' all='장학금/수강료 감면'
-      a href=/fro-end/dep-01/1200 onclick= :: own='장학금/수강료 감면' all='장학금/수강료 감면'
-      li :: own='' all='전체교육과정'
-      a href=/fro-end/dep-01/1300 onclick= :: own='전체교육과정' all='전체교육과정'
-      li :: own='' all='학사일정'
-      a href=/fro-end/dep-01/1400 onclick= :: own='학사일정' all='학사일정'
-[DATES] sample: []
-
-[LINKS] board candidates (1)
+[LINKS] board candidates (10)
    '공지사항' -> https://lifelong.deu.ac.kr/fro-end/dep-05/5100
-====================================================================================================
-URL: https://lifelong.deu.ac.kr/fro-end/dep-05/5100/view/657
-status=200 final=https://lifelong.deu.ac.kr/fro-end/dep-05/5100/view/657 encoding=UTF-8 bytes=33126
-title: 동의대학교 미래교육원
-
-[BODY candidates]
-   div.sub-contents > div.sub-con.w1440 > div.bbs-wrap  textlen=1147 :: '학점은행제 2026년 학점은행제 교강사 법정의무교육 실시 안내 작성자 동의대관리자 작성일 2026-10-14 조회수 106 2026년 학점은행제'
-   div.viewer > div.view-con > div#bbsContents.contents  textlen=913 :: '2026년 학점은행제 교강사 법정의무교육 실시 안내 「아동복지법」제26조 제3항 및 「긴급복지지원법」제7조 제5항,「장애인복지법」제59조의 4 '
-   section.bbs-view > div.viewer > div.view-con  textlen=1042 :: '2026년 학점은행제 교강사 법정의무교육 실시 안내 「아동복지법」제26조 제3항 및 「긴급복지지원법」제7조 제5항,「장애인복지법」제59조의 4 '
-   div.view-con > div#bbsContents.contents > p  textlen=201 :: '「아동복지법」제26조 제3항 및 「긴급복지지원법」제7조 제5항,「장애인복지법」제59조의 4 제6항 및 7항에 따라 아동학대 신고의무자 교육, 예'
-   div.view-con > div#bbsContents.contents > p  textlen=182 :: '의무교육을 이수하지 않으신 분들은 다음학기부터 강의가 불가하니 반드시 기간내 제출하시기 바랍니다. 교육에 따라 수료증 출력은 과정 이수 후 1~'
-
-[ATTACH candidates]
-[DATES] sample: ['2026-10-14', '2026. 11. 6']
+   '2026년 학점은행제 교강사 법정의무교육 실시 안내' -> https://lifelong.deu.ac.kr/fro-end/dep-05/5100/view/657
+   '파크골프 2급지도자(강사) 양성과정 모집안내(4기)' -> https://lifelong.deu.ac.kr/fro-end/dep-05/5100/view/655
+   '학점은행제 수강생 와이파이 사용 안내(재공지)' -> https://lifelong.deu.ac.kr/fro-end/dep-05/5100/view/634
+   '파크골프 2급지도자(강사) 양성과정 모집안내(3기)' -> https://lifelong.deu.ac.kr/fro-end/dep-05/5100/view/644
+   '파크골프 2급지도자(강사) 양성과정 모집안내(2기)' -> https://lifelong.deu.ac.kr/fro-end/dep-05/5100/view/636
+   '파크골프 2급지도자(강사) 양성과정 모집안내' -> https://lifelong.deu.ac.kr/fro-end/dep-05/5100/view/635
+   '50+생애재설계대학의 무인항공기(드론)종합기술과정 모집' -> https://lifelong.deu.ac.kr/fro-end/dep-05/5100/view/615
+   '[부,경,체] 2026-1학기 수강신청 및 등록금 납부' -> https://lifelong.deu.ac.kr/fro-end/dep-05/5100/view/613
+   '[필독] 부산 국제 음악콩쿠르 공지사항' -> https://lifelong.deu.ac.kr/fro-end/dep-05/5100/view/609
