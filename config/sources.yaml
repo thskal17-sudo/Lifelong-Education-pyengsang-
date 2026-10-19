@@ -567,19 +567,23 @@ sources:
     homepage: https://lifelong.deu.ac.kr
     region_hint: [부산]
     adapter:
-      type: html_list
+      type: playwright
       org_name: 동의대학교 미래교육원
-      list_url: https://lifelong.deu.ac.kr/Board/BoardList.aspx?MENU_ID=146&PAGE_NO=&BoardMstNo=1
-      row_selector: dl
-      title_selector: a[id*="hlnkTitle"]
-      date_selector: span.summery
+      list_url: https://lifelong.deu.ac.kr/fro-end/dep-05/5100
+      wait_for: table.bbs-table tbody#searchResultBody td.tit a
+      row_selector: table.bbs-table tbody#searchResultBody tr
+      title_selector: td.tit a
+      date_selector: td:nth-child(5)
+      date_formats: ["%Y.%m.%d"]
       keywords: [강사, 교강사, 강의, 지도사, 초빙, 위촉, 강좌 개설, 강좌 제안]
       paging: { max_pages: 1 }
-      # 본문 147자(2026-09-28 러너 확인). 이 게시판은 본문을 이미지로 올려 글자가 적다
-      detail: { fetch: true, body_selector: div.divStyle01 }
+      detail: { fetch: true, body_selector: div#bbsContents }
     notes: >-
-      공지사항&뉴스 게시판(2026-09-23 러너 렌더 덤프로 검증: dl > dt > p.notice > a#IContent_rptList_hlnkTitle_N,
-      날짜는 span.summery 의 '분류 / YYYY.MM.DD' 에서 느슨하게 추출). 상대경로 BoardView.aspx 로 이어진다.
+      공지사항 게시판(2026-10-18 러너 렌더 덤프로 검증: table.bbs-table 50줄, td.tit a → /fro-end/dep-05/5100/view/N,
+      작성일은 5번째 칸 'YYYY.MM.DD'). 2026-10 사이트 전면 개편으로 주소가 바뀌었다 — 옛 주소
+      Board/BoardList.aspx 는 이제 로그인 페이지(/fro-end/member/login)로 302 되고, 수집기는 로그인 화면을
+      받아 '목록 0건'(empty)으로 조용히 성공 처리했다(10-15~10-18 나흘간). 목록이 JS 로 그려져 html_list 로는
+      빈 표만 받으므로 playwright 를 쓴다.
       '파크골프 2급지도자(강사) 양성과정 모집' 처럼 강사 양성 강좌(수강생 모집)가 섞여 있다 — 규칙의
       '수강생' 제외어로 대부분 걸러지지만 리포트에서 한 번 더 확인할 것. 페이징 파라미터 미확인이라 1페이지만.
   - id: bufs_lifelong
