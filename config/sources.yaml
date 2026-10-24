@@ -570,6 +570,9 @@ sources:
       type: playwright
       org_name: 동의대학교 미래교육원
       list_url: https://lifelong.deu.ac.kr/fro-end/dep-05/5100
+      # 기본 25초로는 첫 수집에서 Page.goto 가 간간이 끊긴다(2026-10-24 03:40 실패, 같은 날
+      # 06:10·07:23 은 정상). 김해대와 같이 60초를 준다
+      timeout_sec: 60
       wait_for: table.bbs-table tbody#searchResultBody td.tit a
       row_selector: table.bbs-table tbody#searchResultBody tr
       title_selector: td.tit a
