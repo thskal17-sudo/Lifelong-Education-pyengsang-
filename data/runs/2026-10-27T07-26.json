@@ -1,0 +1,299 @@
+{
+ "finished_at": "2026-10-27T07:27:33.736491+09:00",
+ "llm_cache_read_tokens": 0,
+ "llm_calls": 0,
+ "llm_errors": 0,
+ "llm_excluded": 0,
+ "llm_input_tokens": 0,
+ "llm_output_tokens": 0,
+ "llm_refusals": 0,
+ "notes": [],
+ "run_id": "2026-10-27T07-26",
+ "sources": [
+  {
+   "detail_fetched": 0,
+   "duration_ms": 2515,
+   "errors": [],
+   "listed": 0,
+   "llm_excluded": 0,
+   "new": 0,
+   "source_id": "cwnu_lifelong",
+   "status": "empty",
+   "updated": 0
+  },
+  {
+   "detail_fetched": 0,
+   "duration_ms": 3664,
+   "errors": [],
+   "listed": 0,
+   "llm_excluded": 0,
+   "new": 0,
+   "source_id": "cwnu_lifelong_jobs",
+   "status": "empty",
+   "updated": 0
+  },
+  {
+   "detail_fetched": 0,
+   "duration_ms": 7379,
+   "errors": [],
+   "listed": 1,
+   "llm_excluded": 0,
+   "new": 0,
+   "source_id": "masan_lifelong",
+   "status": "ok",
+   "updated": 0
+  },
+  {
+   "detail_fetched": 0,
+   "duration_ms": 6898,
+   "errors": [],
+   "listed": 0,
+   "llm_excluded": 0,
+   "new": 0,
+   "source_id": "masan_lectopen",
+   "status": "empty",
+   "updated": 0
+  },
+  {
+   "detail_fetched": 0,
+   "duration_ms": 1530,
+   "errors": [],
+   "listed": 0,
+   "llm_excluded": 0,
+   "new": 0,
+   "source_id": "yonam_lifelong",
+   "status": "empty",
+   "updated": 0
+  },
+  {
+   "detail_fetched": 0,
+   "duration_ms": 4865,
+   "errors": [],
+   "listed": 0,
+   "llm_excluded": 0,
+   "new": 0,
+   "source_id": "jinju_health_lifelong",
+   "status": "empty",
+   "updated": 0
+  },
+  {
+   "detail_fetched": 0,
+   "duration_ms": 4418,
+   "errors": [],
+   "listed": 0,
+   "llm_excluded": 0,
+   "new": 0,
+   "source_id": "koje_lifelong",
+   "status": "empty",
+   "updated": 0
+  },
+  {
+   "detail_fetched": 1,
+   "duration_ms": 67904,
+   "errors": [],
+   "listed": 1,
+   "llm_excluded": 0,
+   "new": 0,
+   "source_id": "gimhae_college_lifelong",
+   "status": "ok",
+   "updated": 0
+  },
+  {
+   "detail_fetched": 0,
+   "duration_ms": 6356,
+   "errors": [],
+   "listed": 0,
+   "llm_excluded": 0,
+   "new": 0,
+   "source_id": "changshin_lifelong",
+   "status": "empty",
+   "updated": 0
+  },
+  {
+   "detail_fetched": 0,
+   "duration_ms": 6147,
+   "errors": [],
+   "listed": 0,
+   "llm_excluded": 0,
+   "new": 0,
+   "source_id": "changshin_lifelong_notice",
+   "status": "empty",
+   "updated": 0
+  },
+  {
+   "detail_fetched": 0,
+   "duration_ms": 1474,
+   "errors": [],
+   "listed": 0,
+   "llm_excluded": 0,
+   "new": 0,
+   "source_id": "cwmc_lifelong",
+   "status": "empty",
+   "updated": 0
+  },
+  {
+   "detail_fetched": 0,
+   "duration_ms": 2517,
+   "errors": [],
+   "listed": 0,
+   "llm_excluded": 0,
+   "new": 0,
+   "source_id": "youngsan_lifelong",
+   "status": "empty",
+   "updated": 0
+  },
+  {
+   "detail_fetched": 0,
+   "duration_ms": 2319,
+   "errors": [],
+   "listed": 2,
+   "llm_excluded": 0,
+   "new": 0,
+   "source_id": "pnu_lifelong",
+   "status": "ok",
+   "updated": 0
+  },
+  {
+   "detail_fetched": 0,
+   "duration_ms": 0,
+   "errors": [
+    "목록 실패: FetchError: 렌더링 실패 https://lifelong.deu.ac.kr/fro-end/dep-05/5100: Page.wait_for_selector: Timeout 60000ms exceeded.\nCall log:\n  - waiting for locator(\"table.bbs-table tbody#searchResultBody td.tit a\") to be visible\n"
+   ],
+   "listed": 0,
+   "llm_excluded": 0,
+   "new": 0,
+   "source_id": "deu_lifelong",
+   "status": "fail",
+   "updated": 0
+  },
+  {
+   "detail_fetched": 0,
+   "duration_ms": 2280,
+   "errors": [],
+   "listed": 0,
+   "llm_excluded": 0,
+   "new": 0,
+   "source_id": "bufs_lifelong",
+   "status": "empty",
+   "updated": 0
+  },
+  {
+   "detail_fetched": 0,
+   "duration_ms": 3107,
+   "errors": [],
+   "listed": 1,
+   "llm_excluded": 0,
+   "new": 0,
+   "source_id": "bhu_lifelong",
+   "status": "ok",
+   "updated": 0
+  },
+  {
+   "detail_fetched": 0,
+   "duration_ms": 3120,
+   "errors": [],
+   "listed": 0,
+   "llm_excluded": 0,
+   "new": 0,
+   "source_id": "ulsan_lifelong",
+   "status": "empty",
+   "updated": 0
+  },
+  {
+   "detail_fetched": 0,
+   "duration_ms": 1392,
+   "errors": [],
+   "listed": 0,
+   "llm_excluded": 0,
+   "new": 0,
+   "source_id": "uc_lifelong",
+   "status": "empty",
+   "updated": 0
+  },
+  {
+   "detail_fetched": 0,
+   "duration_ms": 4122,
+   "errors": [],
+   "listed": 0,
+   "llm_excluded": 0,
+   "new": 0,
+   "source_id": "silla_lifelong",
+   "status": "empty",
+   "updated": 0
+  },
+  {
+   "detail_fetched": 0,
+   "duration_ms": 3549,
+   "errors": [],
+   "listed": 0,
+   "llm_excluded": 0,
+   "new": 0,
+   "source_id": "dongseo_lifelong",
+   "status": "empty",
+   "updated": 0
+  },
+  {
+   "detail_fetched": 0,
+   "duration_ms": 1348,
+   "errors": [],
+   "listed": 0,
+   "llm_excluded": 0,
+   "new": 0,
+   "source_id": "dongseo_lifelong_credit",
+   "status": "empty",
+   "updated": 0
+  },
+  {
+   "detail_fetched": 0,
+   "duration_ms": 3341,
+   "errors": [],
+   "listed": 0,
+   "llm_excluded": 0,
+   "new": 0,
+   "source_id": "dongseo_lifelong_50plus",
+   "status": "empty",
+   "updated": 0
+  },
+  {
+   "detail_fetched": 0,
+   "duration_ms": 1716,
+   "errors": [],
+   "listed": 0,
+   "llm_excluded": 0,
+   "new": 0,
+   "source_id": "tu_lifelong",
+   "status": "empty",
+   "updated": 0
+  },
+  {
+   "detail_fetched": 0,
+   "duration_ms": 4889,
+   "errors": [],
+   "listed": 0,
+   "llm_excluded": 0,
+   "new": 0,
+   "source_id": "cup_lifelong",
+   "status": "empty",
+   "updated": 0
+  },
+  {
+   "detail_fetched": 0,
+   "duration_ms": 1180,
+   "errors": [],
+   "listed": 0,
+   "llm_excluded": 0,
+   "new": 0,
+   "source_id": "kit_lifelong",
+   "status": "empty",
+   "updated": 0
+  }
+ ],
+ "started_at": "2026-10-27T07:26:17.771089+09:00",
+ "totals": {
+  "closing_soon": 0,
+  "expired": 9,
+  "merged": 1,
+  "new": 0,
+  "updated": 0
+ }
+}
