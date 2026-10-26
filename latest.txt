@@ -1,14 +1,294 @@
-24:  default_days: 120
-::group::probe deu_lifelong
-INFO httpx: HTTP Request: GET https://lifelong.deu.ac.kr/robots.txt "HTTP/1.1 302 "
-INFO httpx: HTTP Request: GET https://lifelong.deu.ac.kr/fro-end/member/login "HTTP/1.1 200 "
-[probe] keywords 무시: 목록 전부 표시
-[probe] 동의대학교 미래교육원 공지사항: 목록 50건
-  - 2026-10-14 | 동의대학교 미래교육원 | 2026년 학점은행제 교강사 법정의무교육 실시 안내 | https://lifelong.deu.ac.kr/fro-end/dep-05/5100/view/657
-  - 2026-10-13 | 동의대학교 미래교육원 | 파크골프 2급지도자(강사) 양성과정 모집안내(4기) | https://lifelong.deu.ac.kr/fro-end/dep-05/5100/view/655
-  - 2026-10-13 | 동의대학교 미래교육원 | [음악학전공] 2026-2학기 이론 중간고사 안내 | https://lifelong.deu.ac.kr/fro-end/dep-05/5100/view/652
-  - 2026-10-13 | 동의대학교 미래교육원 | [부동산,경영, 체육학전공] 2026년 2학기 중간고사 안내 | https://lifelong.deu.ac.kr/fro-end/dep-05/5100/view/651
-  - 2026-10-13 | 동의대학교 미래교육원 | ★10.12기준 전공실기 시간 변경■ 2026-2 전공실기 중간시험 일정 및 곡명작성 안내 | https://lifelong.deu.ac.kr/fro-end/dep-05/5100/view/650
-[detail] 본문 931자 · 마감 2026-11-06 23:59:00+09:00 (fixed, '2026. 11. 6.(금)') · 점수 60 ['+50 제목 핵심어(교강사)', '+10 강의어(강의)'] · 분야 counsel_welfare
-[posting] 포함: 2026년 학점은행제 교강사 법정의무교육 실시 안내
-::endgroup::
+====================================================================================================
+URL: https://www.changwon.ac.kr/lifelong/main.do
+status=200 final=https://www.changwon.ac.kr/lifelong/main.do encoding=UTF-8 bytes=33384
+title: 창원대학교평생교육원
+
+[LIST] div.notice.widget143 > div.list_box.on > ul.ul_list  items=6
+   li: li -> 공지 평생교육원 행정실 및 강의실 이전 안내 / 주차장 안내 2026.06.25
+      a href=/lifelong/na/ntt/selectNttInfo.do?nttSn=1419840&mi=4774 onclick= :: own='평생교육원 행정실 및 강의실 이전 안내 / 주차장 안내' all='공지 평생교육원 행정실 및 강의실 이전 안내 / 주차장 안내'
+      b.nttNotice :: own='공지' all='공지'
+      span.date :: own='2026.06.25' all='2026.06.25'
+
+[LIST] div.notice02.widget144 > div.list_box > ul.ul_list  items=5
+   li: li -> 2026-2학기 10월 강의상황부 제출 안내(기한: 10.28 수요일까지)
+      a href=/lifelong/na/ntt/selectNttInfo.do?nttSn=1436174&mi=4771 onclick= :: own='2026-2학기 10월 강의상황부 제출 안내(기한: 10.28 수요일까지' all='2026-2학기 10월 강의상황부 제출 안내(기한: 10.28 수요일까지)'
+[DATES] sample: ['2026.06.25', '2025.03.07', '2026.09.23', '2026.08.27', '2026.08.26']
+
+[ANCHORS] most common link paths
+   x11 div.list_box.on > ul.ul_list > li > a  href=/lifelong/na/ntt/selectNttInfo.do?nttSn=1419840&mi=4774  text='공지 평생교육원 행정실 및 강의실 이전 안내 / 주차장 안내'
+      row? li :: '공지 평생교육원 행정실 및 강의실 이전 안내 / 주차장 안내 2026.06.25'
+   x4 div.list_box > ul.ul_list > li > a  href=/lifelong/na/ntt/selectNttInfo.do?nttSn=1436174&mi=4771  text='2026-2학기 10월 강의상황부 제출 안내(기한: 10.28 수요일까지'
+      row? li :: '2026-2학기 10월 강의상황부 제출 안내(기한: 10.28 수요일까지)'
+   x2 div.m_link02 > ul > li > a  href=http://chains.changwon.ac.kr/cnu/LabLife/alone_login.php {'rel': "['noopener', 'noreferrer']", 'target': '_blank', 'title': '새창열기'} text='평생교육원 로그인(회원가입) 바로가기'
+      row? li :: '평생교육원 로그인(회원가입) 바로가기'
+
+[LINKS] board candidates (7)
+   '모집요강' -> https://www.changwon.ac.kr/lifelong/cm/cntnts/cntntsView.do?mi=4747&cntntsId=1326
+   '강사' -> https://www.changwon.ac.kr/lifelong/na/ntt/selectNttList.do?mi=4771&bbsId=1786
+   '공지사항' -> https://www.changwon.ac.kr/lifelong/na/ntt/selectNttList.do?mi=4774&bbsId=1787
+   '구인구직' -> https://www.changwon.ac.kr/lifelong/na/ntt/selectNttList.do?mi=4780&bbsId=1790
+   '공지 평생교육원 행정실 및 강의실 이전 안내 / 주차장' -> https://www.changwon.ac.kr/lifelong/na/ntt/selectNttInfo.do?nttSn=1419840&mi=4774
+   '공지 도서관 이용 문의[납입영수증 출력]' -> https://www.changwon.ac.kr/lifelong/na/ntt/selectNttInfo.do?nttSn=1363013&mi=4774
+   '기존강좌 강의계획서 입력 매뉴얼 및 강사프로필' -> https://www.changwon.ac.kr/lifelong/na/ntt/selectNttInfo.do?nttSn=1419837&mi=4771
+====================================================================================================
+URL: https://lifelong.masan.ac.kr/main
+status=200 final=https://lifelong.masan.ac.kr/main encoding=utf-8 bytes=58471
+title: 마산대학교 평생교육원
+[DATES] sample: ['2026.10.23', '2026.09.30', '2026.09.29', '2026.09.07', '2026.06.01']
+
+[RETRY without noise filter]
+
+[LIST] div#top-menu.top-menu > div.menubar-box > ul#menubar.menubar  items=5
+   li: li -> 교육원소개 인사말 교육목표 및 비전 연혁 조직도 찾아오시는길
+      a href=/content/000007 onclick= attrs={'role': 'menuitem', 'data-haspopup': 'true'} :: own='' all='교육원소개'
+      span :: own='교육원소개' all='교육원소개'
+      div.menubox :: own='' all='인사말 교육목표 및 비전 연혁 조직도 찾아오시는길'
+      div.menubox-inner :: own='' all='인사말 교육목표 및 비전 연혁 조직도 찾아오시는길'
+      ul :: own='' all='인사말 교육목표 및 비전 연혁 조직도 찾아오시는길'
+      li :: own='' all='인사말'
+      a href=/content/000007 onclick= attrs={'role': 'menuitem'} :: own='인사말' all='인사말'
+      li :: own='' all='교육목표 및 비전'
+      a href=/content/000008 onclick= attrs={'role': 'menuitem'} :: own='교육목표 및 비전' all='교육목표 및 비전'
+      li :: own='' all='연혁'
+      a href=/content/000009 onclick= attrs={'role': 'menuitem'} :: own='연혁' all='연혁'
+      li :: own='' all='조직도'
+      a href=/content/000010 onclick= attrs={'role': 'menuitem'} :: own='조직도' all='조직도'
+      li :: own='' all='찾아오시는길'
+
+[LIST] div.tab-content > div.tab-pane.fade.show.active > ul.board-list  items=4
+   li: li -> [혁신지원사업] IOT 홈케어 전문가 양성교육 과정 운영안내 2026.10.23 15:05
+      a href=/boardview/000001/294 onclick= :: own='' all='[혁신지원사업] IOT 홈케어 전문가 양성교육 과정 운영안내 2026.10.23 15:05'
+      div.item-title :: own='' all='[혁신지원사업] IOT 홈케어 전문가 양성교육 과정 운영안내'
+      span.board-title :: own='[혁신지원사업] IOT 홈케어 전문가 양성교육 과정 운영안내' all='[혁신지원사업] IOT 홈케어 전문가 양성교육 과정 운영안내'
+      time.board-date :: own='2026.10.23 15:05' all='2026.10.23 15:05'
+
+[LIST] div.tab-content > div.tab-pane.fade > ul.board-list  items=4
+   li: li -> [방학특강] 2026학년도 1학기 평생교육과정 하계방학특강 개설 제안 공모 안내 2026.04.21 14:42
+      a href=/lectopen/view/2026/10/010/999/19 onclick= :: own='' all='[방학특강] 2026학년도 1학기 평생교육과정 하계방학특강 개설 제안 공모 안내 2026.'
+      div.item-title :: own='' all='[방학특강] 2026학년도 1학기 평생교육과정 하계방학특강 개설 제안 공모 안내'
+      span.board-title :: own='[방학특강] 2026학년도 1학기 평생교육과정 하계방학특강 개설 제안 공' all='[방학특강] 2026학년도 1학기 평생교육과정 하계방학특강 개설 제안 공모 안내'
+      time.board-date :: own='2026.04.21 14:42' all='2026.04.21 14:42'
+[DATES] sample: ['2026.10.23', '2026.09.30', '2026.09.29', '2026.09.07', '2026.06.01']
+
+[ANCHORS] most common link paths
+   x6 div.carousel-box.gallery-carousel-box > div.owl-carousel.gallery-carousel > div.item > a.item-link  href=/boardview/000006/36  text='2025년 다문화 평생교육 지원사업(25.10.10.~10.17.)'
+      row? div.item :: '2025년 다문화 평생교육 지원사업(25.10.10.~10.17.)'
+
+[LINKS] board candidates (4)
+   '강사소개' -> https://lifelong.masan.ac.kr/board/000013
+   '공지사항' -> https://lifelong.masan.ac.kr/board/000001
+   '[혁신지원사업] 2026년 평생교육원 무료 강좌 수강생' -> https://lifelong.masan.ac.kr/boardview/000001/293
+   '[직업능력교육] 2026학년도 2학기 창원시 · 함안군' -> https://lifelong.masan.ac.kr/lectopen/view/2026/20/010/999/13
+====================================================================================================
+URL: https://lifelong.yc.ac.kr
+status=200 final=https://lifelong.yc.ac.kr/ encoding=utf-8 bytes=40404
+title: 연암공과대학교 평생교육원
+
+[LIST] div#mgnb > div#mgnb_all > ul.mgnb  items=6
+   li: li.mgnb_1dli.gnb_al_li_plus -> 교육원소개 원장인사 조직도 오시는 길
+      a.mgnb_1da.dep01 href=# onclick= attrs={'target': '_self'} :: own='교육원소개' all='교육원소개'
+      ul.mgnb_2dul :: own='' all='원장인사 조직도 오시는 길'
+      li.mgnb_2dli :: own='' all='원장인사'
+      a.mgnb_2da href=/sub/sub1_1.php onclick= attrs={'target': '_self'} :: own='원장인사' all='원장인사'
+      li.mgnb_2dli :: own='' all='조직도'
+      a.mgnb_2da href=/sub/sub1_2.php onclick= attrs={'target': '_self'} :: own='조직도' all='조직도'
+      li.mgnb_2dli :: own='' all='오시는 길'
+      a.mgnb_2da href=/sub/sub1_3.php onclick= attrs={'target': '_self'} :: own='오시는 길' all='오시는 길'
+[DATES] sample: []
+
+[ANCHORS] most common link paths
+   x2 section#sec04 > div.sec04_wr.wr-1500 > div.sec04_list > a  href=https://lifelong.yc.ac.kr/sub/sub2_2.php#  text='일반교육과정안내 지역사회의 중점 필요 교육기관으로 전 생애주기를 고려한 '
+      row? div.sec04_list :: '일반교육과정안내 지역사회의 중점 필요 교육기관으로 전 생애주기를 고려한 맞춤 학습을 제공합니다. 더보기 +'
+   x1 div.notice.ft_cnt > ul > li > a  href=https://lifelong.yc.ac.kr/bbs/board.php?bo_table=sub5_1&wr_id=8  text='연암공과대학교 평생교육원 홈…'
+      row? li :: '연암공과대학교 평생교육원 홈…'
+   x1 ul > li > div.title__box > a  href=https://lifelong.yc.ac.kr/bbs/board.php?bo_table=sub5_1&wr_id=8  text='연암공과대학교 평생교육원 홈페이지가 오픈하였습니다. 연암공과대학교 평생교'
+      row? div.title__box :: '연암공과대학교 평생교육원 홈페이지가 오픈하였습니다. 연암공과대학교 평생교육원 홈페이지가 오픈하였습니다.\n감사합니다.'
+
+[LINKS] board candidates (2)
+   '알림마당' -> https://lifelong.yc.ac.kr/bbs/board.php?bo_table=sub5_1
+   '모집전단' -> https://lifelong.yc.ac.kr/bbs/board.php?bo_table=sub5_4
+====================================================================================================
+URL: https://lifelong.jhc.ac.kr
+status=200 final=https://lifelong.jhc.ac.kr/ encoding=utf-8 bytes=33304
+title: 진주보건대학교 평생교육원
+
+[LIST] div#mgnb_all > div.mgnb > ul  items=5
+   li: li.mgnb_1dli -> 교육원소개 교육원소개 연혁 조직안내 오시는 길
+      a.mgnb_1da href=# onclick= :: own='교육원소개' all='교육원소개'
+      ul.mgnb_2dul :: own='' all='교육원소개 연혁 조직안내 오시는 길'
+      li.mgnb_2dli :: own='' all='교육원소개'
+      a.mgnb_2da href=/sub/sub1_1.php onclick= attrs={'target': '_self'} :: own='교육원소개' all='교육원소개'
+      li.mgnb_2dli :: own='' all='연혁'
+      a.mgnb_2da href=/sub/sub1_2.php onclick= attrs={'target': '_self'} :: own='연혁' all='연혁'
+      li.mgnb_2dli :: own='' all='조직안내'
+      a.mgnb_2da href=/sub/sub1_3.php onclick= attrs={'target': '_self'} :: own='조직안내' all='조직안내'
+      li.mgnb_2dli :: own='' all='오시는 길'
+      a.mgnb_2da href=/sub/sub1_4.php onclick= attrs={'target': '_self'} :: own='오시는 길' all='오시는 길'
+
+[LIST] div.tab_bx.tab1 > div.notice.ft_cnt > ul  items=5
+   li: li -> 2026년 산모 신생아 건강관리사 양성과정… 2026-09-02
+      a href=https://lifelong.jhc.ac.kr/bbs/board.php?bo_table=sub4_3&wr_id=116 onclick= :: own='' all='2026년 산모 신생아 건강관리사 양성과정… 2026-09-02'
+      span.subject :: own='2026년 산모 신생아 건강관리사 양성과정…' all='2026년 산모 신생아 건강관리사 양성과정…'
+      span.date :: own='2026-09-02' all='2026-09-02'
+
+[LIST] div.tab_bx.tab2 > div.notice.ft_cnt > ul  items=5
+   li: li -> [수강생 모집] 2026년 성인학습자 생활… 2026-10-15
+      a href=https://lifelong.jhc.ac.kr/bbs/board.php?bo_table=sub4_1&wr_id=535 onclick= :: own='' all='[수강생 모집] 2026년 성인학습자 생활… 2026-10-15'
+      span.subject :: own='[수강생 모집] 2026년 성인학습자 생활…' all='[수강생 모집] 2026년 성인학습자 생활…'
+      span.date :: own='2026-10-15' all='2026-10-15'
+[DATES] sample: ['2026-09-02', '2026-09-02', '2026-05-14', '2026-05-11', '2026-05-08']
+
+[ANCHORS] most common link paths
+   x10 div.notice.ft_cnt > ul > li > a  href=https://lifelong.jhc.ac.kr/bbs/board.php?bo_table=sub4_3&wr_id=116  text='2026년 산모 신생아 건강관리사 양성과정… 2026-09-02'
+      row? li :: '2026년 산모 신생아 건강관리사 양성과정… 2026-09-02'
+   x3 li.mgnb_1dli > ul.mgnb_2dul > li.mgnb_2dli > a.mgnb_2da  href=/sub/sub3_2.php {'target': '_self'} text='학점은행제 모집요강'
+      row? li.mgnb_2dli :: '학점은행제 모집요강'
+   x2 div.wrapper > div.ft_left > div.link_ul > a  href=https://www.jhc.ac.kr/site/sit_01_03.aspx {'target': '_blank', 'title': '새창열기'} text='개인정보 제3자제공'
+   x1 div#hd > div#hd_wrapper > div#logo > a  href=https://lifelong.jhc.ac.kr  text='※학점은행제 교육훈련기관'
+      row? div#logo :: '※학점은행제 교육훈련기관'
+
+[LINKS] board candidates (5)
+   '학점은행제 모집요강' -> https://lifelong.jhc.ac.kr/sub/sub3_2.php
+   '공지사항' -> https://lifelong.jhc.ac.kr/bbs/board.php?bo_table=sub4_1
+   '[수강생 모집] 2026년 성인학습자 생활… 2026-' -> https://lifelong.jhc.ac.kr/bbs/board.php?bo_table=sub4_1&wr_id=535
+   '예·결산공고' -> https://www.jhc.ac.kr/intro/int_05_01.aspx
+   '입찰공고' -> https://www.jhc.ac.kr/intro/int_07_01.aspx
+====================================================================================================
+URL: https://anytime.koje.ac.kr/anytime
+  (tls handshake failed, retrying with legacy TLS context)
+status=200 final=https://anytime.koje.ac.kr/anytime encoding=utf-8 bytes=73478
+title: 거제대학교 평생학습원 - 거제대학교 평생학습원
+
+[LIST] div.sec-body > div.list-wrapper > ul  items=5
+   li: li -> 장애인 대상 무료교육(국비지원) 제빵 직업훈련과정 수강생 모집 [거제직업... 2021-06-23
+      a href=/anytime/boardview/1/113 onclick= :: own='' all='장애인 대상 무료교육(국비지원) 제빵 직업훈련과정 수강생 모집 [거제직업... 2021-0'
+      div.list-item-wrapper :: own='' all='장애인 대상 무료교육(국비지원) 제빵 직업훈련과정 수강생 모집 [거제직업... 2021-0'
+      span.title :: own='장애인 대상 무료교육(국비지원) 제빵 직업훈련과정 수강생 모집 [거제직업' all='장애인 대상 무료교육(국비지원) 제빵 직업훈련과정 수강생 모집 [거제직업...'
+      time.date :: own='2021-06-23' all='2021-06-23'
+
+[LIST] div.sec-body > div.list-wrapper > ul  items=3
+   li: li -> 제21기 경영대학원과정 수료식 개최 2020-05-19
+      a href=/anytime/boardview/2/3 onclick= :: own='' all='제21기 경영대학원과정 수료식 개최 2020-05-19'
+      div.list-item-wrapper :: own='' all='제21기 경영대학원과정 수료식 개최 2020-05-19'
+      span.title :: own='제21기 경영대학원과정 수료식 개최' all='제21기 경영대학원과정 수료식 개최'
+      time.date :: own='2020-05-19' all='2020-05-19'
+[DATES] sample: ['2021-06-23', '2021-06-17', '2021-06-24', '2021-07-15', '2020-12-23']
+
+[ANCHORS] most common link paths
+   x8 div.list-wrapper > ul > li > a  href=/anytime/boardview/1/113  text='장애인 대상 무료교육(국비지원) 제빵 직업훈련과정 수강생 모집 [거제직업'
+      row? li :: '장애인 대상 무료교육(국비지원) 제빵 직업훈련과정 수강생 모집 [거제직업... 2021-06-23'
+   x1 div.col-lg-6 > div.sec.sec-board.sec-board-news > div.sec-body > a.board-first-link  href=/anytime/boardview/1/114  text='06 2021.07 1급 소방안전관리자 자격 강습 교육 과정 수강생 모집'
+   x1 div.col-lg-6 > div.sec.sec-board.sec-board-notice > div.sec-body > a.board-first-link  href=/anytime/boardview/2/4  text='03 2020.07 거제대학교 평생교육원 민화반 전시회 2020.07.1'
+
+[LINKS] board candidates (7)
+   '모집요강' -> https://anytime.koje.ac.kr/anytime/content/11
+   '공지사항' -> https://anytime.koje.ac.kr/anytime/board/1
+   '자유게시판' -> https://anytime.koje.ac.kr/anytime/board/3
+   '강사모집' -> https://anytime.koje.ac.kr/anytime/board/6
+   '06 2021.07 1급 소방안전관리자 자격 강습 교육' -> https://anytime.koje.ac.kr/anytime/boardview/1/114
+   '장애인 대상 무료교육(국비지원) 제빵 직업훈련과정 수강' -> https://anytime.koje.ac.kr/anytime/boardview/1/113
+   '2021 평생학습원 여름학기 교육과정 수강생 모집 안내' -> https://anytime.koje.ac.kr/anytime/boardview/1/111
+====================================================================================================
+URL: https://www.gimhae.ac.kr/www/content/219
+status=200 final=https://www.gimhae.ac.kr/www/content/219 encoding=utf-8 bytes=129986
+title: Home > 대학소개 > 대학조직 > 부속/부설/운영기관 > 평생직업교육원
+
+[TABLE] div#sub-render-container.container > div.table-responsive > table.table.table-bordered  rows=6
+   row: tr -> th:담당자 | th:담당업무 | th:전화번호 | th:부서위치
+   row: tr -> td:원장 | td:총괄 | td:716 | td:사무실 : 정의관 1층
+      td :: own='원장' all='원장'
+      td :: own='총괄' all='총괄'
+      td :: own='716' all='716'
+      td :: own='사무실 : 정의관 1층' all='사무실 : 정의관 1층'
+[DATES] sample: ['2026-02-11']
+
+[LINKS] board candidates (7)
+   '근로장학사업 참여기관모집' -> https://www.gimhae.ac.kr/www/content/164
+   '알림 열기' -> https://www.gimhae.ac.kr/www/board/44
+   '학사공지 열기' -> https://www.gimhae.ac.kr/www/board/45
+   '입학공지 열기' -> https://ipsi.gimhae.ac.kr/ipsi/board/73
+   '채용/입찰 열기' -> https://www.gimhae.ac.kr/www/board/47
+   '외부알림 열기' -> https://www.gimhae.ac.kr/www/board/48
+   'e-모집요강' -> https://ipsi.gimhae.ac.kr/ipsi/content/238
+====================================================================================================
+URL: https://ice.cs.ac.kr
+  (tls handshake failed, retrying with legacy TLS context)
+status=200 final=https://ice.cs.ac.kr/ encoding=utf-8 bytes=158021
+title: 창신대학교 부설 평생교육원
+[DATES] sample: []
+
+[RETRY without noise filter]
+[DATES] sample: []
+
+[ANCHORS] most common link paths
+   x4 div.content_wr.df > div.four.df > div.text > a  href=/lecture {'data-v-50c3cd33': ''} text='수강신청 나에게 꼭 맞는 강좌, 지금 바로 신청해보세요!'
+      row? div.text :: '수강신청 나에게 꼭 맞는 강좌, 지금 바로 신청해보세요!'
+   x2 div.right_con.df > div.text_wr.df > div.tit > a  href=tel:055-250-3050 {'data-v-50c3cd33': ''} text='055-250-3050'
+      row? div.tit :: '055-250-3050'
+====================================================================================================
+URL: https://ps.cmu.ac.kr
+  (tls handshake failed, retrying with legacy TLS context)
+status=200 final=https://ps.cmu.ac.kr/ encoding=UTF-8 bytes=483
+title: 창원문성대학교
+body (short): <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> <html xmlns="http://www.w3.org/1999/xhtml" lang="ko" xml:lang="ko"> <head> <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> <title>창원문성대학교</title> <script type="text/javascript"> var currDomain = document.domain; document.location.href = "https://" + currDomain + '/api_test.jsp'; </script> </head> <body> </body> </html> 
+====================================================================================================
+URL: https://ysedu.ysu.ac.kr
+status=200 final=https://ysedu.ysu.ac.kr/ encoding=EUC-KR bytes=18079
+title: 영산대학교 평생교육원 학점은행제
+
+[LIST] div.gridContainer.clearfix > div#GnbMenu > ul#topnav  items=6
+   li: li -> 교육원소개 원장인사말 연혁 시설현황 찾아오시는 길
+      a.depth1.menu1 href=/Sub01/01.asp onclick= :: own='교육원소개' all='교육원소개'
+      div :: own='' all='원장인사말 연혁 시설현황 찾아오시는 길'
+      p.sub1 :: own='' all='원장인사말 연혁 시설현황 찾아오시는 길'
+      a href=/Sub01/01.asp onclick= :: own='원장인사말' all='원장인사말'
+      a href=/Sub01/02.asp onclick= :: own='연혁' all='연혁'
+      a href=/Sub01/03.asp onclick= :: own='시설현황' all='시설현황'
+      a href=javascript:map(); onclick= :: own='찾아오시는 길' all='찾아오시는 길'
+
+[LIST] div#mainboardWrap > div#main_board1.main_board > ul.list  items=5
+   li: li -> · [학점과정]2026년 4분기 학습자등록...
+      a href=/Sub04/01.asp?seq=298 onclick= :: own='· [학점과정]2026년 4분기 학습자등록...' all='· [학점과정]2026년 4분기 학습자등록...'
+[DATES] sample: ['2026-10-01', '2026-08-27', '2026-08-21', '2026-08-18', '2026-07-22']
+
+[ANCHORS] most common link paths
+   x5 div#main_board1.main_board > ul.list > li > a  href=/Sub04/01.asp?seq=298  text='· [학점과정]2026년 4분기 학습자등록...'
+      row? li :: '· [학점과정]2026년 4분기 학습자등록...'
+   x5 div.IndexBoard_m > dl.IndexBoard_list_m > dt > a  href=/Sub04/01.asp?seq=298  text='· [학점과정]2026년 4분기 학습자등록,학...'
+   x1 li > div > p.sub3 > a  href=/Sub07/06.asp  text='공지사항(일반과정)'
+      row? li :: '일반과정 모집안내 특전 및 할인 교육과정 수강신청 수강신청내역 공지사항(일반과정) 총동창회'
+   x1 div#GnbMenu > ul#topnav > li > a.depth1.menu4  href=/Sub05/01.asp  text='보육 교사 보수교육'
+      row? li :: '보육 교사 보수교육 보수교육 정의 과정 안내 대상자 안내 일정 안내 교과목 수강 면제 안내'
+
+[LINKS] board candidates (5)
+   '모집안내' -> https://ysedu.ysu.ac.kr/Sub07/01.asp
+   '공지사항(일반과정)' -> https://ysedu.ysu.ac.kr/Sub07/06.asp
+   '공지사항' -> https://ysedu.ysu.ac.kr/Sub04/01.asp
+   '모집안내' -> https://ysedu.ysu.ac.kr/Sub08/01.asp
+   '공지사항' -> https://ysedu.ysu.ac.kr/Sub08/02.asp
+====================================================================================================
+URL: https://sce.pusan.ac.kr
+status=200 final=https://sce.pusan.ac.kr/ encoding=UTF-8 bytes=200671
+title: 부산대학교 미래시민교육원
+
+[LIST] div#noticeTabContent.tab-content.notice-con > div#notice.tab-pane.fade.show.active > ul.notice-list  items=4
+   li: li.notice-item -> 2026학년도 겨울계절학기 미래시민교육원 강좌 공모 안내 2026-10-26
+      a.notice-box href=/page?menuCD=000000000000561&mode=DETAIL&seq=2598&mainbbsTabIndex=&typeSeqNo=1 onclick= attrs={'onkeypress': 'this.onclick()'} :: own='' all='2026학년도 겨울계절학기 미래시민교육원 강좌 공모 안내 2026-10-26'
+      p.tit :: own='2026학년도 겨울계절학기 미래시민교육원 강좌 공모 안내' all='2026학년도 겨울계절학기 미래시민교육원 강좌 공모 안내'
+      span.date :: own='2026-10-26' all='2026-10-26'
+
+[LIST] div#noticeTabContent.tab-content.notice-con > div#reference.tab-pane.fade > ul.notice-list  items=4
+   li: li.notice-item -> 개선요청드립니다. 2025-05-29
+      a.notice-box href=/page?menuCD=000000000000562&mode=DETAIL&seq=2567&mainbbsTabIndex=&typeSeqNo=1 onclick= attrs={'onkeypress': 'this.onclick()'} :: own='' all='개선요청드립니다. 2025-05-29'
+      p.tit :: own='개선요청드립니다.' all='개선요청드립니다.'
+      span.date :: own='2025-05-29' all='2025-05-29'
+[DATES] sample: ['2000-01-01', '2026-10-26', '2026-09-28', '2026-08-27', '2026-08-27']
+
+[ANCHORS] most common link paths
+   x4 div#notice.tab-pane.fade.show.active > ul.notice-list > li.notice-item > a.notice-box  href=/page?menuCD=000000000000561&mode=DETAIL&seq=2598&mainbbsTabIndex=&typeSeqNo=1 {'onkeypress': 'this.onclick()'} text='2026학년도 겨울계절학기 미래시민교육원 강좌 공모 안내 2026-10-'
+      row? li.notice-item :: '2026학년도 겨울계절학기 미래시민교육원 강좌 공모 안내 2026-10-26'
+   x4 div#reference.tab-pane.fade > ul.notice-list > li.notice-item > a.notice-box  href=/page?menuCD=000000000000562&mode=DETAIL&seq=2567&mainbbsTabIndex=&typeSeqNo=1 {'onkeypress': 'this.onclick()'} text='개선요청드립니다. 2025-05-29'
+      row? li.notice-item :: '개선요청드립니다. 2025-05-29'
+
+[LINKS] board candidates (1)
+   '2026학년도 2학기 강사 공지사항 2026-08-27' -> https://sce.pusan.ac.kr/page?menuCD=000000000000561&mode=DETAIL&seq=2594&mainbbsTabIndex=&typeSeqNo=1
