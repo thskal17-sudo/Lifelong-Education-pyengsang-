@@ -1,0 +1,19 @@
+====================================================================================================
+URL: https://lifelong.deu.ac.kr/fro-end/dep-05/5100/view/658
+status=200 final=https://lifelong.deu.ac.kr/fro-end/dep-05/5100/view/658 encoding=UTF-8 bytes=29236
+title: 동의대학교 미래교육원
+
+[BODY TEXT] div.viewer > div.view-con > div#bbsContents.contents
+데이터 작업으로 인해 홈페이지 사용이 일시적으로 중단될 예정입니다.
+일시: 10/26(월) 18:00~
+예상 소요 시간: 약 1시간
+이용에 참고부탁드립니다.
+
+[BODY candidates]
+   div.sub-contents > div.sub-con.w1440 > div.bbs-wrap  textlen=196 :: '전체 홈페이지 작업에 따른 서비스 이용 일시 중단 안내 작성자 정지연 작성일 2026-10-23 조회수 33 데이터 작업으로 인해 홈페이지 사용'
+   div.sub-inner > div.sub-contents > div.sub-con.w1440  textlen=252 :: '전체 홈페이지 작업에 따른 서비스 이용 일시 중단 안내 작성자 정지연 작성일 2026-10-23 조회수 33 데이터 작업으로 인해 홈페이지 사용'
+   form.setting-form > section.bbs-view > div.viewer  textlen=148 :: '전체 홈페이지 작업에 따른 서비스 이용 일시 중단 안내 작성자 정지연 작성일 2026-10-23 조회수 33 데이터 작업으로 인해 홈페이지 사용'
+   div.bbs-wrap > form.setting-form > section.bbs-view  textlen=196 :: '전체 홈페이지 작업에 따른 서비스 이용 일시 중단 안내 작성자 정지연 작성일 2026-10-23 조회수 33 데이터 작업으로 인해 홈페이지 사용'
+
+[ATTACH candidates]
+[DATES] sample: ['2026-10-23']
