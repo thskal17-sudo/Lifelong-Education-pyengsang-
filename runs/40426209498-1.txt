@@ -1,0 +1,33 @@
+====================================================================================================
+URL: https://lifelong.deu.ac.kr/fro-end/dep-05/5100 (rendered) UA=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, l
+final=https://lifelong.deu.ac.kr/fro-end/dep-05/5100 bytes=44310
+title: 동의대학교 미래교육원
+
+[TABLE] section.bbs-list > div.table-wrap > table.bbs-table  rows=51
+   row: tr -> th.num:번호 | th.cate:카테고리 | th.tit:제목 | th.txt:작성자 | th.txt:작성일 | th.txt:조회수
+   row: tr -> td.num:공지 | td.cate:전체 | td.tit:초청특강 안내 | td.txt:송재기 | td.txt:2026.10.23 | td.txt.view:35
+      td.num :: own='' all='공지'
+      span.noti :: own='공지' all='공지'
+      td.cate :: own='전체' all='전체'
+      td.tit :: own='' all='초청특강 안내'
+      a href=/fro-end/dep-05/5100/view/659 onclick= :: own='초청특강 안내' all='초청특강 안내'
+      td.txt :: own='송재기' all='송재기'
+      td.txt :: own='2026.10.23' all='2026.10.23'
+      td.txt.view :: own='35' all='35'
+[DATES] sample: ['2026.10.23', '2026.10.23', '2026.10.14', '2026.10.13', '2026.10.13']
+
+[ANCHORS] most common link paths
+   x49 tbody#searchResultBody > tr > td.tit > a  href=/fro-end/dep-05/5100/view/658  text='홈페이지 작업에 따른 서비스 이용 일시 중단 안내'
+      row? tr :: '공지 전체 홈페이지 작업에 따른 서비스 이용 일시 중단 안내 정지연 2026.10.23 32'
+
+[LINKS] board candidates (10)
+   '공지사항' -> https://lifelong.deu.ac.kr/fro-end/dep-05/5100
+   '2026년 학점은행제 교강사 법정의무교육 실시 안내' -> https://lifelong.deu.ac.kr/fro-end/dep-05/5100/view/657
+   '파크골프 2급지도자(강사) 양성과정 모집안내(4기)' -> https://lifelong.deu.ac.kr/fro-end/dep-05/5100/view/655
+   '학점은행제 수강생 와이파이 사용 안내(재공지)' -> https://lifelong.deu.ac.kr/fro-end/dep-05/5100/view/634
+   '파크골프 2급지도자(강사) 양성과정 모집안내(3기)' -> https://lifelong.deu.ac.kr/fro-end/dep-05/5100/view/644
+   '파크골프 2급지도자(강사) 양성과정 모집안내(2기)' -> https://lifelong.deu.ac.kr/fro-end/dep-05/5100/view/636
+   '파크골프 2급지도자(강사) 양성과정 모집안내' -> https://lifelong.deu.ac.kr/fro-end/dep-05/5100/view/635
+   '50+생애재설계대학의 무인항공기(드론)종합기술과정 모집' -> https://lifelong.deu.ac.kr/fro-end/dep-05/5100/view/615
+   '[부,경,체] 2026-1학기 수강신청 및 등록금 납부' -> https://lifelong.deu.ac.kr/fro-end/dep-05/5100/view/613
+   '[필독] 부산 국제 음악콩쿠르 공지사항' -> https://lifelong.deu.ac.kr/fro-end/dep-05/5100/view/609
