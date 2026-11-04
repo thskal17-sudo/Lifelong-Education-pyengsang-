@@ -144,3 +144,38 @@ def clean_url(url: str) -> str:
     parts = urlsplit((url or "").strip())
     q = [(k, v) for k, v in parse_qsl(parts.query, keep_blank_values=True) if not k.lower().startswith("utm_")]
     return urlunsplit((parts.scheme.lower(), parts.netloc.lower(), parts.path, urlencode(q), ""))
+
+
+# --- 본문 다듬기 (강사잇다 양식 '상세 내용', 공고 상세 화면) -------------------------
+# HWP·아래아한글에서 붙여넣은 공고문은 글자마다 span 이 쪼개져 있어, 태그를 떼고 공백을
+# 합치면 '2026 년 11 월 3 일', '제 1 학기', '( 예시 : AI …' 처럼 띄어쓰기가 어긋난
+# 한 덩어리가 된다. 읽을 수 있게 두 가지를 한다 — 어긋난 공백을 되돌리고, 항목 기호
+# 앞에서 줄을 바꾼다. 요약이 아니라 원문 그대로이고, 글자는 지우지 않는다.
+_SP_BEFORE_PUNCT = re.compile(r"\s+([,.)\]}»:;%?!])")
+_SP_AFTER_OPEN = re.compile(r"([(\[{«])\s+")
+_NUM_UNIT = re.compile(r"(\d)\s+(학년도|개월|주차|교시|시간|학기|년|월|일|시|분|초|명|개|회|차|주|급|호|부|권|쪽|인|원)(?![가-힣])")
+_JE_NUM = re.compile(r"제\s+(?=\d)")
+# 가운뎃점(·)과 붙임표(-)는 목록 기호로도 쓰이지만 '교육 · 연구경력', '2026-11-03' 처럼
+# 잇는 자리에 더 많이 쓰인다. 끊으면 말이 두 동강 나므로 목록 기호에서 뺀다
+_BULLET = r"○|●|◦|□|■|◆|◇|▶|▷|※|☞|▪"
+_BREAK_BEFORE = re.compile(rf"\s+(?=(?:{_BULLET}|[가-하]\.\s|[①-⑮]|[㉠-㉯]))")
+# '1. 모집부문' 같은 번호 항목 앞에서도 줄을 바꾼다. 다만 '2026. 11. 3.' 이나
+# '11. 3.(화) ~ 11. 13.(금)' 처럼 날짜 가운데의 숫자는 건드리면 안 되므로,
+# 앞 글자가 숫자·마침표·물결표가 아닐 때만 끊는다
+_BREAK_NUM = re.compile(r"(?<=[^\d.\s~∼〜\-–])\s+(?=\d{1,2}\.\s)")
+_MULTI_NL = re.compile(r"\n{3,}")
+
+
+def tidy_body(text: str) -> str:
+    """공고 본문을 읽을 수 있게 다듬는다(내용은 그대로, 공백·줄바꿈만 손본다)."""
+    if not text:
+        return ""
+    t = _WS_RE.sub(" ", text).strip()
+    t = _SP_BEFORE_PUNCT.sub(r"\1", t)
+    t = _SP_AFTER_OPEN.sub(r"\1", t)
+    t = _NUM_UNIT.sub(r"\1\2", t)
+    t = _JE_NUM.sub("제", t)
+    t = _BREAK_BEFORE.sub("\n", t)
+    t = _BREAK_NUM.sub("\n", t)
+    t = _MULTI_NL.sub("\n\n", t)
+    return t.strip()
