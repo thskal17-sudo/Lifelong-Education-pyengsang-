@@ -20,7 +20,7 @@ from .extract.attachments import extract_text, file_extension, filename_from_url
 from .extract.deadline import KST, DeadlineType, parse_deadline, parse_known_format
 from .models import Posting, RawPosting, RunLog, SourceRef, SourceRunResult, Status
 from .models import FIELD_NAMES
-from .normalize import clean_url, extract_regions, mask_pii, normalize_title, standardize_org, strip_surrogates
+from .normalize import clean_url, extract_regions, mask_pii, normalize_title, standardize_org, strip_surrogates, tidy_body
 from .store import Store
 
 log = logging.getLogger("gia")
@@ -45,7 +45,10 @@ def _body_excerpt(raw: RawPosting, cfg: SourceConfig) -> str:
     d = cfg.adapter.get("detail") or {}
     if (d.get("body_selector") or "body") == "body":
         return ""
-    return " ".join((raw.body_text or "").split())[:1500]
+    # 공백을 전부 하나로 합치면 한 덩어리 글이 된다(HWP 에서 붙여넣은 공고문은 '2026 년 11 월',
+    # '( 예시 :' 처럼 띄어쓰기도 어긋나 있다). tidy_body 가 그 공백을 되돌리고 항목 기호 앞에서
+    # 줄을 바꾼다 — 내용은 그대로다
+    return tidy_body(raw.body_text or "")[:1500]
 
 
 def build_posting(raw: RawPosting, cfg: SourceConfig, bundle: ConfigBundle, now: datetime) -> Posting | None:
