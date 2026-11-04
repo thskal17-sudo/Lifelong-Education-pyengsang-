@@ -131,3 +131,23 @@ def test_until_filled_variants():
     for text in ("1. 모집기간 : 수시 접수", "수시모집", "연중 상시 접수", "상시 모집"):
         res = parse_deadline(text, date(2026, 9, 22))
         assert res.deadline is None and res.deadline_type == DeadlineType.until_filled, text
+
+
+def test_contest_period_beats_class_period():
+    """부산대 미래시민교육원 강좌 공모 (2026-11-04). 공모 기간 끝(11.15)이 마감이고, 교육 기간 끝(2027.2.5)은 아니다.
+    첨부에서 뽑은 글이라 '공모 기간', '교육 기간' 처럼 띄어 쓰여 있고 날짜 앞에 범위 시작일이 있다."""
+    text = (
+        "Ⅰ 강좌 공모 가 . 공모개요 ○ 공모 학기 : 2026 학년도 겨울계절학기 "
+        "○ 공모 기간 : 2026. 11. 2.( 월 ) ~ 2026. 11. 15.( 일 ) ○ 공모 대상 : 강좌 개설을 희망하는 개인 "
+        "나 . 26 학년도 겨울계절학기 강좌 운영 ○ 교육 기간 : 2027. 1. 4.( 월 ) ~ 2027. 2. 5.( 금 ), 과정별 상이"
+    )
+    res = parse_deadline(text, date(2026, 10, 26))
+    assert res.deadline_type == DeadlineType.fixed
+    assert res.deadline == datetime(2026, 11, 15, 23, 59, tzinfo=KST)
+
+
+def test_spaced_class_period_loses_to_application_period():
+    """띄어 쓴 '운영 기간' 끝 날짜는 '접수 기간' 끝 날짜에 진다 (늦은 날짜라도)."""
+    text = "○ 운영 기간 : 2026. 12. 1.( 화 ) ~ 2026. 12. 20.( 일 ) ○ 접수 기간 : 2026. 9. 16.( 수 ) ~ 2026. 9. 25.( 금 )"
+    res = parse_deadline(text, REF)
+    assert res.deadline == datetime(2026, 9, 25, 23, 59, tzinfo=KST)

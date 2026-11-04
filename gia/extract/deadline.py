@@ -28,13 +28,26 @@ _UNTIL_FILLED = re.compile(r"채용\s*시\s*까지|충원\s*시\s*까지|(?:상�
 PAST_SLACK_DAYS = 30
 FUTURE_LIMIT_DAYS = 365
 
-_POS_BEFORE = ["접수", "제출", "마감", "공고기간", "모집기간", "신청", "접수기간", "기한", "공고 기간", "모집 기간"]
+_POS_BEFORE = ["접수", "제출", "마감", "공고기간", "모집기간", "신청", "접수기간", "기한", "공고 기간", "모집 기간",
+               # 강좌·강사 공모 (2026-11-04 부산대 미래시민교육원 '공모 기간 : 2026. 11. 2. ~ 11. 15.')
+               "공모기간", "응모기간"]
 _NEG_BEFORE = [
     "면접", "발표", "합격", "시험", "근무", "계약", "임용", "게시", "심사", "개강",
     "교육기간", "강의기간", "운영기간", "채용예정", "근무기간", "위촉기간", "임기", "작성일", "등록일",
     "DATE", "다운로드", "조회", "수정일", "작성자",
 ]
 _RANGE_START = re.compile(r"^\s*(?:~|∼|～|-|–|—|부터)")
+# 기간의 끝 날짜를 볼 때, 같은 기간의 시작 날짜 앞에 붙은 이름('공모 기간 :', '교육 기간 :')까지 본다
+_RANGE_HEAD = re.compile(r"(?:\d{2,4}\s*[.\-/년]\s*)?\d{1,2}\s*[.\-/월]\s*\d{1,2}[^~∼～]{0,14}[~∼～]\s*$")
+
+
+def _squash(s: str) -> str:
+    return re.sub(r"\s+", "", s)
+
+
+# 띄어 쓴 이름('교육 기간', '공모 기간')도 같은 것으로 본다
+_POS_KEYS: list[str] = []
+_NEG_KEYS: list[str] = []
 
 _KNOWN_FORMATS = ["%Y%m%d", "%Y-%m-%d", "%Y.%m.%d", "%Y/%m/%d", "%Y-%m-%d %H:%M:%S", "%Y-%m-%d %H:%M", "%Y%m%d%H%M", "%y-%m-%d", "%y.%m.%d"]
 
@@ -151,12 +164,19 @@ def _build(year: int, month: int, day: int, m: re.Match) -> datetime | None:
 def _score(text: str, m: re.Match, partial: bool) -> int:
     before = text[max(0, m.start() - 25): m.start()]
     after = text[m.end(): m.end() + 12]
+    # 기간의 끝 날짜면 시작 날짜 앞의 이름까지 본다 ('공모 기간 : 2026. 11. 2.(월) ~ [2026. 11. 15.]')
+    label = before
+    head = _RANGE_HEAD.search(text[max(0, m.start() - 45): m.start()])
+    if head:
+        start = max(0, m.start() - 45) + head.start()
+        label = text[max(0, start - 25): m.start()]
+    squashed = _squash(label)
     sc = 0
-    for w in _POS_BEFORE:
-        if w in before:
+    for w in _POS_KEYS:
+        if w in squashed:
             sc += 2
-    for w in _NEG_BEFORE:
-        if w in before:
+    for w in _NEG_KEYS:
+        if w in squashed:
             sc -= 3
     if "까지" in after[:6]:
         sc += 3
@@ -167,3 +187,8 @@ def _score(text: str, m: re.Match, partial: bool) -> int:
     if not partial and ("~" in before[-3:] or "∼" in before[-3:]):
         sc += 1
     return sc
+
+
+# 띄어 쓴 이름('교육 기간', '공모 기간')도 같은 것으로 본다. 같은 말이 두 번 세지지 않게 겹침을 없앤다
+_POS_KEYS.extend(sorted({_squash(w) for w in _POS_BEFORE}))
+_NEG_KEYS.extend(sorted({_squash(w) for w in _NEG_BEFORE}))
