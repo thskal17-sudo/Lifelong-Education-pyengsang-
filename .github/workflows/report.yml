@@ -64,6 +64,16 @@ jobs:
           elif [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
             # 손으로 돌린 것은 하루 한 번 제한을 걸지 않는다. 보내라고 누른 것이다
             python -m gia report --send
+          elif [ "${{ github.event_name }}" = "workflow_run" ]; then
+            # 한밤중(23~01시 KST)에는 보내지 않는다. 전날 저녁 21:37 수집이 2~3시간 밀리면
+            # 그 리포트가 자정 앞뒤에 돌아 한밤중 메일이 된다. 건너뛰어도 뒤의 수집(23:37·
+            # 02:59·04:29)이 아침 전에 받아 준다 (2026-11-04 네 번째 예약을 더하면서 넣었다)
+            hour=$(TZ=Asia/Seoul date +%H)
+            if [ "$hour" = "23" ] || [ "$hour" = "00" ]; then
+              echo "[report] 한밤중($hour 시 KST) — 발송은 다음 수집에 맡기고 건너뜀"
+              exit 0
+            fi
+            python -m gia report --send --once-daily
           else
             # 수집 뒤 자동 실행과 예비 예약이 같은 날 겹칠 수 있다. 먼저 돈 쪽만 보낸다
             python -m gia report --send --once-daily
