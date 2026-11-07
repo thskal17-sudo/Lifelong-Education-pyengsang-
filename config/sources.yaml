@@ -79,6 +79,9 @@ sources:
     verified: true
     adapter:
       type: html_list
+      # 같은 공고가 '공지사항'과 '강좌 개설 신청' 두 게시판에 함께 올라온다. 기관명을 따로 주지 않으면
+      # 소스 이름(…공지사항 / …강좌 개설 신청)이 기관명이 되어 중복 제거가 둘을 다른 기관으로 본다
+      org_name: 마산대학교 평생교육원
       list_url: https://lifelong.masan.ac.kr/board/000001
       row_selector: table#tablelist tbody tr
       title_selector: td.text-left a
@@ -98,6 +101,7 @@ sources:
     verified: true
     adapter:
       type: html_list
+      org_name: 마산대학교 평생교육원   # masan_lifelong 과 같은 기관으로 묶어 중복을 합친다
       list_url: https://lifelong.masan.ac.kr/lectopen
       row_selector: table#tablelist tbody tr
       title_selector: td.text-left a
