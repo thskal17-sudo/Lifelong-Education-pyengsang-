@@ -92,3 +92,27 @@ def merge(existing: Posting, incoming: Posting, now: datetime, prefer_incoming: 
     if p.status == Status.expired and changed:
         p.status = Status.updated
     return p, changed
+
+
+def merge_stored_duplicates(store, now: datetime) -> int:
+    """저장소 안에 남은 중복을 합친다. 합친 건수를 돌려준다.
+
+    같은 공고가 두 게시판에 올라오는 곳이 있다(마산대 '공지사항'·'강좌 개설 신청'). 그런
+    소스에 adapter.org_name 을 주면 그 뒤로는 기관+제목이 같아져 한 건으로 들어오지만,
+    기관명이 달랐던 때 저장된 공고는 각자의 canonical_key 를 들고 남는다. 지금 기관·제목으로
+    키를 다시 계산해 같아진 것들을 하나로 합친다(먼저 들어온 쪽에 출처를 모은다).
+    """
+    by_key: dict[str, Posting] = {}
+    dups: list[tuple[Posting, Posting]] = []
+    for p in sorted(store.values(), key=lambda x: x.first_seen_at):
+        key = canonical_key(p.org_name, p.title)
+        keeper = by_key.get(key)
+        if keeper is None:
+            by_key[key] = p
+        else:
+            dups.append((keeper, p))
+    for keeper, extra in dups:
+        merged, _ = merge(keeper, extra, now)
+        store.upsert(merged)
+        store.drop(extra.canonical_key)
+    return len(dups)
