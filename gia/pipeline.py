@@ -14,7 +14,7 @@ from .classify.rules import score_posting
 from .collectors.base import FetchError, HttpClient, UnconfiguredSource
 from .collectors.registry import build_adapter
 from .config import ConfigBundle, MissingSecret, SourceConfig
-from .dedupe import canonical_key, find_duplicate, merge
+from .dedupe import canonical_key, find_duplicate, merge, merge_stored_duplicates
 from .feedback import apply_feedback, feedback_path, load_feedback
 from .extract.attachments import extract_text, file_extension, filename_from_url
 from .extract.deadline import KST, DeadlineType, parse_deadline, parse_known_format
@@ -342,6 +342,13 @@ def collect(bundle: ConfigBundle, store: Store, http: HttpClient, only: list[str
             if dup in batch:
                 batch[batch.index(dup)] = merged
         run.sources.append(oc.result)
+
+    # 기관명 설정이 바뀌어 같은 공고가 된 옛 기록을 합친다(마산대처럼 한 공고가 두 게시판에
+    # 올라오는 곳). 새로 들어오는 건은 위에서 이미 걸러지므로 여기는 남아 있던 것만 정리한다
+    merged_old = merge_stored_duplicates(store, now)
+    if merged_old:
+        counts["merged"] += merged_old
+        run.notes.append(f"저장소에 남아 있던 중복 {merged_old}건 합침")
 
     store.refresh_statuses(now, bundle.settings.report.closing_soon_days)
     counts["closing_soon"] = sum(1 for p in store.values() if p.status == Status.closing_soon)
