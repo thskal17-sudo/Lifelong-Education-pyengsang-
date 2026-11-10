@@ -1,77 +1,97 @@
 ====================================================================================================
-URL: https://lifelong.masan.ac.kr/board/000001
-status=200 final=https://lifelong.masan.ac.kr/board/000001 encoding=utf-8 bytes=63233
-title: 목록 > 공지사항 > 마산대학교 평생교육원
+URL: https://lifelong.masan.ac.kr/lectopen/view/2026/20/010/999/19
+status=200 final=https://lifelong.masan.ac.kr/lectopen/view/2026/20/010/999/19 encoding=utf-8 bytes=33700
+title: 내용보기 > 강좌 개설 신청 > 마산대학교 평생교육원
 
-[TABLE] div#IContents_Board_Ctrl_List1_div내용 > div#IContents_Board_Ctrl_List1_div목록.table-responsive-lg.mt-3 > table#tablelist.table.table-board.table-hover.text-center  rows=11
-   row: tr -> th:259 | td.text-left:2027학년도 1학기 창원특례시 · 함안군 위탁 | td.d-none.d-md-table-cell:조혜인 | td:2026.11.10 09:40 | td.d-none.d-md-table-cell:22
-      th :: own='259' all='259'
-      td.text-left :: own='' all='2027학년도 1학기 창원특례시 · 함안군 위탁 평생교육과정 신규강좌 개설 제안 공모 안내'
-      a href=/boardview/000001/296 onclick= :: own='2027학년도 1학기 창원특례시 · 함안군 위탁 평생교육과정 신규강좌 개' all='2027학년도 1학기 창원특례시 · 함안군 위탁 평생교육과정 신규강좌 개설 제안 공모 안내'
-      td.d-none.d-md-table-cell :: own='조혜인' all='조혜인'
-      td :: own='2026.11.10 09:40' all='2026.11.10 09:40'
-      td.d-none.d-md-table-cell :: own='22' all='22'
-[DATES] sample: ['2026.11.10', '2026.10.26', '2026.10.23', '2026.09.30', '2026.09.29']
+[BODY TEXT] div#content > div#IContents_divView > div.board-view
+2026학년도 2학기 평생교육과정 동계방학특강 개설 제안 공모 안내
+event
+학년도-학기 : 2026-2학기
+view_list
+교육과정 : 특별교육과정
+create
+과정 : 방학특강
+visibility
+조회수 : 8
+date_range
+신청기간 : 2026.10.26 00:00 ~ 2026.11.13 00:00
+access_time
+상태 : 활성
+2026학년도 2학기 평생교육과정 동계방학특강 개설 제안 공모를 아래와 같이 실시하오니 많은 신청 바랍니다.
+Ⅰ. 강좌개설 신청
+- 기간: 2026.10.26.(월) ~ 11.13.(금)
+- 방법: e-mail 접수 (gpdls6770@masan.ac.kr)
+- 제출서류
+1. 강의계획서 및 강사추천서 (붙임서식)
+2. 최종학위증명서, 강의경력증명서, 관련 자격증 등 증빙서류 (1학기 개강 강좌는 제외)
+※ 증빙서류 제출 가능한 경력만 작성
+Ⅱ. 강좌운영 계획
+- 운영기간: 2026.12.01.(화) ~ 2027.01.29.(금)
+※ 강좌별 운영기간 상이
+- 편성기준
+1. 주   수: 8주 이내
+2. 인   원: 최소 15명 이상
+3. 수강료: 최소 120,000원 이상 (강좌별 상이)
+4. 강사료: 총 수강료 수입의 60% 지급
+Ⅲ. 강사 자격조건
+1. 평생교육원 운영규정 제24조(강사)에 의거하여 학사학위 이상 소지자로 교육·연구경력 및 관련분야 근무경력 3년 이상인 자
+- 단, 강좌의 특성 및 성격에 따라 관련분야 근무경력을 고려하여 운영위원회 심의를 통과한 자
+2. 교육공무원법 제10조4 각 호의 결격사유가 없는 자
 
-[ANCHORS] most common link paths
-   x10 tbody > tr > td.text-left > a  href=/boardview/000001/296  text='2027학년도 1학기 창원특례시 · 함안군 위탁 평생교육과정 신규강좌 개'
-      row? tr :: '259 2027학년도 1학기 창원특례시 · 함안군 위탁 평생교육과정 신규강좌 개설 제안 공모 안내 조혜인 2026.11.10 09:40 22'
-   x1 div#IContents_Board_Ctrl_List1_div내용 > ul.pagination.mt-5 > li.page-item.next > a.page-link  href=/board/000001/8  text='keyboard_arrow_right 다음'
-      row? li.page-item.next :: 'keyboard_arrow_right 다음'
+[BODY candidates]
+   div#IContents_divView > div.board-view > div#IContents_div내용.board-view-cont  textlen=579 :: '2026학년도\xa02학기 평생교육과정 동계방학특강 개설 제안 공모를 아래와 같이 실시하오니 많은 신청 바랍니다. Ⅰ.\xa0강좌개설 신청 -\xa0기간: 20'
+   div#content > div#IContents_divView > div.board-view  textlen=775 :: '2026학년도 2학기 평생교육과정 동계방학특강 개설 제안 공모 안내 event 학년도-학기 : 2026-2학기 view_list 교육과정 : 특'
+   div#IContents_divView > div.board-view > div.board-view-title  textlen=195 :: '2026학년도 2학기 평생교육과정 동계방학특강 개설 제안 공모 안내 event 학년도-학기 : 2026-2학기 view_list 교육과정 : 특'
+   div#sub_container.sub-container.container > div.row > div.col  textlen=841 :: 'home 메인 커뮤니티 강좌 개설 신청 강좌 개설 신청 Facebook Twitter KakaoTalk Band 2026학년도 2학기 평생교육과'
+   form#SubForm > div#sub_container.sub-container.container > div.row  textlen=877 :: '커뮤니티 공지사항 Q&A FAQ 갤러리 강사소개 강좌 개설 신청 home 메인 커뮤니티 강좌 개설 신청 강좌 개설 신청 Facebook Twit'
 
-[LINKS] board candidates (3)
-   '강사소개' -> https://lifelong.masan.ac.kr/board/000013
-   '공지사항' -> https://lifelong.masan.ac.kr/board/000001
-   '[혁신지원사업] 2026년 평생교육원 무료 강좌 수강생' -> https://lifelong.masan.ac.kr/boardview/000001/293
+[ATTACH candidates]
+[DATES] sample: ['2026.10.26', '2026.11.13', '2026.10.26', '2026.12.01', '2027.01.29']
 ====================================================================================================
-URL: https://lifelong.masan.ac.kr/lectopen
-status=200 final=https://lifelong.masan.ac.kr/lectopen encoding=utf-8 bytes=45081
-title: 목록 > 강좌 개설 신청 > 마산대학교 평생교육원
+URL: https://lifelong.masan.ac.kr/boardview/000001/296
+status=200 final=https://lifelong.masan.ac.kr/boardview/000001/296 encoding=utf-8 bytes=49721
+title: 내용보기 > 공지사항 > 마산대학교 평생교육원
 
-[TABLE] div.card-body.p-0 > div#IContents_div목록.table-responsive-lg > table#tablelist.table.table-sm.table-bordered.text-center.m-0  rows=9
-   row: tr -> th#IContents_rptList_tdYY_0:2026 | th#IContents_rptList_tdSHTM_FG_NM_0:2학기 | th#IContents_rptList_tdCURI_FG_NM_0:특별교육과정 | td.text-left:방학특강 | td.text-left:2026학년도 2학기 평생교육과정 동계방학특강  | td:2026.10.26 00:00 ~ 2026.11 | td:활성 | td:7
-      th#IContents_rptList_tdYY_0 :: own='2026' all='2026'
-      th#IContents_rptList_tdSHTM_FG_NM_0 :: own='2학기' all='2학기'
-      th#IContents_rptList_tdCURI_FG_NM_0 :: own='특별교육과정' all='특별교육과정'
-      td.text-left :: own='방학특강' all='방학특강'
-      td.text-left :: own='' all='2026학년도 2학기 평생교육과정 동계방학특강 개설 제안 공모 안내'
-      a.font-weight-bold.text-primary href=/lectopen/view/2026/20/010/999/19 onclick= :: own='2026학년도 2학기 평생교육과정 동계방학특강 개설 제안 공모 안내' all='2026학년도 2학기 평생교육과정 동계방학특강 개설 제안 공모 안내'
-[DATES] sample: ['2026.10.26', '2026.11.13', '2026.06.01', '2026.06.30', '2025.11.17']
+[BODY TEXT] div#content > div#IContents_divView > div.board-view
+2027학년도 1학기 창원특례시 · 함안군 위탁 평생교육과정 신규강좌 개설 제안 공모 안내
+작성자
+create
+조혜인
+작성일
+access_time
+2026.11.10 09:40
+조회수
+visibility
+23
+첨부파일
+2027학년도 1학기 창원특례시 · 함안군 위탁 평생교육과정 강의계획서 및 강사추천서.hwp
+[2027학년도 1학기 창원특례시 · 함안군 위탁 평생교육과정 신규강좌 개설 제안 공모 안내]
+2027학년도 1학기 마산대학교 평생교육원 신규강좌 개설 제안 공모를 아래와 같이 실시하오니 많은 신청 바랍니다.
+Ⅰ. 강좌개설 신청
+- 신청기간: 2026.11.09.(월) ~ 12.24.(목)
+- 신청방법: e-mail 접수 ( gpdls6770@masan.ac.kr )
+- 제출서류
+1. 강의계획서 및 강사추천서(붙임서식)
+2. 최종학위증명서, 강의경력증명서, 관련 자격증 등 증빙서류
+※ 증빙서류 제출 가능한 경력만 작성
+※ 증명서 및 확인서는 공고일 기준 3개월 이내 자료만 인정함.
+Ⅱ. 강좌운영 계획
+- 운영기간: 2027.03.08.(월) ~ 06.05.(토)
+- 편성기준
+1. 주수: 10주 또는 12주
+2. 시수: 주 1~2회, 1일 2~3시간
+※ 최소 30시수 이상
+Ⅲ. 강사 자격조건
+1. 평생교육원 운영규정 제24조(강사)에 의거하여 학사학위 이상 소지자로 교육·연구경력 및 관련분야 근무경력 3년 이상인 자
+- 단, 강좌의 특성 및 성격에 따라 관련분야 근무경력을 고려하여 운영위원회 심의를 통과한 자
+2. 교육공무원법 제10조4 각 호의 결격사유가 없는 자
 
-[ANCHORS] most common link paths
-   x8 tbody > tr > td.text-left > a.font-weight-bold.text-primary  href=/lectopen/view/2026/20/010/999/19  text='2026학년도 2학기 평생교육과정 동계방학특강 개설 제안 공모 안내'
-      row? tr :: '2026 2학기 특별교육과정 방학특강 2026학년도 2학기 평생교육과정 동계방학특강 개설 제안 공모 안내 2026.10.26 00:00 ~ 2026.11.13 00:00 활성 7'
+[BODY candidates]
+   div#IContents_divView > div.board-view > div#IContents_div내용.board-view-cont  textlen=603 :: '[2027학년도 1학기 창원특례시 · 함안군 위탁 평생교육과정 신규강좌 개설 제안 공모 안내] 2027학년도 1학기 마산대학교 평생교육원 신규강'
+   div#content > div#IContents_divView > div.board-view  textlen=777 :: '2027학년도 1학기 창원특례시 · 함안군 위탁 평생교육과정 신규강좌 개설 제안 공모 안내 작성자 create 조혜인 작성일 access_tim'
+   div.col > div#content > div#IContents_divView  textlen=922 :: '2027학년도 1학기 창원특례시 · 함안군 위탁 평생교육과정 신규강좌 개설 제안 공모 안내 작성자 create 조혜인 작성일 access_tim'
+   div#sub_container.sub-container.container > div.row > div.col  textlen=977 :: 'home 메인 커뮤니티 공지사항 공지사항 Facebook Twitter KakaoTalk Band 2027학년도 1학기 창원특례시 · 함안군 위'
+   form#SubForm > div#sub_container.sub-container.container > div.row  textlen=1013 :: '커뮤니티 공지사항 Q&A FAQ 갤러리 강사소개 강좌 개설 신청 home 메인 커뮤니티 공지사항 공지사항 Facebook Twitter Kaka'
 
-[LINKS] board candidates (2)
-   '강사소개' -> https://lifelong.masan.ac.kr/board/000013
-   '공지사항' -> https://lifelong.masan.ac.kr/board/000001
-24:  default_days: 90
-::group::probe masan_lifelong
-INFO httpx: HTTP Request: GET https://lifelong.masan.ac.kr/robots.txt "HTTP/1.1 302 Found"
-INFO httpx: HTTP Request: GET https://www.masan.ac.kr/err/wp_18.html "HTTP/1.1 200 OK"
-INFO httpx: HTTP Request: GET https://lifelong.masan.ac.kr/board/000001 "HTTP/1.1 200 OK"
-INFO httpx: HTTP Request: GET https://lifelong.masan.ac.kr/boardview/000001/296 "HTTP/1.1 200 OK"
-[probe] keywords 무시: 목록 전부 표시
-[probe] 마산대학교 평생교육원 공지사항: 목록 8건
-  - 2026-11-10 | 마산대학교 평생교육원 | 2027학년도 1학기 창원특례시 · 함안군 위탁 평생교육과정 신규강좌 개설 제안 공모 안내 | https://lifelong.masan.ac.kr/boardview/000001/296
-  - 2026-10-26 | 마산대학교 평생교육원 | 2026학년도 2학기 평생교육과정 동계방학특강 개설 제안 공모 안내 | https://lifelong.masan.ac.kr/boardview/000001/295
-  - 2026-10-23 | 마산대학교 평생교육원 | [혁신지원사업] IOT 홈케어 전문가 양성교육 과정 운영안내 | https://lifelong.masan.ac.kr/boardview/000001/294
-  - 2026-09-30 | 마산대학교 평생교육원 | [혁신지원사업] 2026년 평생교육원 무료 강좌 수강생 모집 안내 | https://lifelong.masan.ac.kr/boardview/000001/293
-  - 2026-09-29 | 마산대학교 평생교육원 | 마산대학교 평생교육원 FESTA 안내 | https://lifelong.masan.ac.kr/boardview/000001/292
-[detail] 본문 806자 · 마감 None (unknown, 'None') · 점수 90 ['+45 강좌 개설 제안(강좌 개설 제안)', '+20 채용어(공모)', '+10 강의어(강의)', '+15 부·울·경 지역'] · 분야 lifelong
-  [date?] 2026.11.10 09:40
-  [date?] - 신청기간: 2026.11.09.(월) ~ 12.24.(목)
-  [date?] - 신청방법: e-mail 접수 ( gpdls6770@masan.ac.kr )
-  [date?] - 운영기간: 2027.03.08.(월) ~ 06.05.(토)
-[posting] 포함: 2027학년도 1학기 창원특례시 · 함안군 위탁 평생교육과정 신규강좌 개설 제안 공모 안내
-::endgroup::
-::group::probe masan_lectopen
-INFO httpx: HTTP Request: GET https://lifelong.masan.ac.kr/robots.txt "HTTP/1.1 302 Found"
-INFO httpx: HTTP Request: GET https://lifelong.masan.ac.kr/lectopen "HTTP/1.1 200 OK"
-INFO httpx: HTTP Request: GET https://lifelong.masan.ac.kr/lectopen/view/2026/20/010/999/19 "HTTP/1.1 200 OK"
-[probe] keywords 무시: 목록 전부 표시
-[probe] 마산대학교 평생교육원 강좌 개설 신청: 목록 1건
-  - 2026-10-26 | 마산대학교 평생교육원 | 2026학년도 2학기 평생교육과정 동계방학특강 개설 제안 공모 안내 | https://lifelong.masan.ac.kr/lectopen/view/2026/20/010/999/19
-[detail] 본문 600자 · 마감 2027-01-29 23:59:00+09:00 (fixed, '2027.01.29.(금)') · 점수 75 ['+45 강좌 개설 제안(개설 제안)', '+20 채용어(공모)', '+10 강의어(강의)'] · 분야 lifelong
-[posting] 포함: 2026학년도 2학기 평생교육과정 동계방학특강 개설 제안 공모 안내
-::endgroup::
+[ATTACH candidates]
+[DATES] sample: ['2026.11.10', '2026.11.09', '2027.03.08']

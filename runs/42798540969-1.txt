@@ -1,0 +1,97 @@
+====================================================================================================
+URL: https://lifelong.masan.ac.kr/lectopen/view/2026/20/010/999/19
+status=200 final=https://lifelong.masan.ac.kr/lectopen/view/2026/20/010/999/19 encoding=utf-8 bytes=33700
+title: 내용보기 > 강좌 개설 신청 > 마산대학교 평생교육원
+
+[BODY TEXT] div#content > div#IContents_divView > div.board-view
+2026학년도 2학기 평생교육과정 동계방학특강 개설 제안 공모 안내
+event
+학년도-학기 : 2026-2학기
+view_list
+교육과정 : 특별교육과정
+create
+과정 : 방학특강
+visibility
+조회수 : 8
+date_range
+신청기간 : 2026.10.26 00:00 ~ 2026.11.13 00:00
+access_time
+상태 : 활성
+2026학년도 2학기 평생교육과정 동계방학특강 개설 제안 공모를 아래와 같이 실시하오니 많은 신청 바랍니다.
+Ⅰ. 강좌개설 신청
+- 기간: 2026.10.26.(월) ~ 11.13.(금)
+- 방법: e-mail 접수 (gpdls6770@masan.ac.kr)
+- 제출서류
+1. 강의계획서 및 강사추천서 (붙임서식)
+2. 최종학위증명서, 강의경력증명서, 관련 자격증 등 증빙서류 (1학기 개강 강좌는 제외)
+※ 증빙서류 제출 가능한 경력만 작성
+Ⅱ. 강좌운영 계획
+- 운영기간: 2026.12.01.(화) ~ 2027.01.29.(금)
+※ 강좌별 운영기간 상이
+- 편성기준
+1. 주   수: 8주 이내
+2. 인   원: 최소 15명 이상
+3. 수강료: 최소 120,000원 이상 (강좌별 상이)
+4. 강사료: 총 수강료 수입의 60% 지급
+Ⅲ. 강사 자격조건
+1. 평생교육원 운영규정 제24조(강사)에 의거하여 학사학위 이상 소지자로 교육·연구경력 및 관련분야 근무경력 3년 이상인 자
+- 단, 강좌의 특성 및 성격에 따라 관련분야 근무경력을 고려하여 운영위원회 심의를 통과한 자
+2. 교육공무원법 제10조4 각 호의 결격사유가 없는 자
+
+[BODY candidates]
+   div#IContents_divView > div.board-view > div#IContents_div내용.board-view-cont  textlen=579 :: '2026학년도\xa02학기 평생교육과정 동계방학특강 개설 제안 공모를 아래와 같이 실시하오니 많은 신청 바랍니다. Ⅰ.\xa0강좌개설 신청 -\xa0기간: 20'
+   div#content > div#IContents_divView > div.board-view  textlen=775 :: '2026학년도 2학기 평생교육과정 동계방학특강 개설 제안 공모 안내 event 학년도-학기 : 2026-2학기 view_list 교육과정 : 특'
+   div#IContents_divView > div.board-view > div.board-view-title  textlen=195 :: '2026학년도 2학기 평생교육과정 동계방학특강 개설 제안 공모 안내 event 학년도-학기 : 2026-2학기 view_list 교육과정 : 특'
+   div#sub_container.sub-container.container > div.row > div.col  textlen=841 :: 'home 메인 커뮤니티 강좌 개설 신청 강좌 개설 신청 Facebook Twitter KakaoTalk Band 2026학년도 2학기 평생교육과'
+   form#SubForm > div#sub_container.sub-container.container > div.row  textlen=877 :: '커뮤니티 공지사항 Q&A FAQ 갤러리 강사소개 강좌 개설 신청 home 메인 커뮤니티 강좌 개설 신청 강좌 개설 신청 Facebook Twit'
+
+[ATTACH candidates]
+[DATES] sample: ['2026.10.26', '2026.11.13', '2026.10.26', '2026.12.01', '2027.01.29']
+====================================================================================================
+URL: https://lifelong.masan.ac.kr/boardview/000001/296
+status=200 final=https://lifelong.masan.ac.kr/boardview/000001/296 encoding=utf-8 bytes=49721
+title: 내용보기 > 공지사항 > 마산대학교 평생교육원
+
+[BODY TEXT] div#content > div#IContents_divView > div.board-view
+2027학년도 1학기 창원특례시 · 함안군 위탁 평생교육과정 신규강좌 개설 제안 공모 안내
+작성자
+create
+조혜인
+작성일
+access_time
+2026.11.10 09:40
+조회수
+visibility
+23
+첨부파일
+2027학년도 1학기 창원특례시 · 함안군 위탁 평생교육과정 강의계획서 및 강사추천서.hwp
+[2027학년도 1학기 창원특례시 · 함안군 위탁 평생교육과정 신규강좌 개설 제안 공모 안내]
+2027학년도 1학기 마산대학교 평생교육원 신규강좌 개설 제안 공모를 아래와 같이 실시하오니 많은 신청 바랍니다.
+Ⅰ. 강좌개설 신청
+- 신청기간: 2026.11.09.(월) ~ 12.24.(목)
+- 신청방법: e-mail 접수 ( gpdls6770@masan.ac.kr )
+- 제출서류
+1. 강의계획서 및 강사추천서(붙임서식)
+2. 최종학위증명서, 강의경력증명서, 관련 자격증 등 증빙서류
+※ 증빙서류 제출 가능한 경력만 작성
+※ 증명서 및 확인서는 공고일 기준 3개월 이내 자료만 인정함.
+Ⅱ. 강좌운영 계획
+- 운영기간: 2027.03.08.(월) ~ 06.05.(토)
+- 편성기준
+1. 주수: 10주 또는 12주
+2. 시수: 주 1~2회, 1일 2~3시간
+※ 최소 30시수 이상
+Ⅲ. 강사 자격조건
+1. 평생교육원 운영규정 제24조(강사)에 의거하여 학사학위 이상 소지자로 교육·연구경력 및 관련분야 근무경력 3년 이상인 자
+- 단, 강좌의 특성 및 성격에 따라 관련분야 근무경력을 고려하여 운영위원회 심의를 통과한 자
+2. 교육공무원법 제10조4 각 호의 결격사유가 없는 자
+
+[BODY candidates]
+   div#IContents_divView > div.board-view > div#IContents_div내용.board-view-cont  textlen=603 :: '[2027학년도 1학기 창원특례시 · 함안군 위탁 평생교육과정 신규강좌 개설 제안 공모 안내] 2027학년도 1학기 마산대학교 평생교육원 신규강'
+   div#content > div#IContents_divView > div.board-view  textlen=777 :: '2027학년도 1학기 창원특례시 · 함안군 위탁 평생교육과정 신규강좌 개설 제안 공모 안내 작성자 create 조혜인 작성일 access_tim'
+   div.col > div#content > div#IContents_divView  textlen=922 :: '2027학년도 1학기 창원특례시 · 함안군 위탁 평생교육과정 신규강좌 개설 제안 공모 안내 작성자 create 조혜인 작성일 access_tim'
+   div#sub_container.sub-container.container > div.row > div.col  textlen=977 :: 'home 메인 커뮤니티 공지사항 공지사항 Facebook Twitter KakaoTalk Band 2027학년도 1학기 창원특례시 · 함안군 위'
+   form#SubForm > div#sub_container.sub-container.container > div.row  textlen=1013 :: '커뮤니티 공지사항 Q&A FAQ 갤러리 강사소개 강좌 개설 신청 home 메인 커뮤니티 공지사항 공지사항 Facebook Twitter Kaka'
+
+[ATTACH candidates]
+[DATES] sample: ['2026.11.10', '2026.11.09', '2027.03.08']
