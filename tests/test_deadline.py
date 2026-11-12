@@ -151,3 +151,38 @@ def test_spaced_class_period_loses_to_application_period():
     text = "○ 운영 기간 : 2026. 12. 1.( 화 ) ~ 2026. 12. 20.( 일 ) ○ 접수 기간 : 2026. 9. 16.( 수 ) ~ 2026. 9. 25.( 금 )"
     res = parse_deadline(text, REF)
     assert res.deadline == datetime(2026, 9, 25, 23, 59, tzinfo=KST)
+
+
+def test_bullet_hyphen_on_next_line_is_not_a_range_start():
+    """마산대 평생교육원 (2026-11-10). 기간 끝 날짜 바로 다음 줄이 '- 신청방법:' 처럼 글머리표로 시작한다.
+    그 '-' 를 범위 시작 기호로 세면 신청 마감이 깎여 뒤에 오는 운영기간 끝(2027.01.29)에 밀린다."""
+    text = (
+        "Ⅰ. 강좌개설 신청\n"
+        "- 기간: 2026.10.26.(월) ~ 11.13.(금)\n"
+        "- 방법: e-mail 접수 (gpdls6770@masan.ac.kr)\n"
+        "Ⅱ. 강좌운영 계획\n"
+        "- 운영기간: 2026.12.01.(화) ~ 2027.01.29.(금)\n"
+    )
+    res = parse_deadline(text, date(2026, 10, 26))
+    assert res.deadline_type == DeadlineType.fixed
+    assert res.deadline == datetime(2026, 11, 13, 23, 59, tzinfo=KST)
+
+
+def test_application_period_end_without_year():
+    """같은 공고의 '신청기간: 2026.11.09.(월) ~ 12.24.(목)' — 끝 날짜에 연도가 없어도 게시 연도로 읽는다."""
+    text = (
+        "Ⅰ. 강좌개설 신청\n"
+        "- 신청기간: 2026.11.09.(월) ~ 12.24.(목)\n"
+        "- 신청방법: e-mail 접수\n"
+        "Ⅱ. 강좌운영 계획\n"
+        "- 운영기간: 2027.03.08.(월) ~ 06.05.(토)\n"
+    )
+    res = parse_deadline(text, date(2026, 11, 10))
+    assert res.deadline == datetime(2026, 12, 24, 23, 59, tzinfo=KST)
+
+
+def test_same_line_hyphen_range_still_counts():
+    """같은 줄에서 숫자로 이어지는 '-' 는 그대로 범위 시작으로 본다 (시작일이 마감으로 뽑히지 않는다)."""
+    text = "접수기간 2026. 9. 16. - 2026. 9. 25."
+    res = parse_deadline(text, REF)
+    assert res.deadline == datetime(2026, 9, 25, 23, 59, tzinfo=KST)
