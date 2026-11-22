@@ -158,3 +158,17 @@ def test_lesson_word_counts_as_instructor_posting():
     assert score_posting("시민생활체육관 수영강습 강사 모집", "부산시", None).score >= 70
     # 수강생을 부르는 글은 강습이 들어가도 그대로 걸러진다
     assert title_veto("2026년 하반기 수영강습 수강생 모집") is not None
+
+
+def test_강사_대상_법정의무교육은_구인이_아니다():
+    """동의대 미래교육원 '2026년 학점은행제 교강사 법정의무교육 실시 안내' (2026-11-22 probe).
+    이미 일하는 강사를 모아 듣게 하는 교육 공지인데 '교강사'(+50)로 목록에 올라와 있었다."""
+    res = score_posting("2026년 학점은행제 교강사 법정의무교육 실시 안내", "", source_regions=["부산"])
+    assert res.score < 30
+    assert any("법정의무교육" in r for r in res.reasons)
+
+
+def test_그_교육을_맡을_강사를_뽑는_글은_살린다():
+    """뽑는 말('모집')이 함께 있으면 연수·의무교육 낱말은 빼고 센다."""
+    res = score_posting("성희롱예방 법정의무교육 강사 모집 공고", "", source_regions=["부산"])
+    assert res.score >= 70
