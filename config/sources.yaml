@@ -126,6 +126,10 @@ sources:
     adapter:
       type: html_list
       list_url: https://lifelong.yc.ac.kr/bbs/board.php?bo_table=sub5_1&page={page}
+      # 2026-11-22 네 번 모두 'The read operation timed out'(기본 20초). 그 사흘 전엔 인증서
+      # 오류로도 멈췄다 — 서버가 불안정하다. 길게 기다리고, 다시 시도할 때도 간격을 둔다
+      timeout_sec: 45
+      retries: 3
       row_selector: ul.fz-list > li
       title_selector: div.fz-subject a.list-subject
       keywords: [강사, 교강사, 강좌 개설, 개설 신청, 지도사, 지도자]

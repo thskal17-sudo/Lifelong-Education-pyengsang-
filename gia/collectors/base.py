@@ -41,6 +41,10 @@ class HttpClient:
         # 호스트별 TLS 모드: "insecure"(tls_verify: false) / "legacy"(tls_legacy: true). 모드별 클라이언트는 지연 생성
         self._host_mode: dict[str, str] = {}
         self._mode_clients: dict[str, httpx.Client] = {}
+        # 호스트별 응답 대기·재시도 (adapter.timeout_sec / adapter.retries). 가끔 수십 초씩 멈추는
+        # 서버만 길게 기다리고, 다시 시도할 때도 간격을 둔다 (경남 저장소와 같은 장치)
+        self._host_timeout: dict[str, float] = {}
+        self._host_retries: dict[str, int] = {}
         self._last: dict[str, float] = {}
         self._locks: dict[str, threading.Lock] = {}
         self._guard = threading.Lock()
@@ -80,6 +84,20 @@ class HttpClient:
             self._mode_clients[mode] = self._make_client(verify=False if mode == "insecure" else self.legacy_tls_context())
         log.warning("[http] %s: %s", host, "TLS 인증서 검증 비활성 (tls_verify: false)" if mode == "insecure" else "구형 TLS 허용·검증 비활성 (tls_legacy: true)")
 
+    def set_host_policy(self, host: str, timeout: float | None = None, retries: int | None = None) -> None:
+        host = host.lower()
+        if timeout:
+            self._host_timeout[host] = float(timeout)
+        if retries:
+            self._host_retries[host] = int(retries)
+
+    def _retry_wait(self, host: str, attempt: int) -> float:
+        if not self.settings.per_domain_delay_sec:
+            return 0
+        if host in self._host_retries or host in self._host_timeout:
+            return 5.0 * (2 ** attempt)  # 5초, 10초, 20초 … — 멈춘 서버가 풀릴 틈을 준다
+        return 2 ** attempt * 0.5
+
     def allow_insecure_tls(self, host: str) -> None:
         """adapter.tls_verify: false — 중간 인증서 누락 등 서버 쪽 설정 문제용."""
         self.set_tls_mode(host, "insecure")
@@ -97,19 +115,22 @@ class HttpClient:
         host = urlsplit(url).netloc
         if self.settings.respect_robots and not self._allowed(url):
             raise FetchError(f"robots.txt 차단: {url}")
+        key = host.lower()
+        extra = {"timeout": self._host_timeout[key]} if key in self._host_timeout else {}
+        attempts = self._host_retries.get(key, 3)
         with self._lock_for(host):
             self._wait(host)
             last_err: Exception | None = None
-            for attempt in range(3):
+            for attempt in range(attempts):
+                if attempt:
+                    time.sleep(self._retry_wait(key, attempt - 1))
                 try:
-                    r = self._client_for(url).get(url, params=params, headers=headers)
+                    r = self._client_for(url).get(url, params=params, headers=headers, **extra)
                 except (httpx.TimeoutException, httpx.TransportError) as e:
                     last_err = e
-                    time.sleep(2 ** attempt * 0.5 if self.settings.per_domain_delay_sec else 0)
                     continue
                 if r.status_code >= 500:
                     last_err = FetchError(f"HTTP {r.status_code} {url}")
-                    time.sleep(2 ** attempt * 0.5 if self.settings.per_domain_delay_sec else 0)
                     continue
                 if r.status_code >= 400:
                     raise FetchError(f"HTTP {r.status_code} {url}")
@@ -124,7 +145,8 @@ class HttpClient:
         with self._lock_for(host):
             self._wait(host)
             try:
-                with self._client_for(url).stream("GET", url) as r:
+                extra = {"timeout": self._host_timeout[host.lower()]} if host.lower() in self._host_timeout else {}
+                with self._client_for(url).stream("GET", url, **extra) as r:
                     if r.status_code >= 400:
                         raise FetchError(f"HTTP {r.status_code} {url}")
                     buf = bytearray()
